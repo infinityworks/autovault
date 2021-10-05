@@ -105,7 +105,17 @@ Test DBT connection
 
     dbt debug
 
-# Load sample data
+# Install dbtvault
+Refer link - https://hub.getdbt.com/datavault-uk/dbtvault/latest/
+
+# Load sample source data into snowflake and set data sources for the project
+Create raw data tables using following DDLs-
+    CREATE  OR REPLACE TABLE "AUTOVAULT"."PUBLIC".TRANSACTIONS (TRSACTION VARIANT, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
+    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".CUSTOMERS (CUSTOMER_ID STRING, AVG_VISITS_PER_MONTH NUMBER, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
+    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".PRODUCTS (PRODUCT_ID STRING, MODEL STRING, MAKE STRING, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
+    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".CUSTOMER_VISITS (CUSTOMER_ID STRING, MONTHLY_VISITS_AVG NUMBER, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
+    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".TOTAL_CUST_VISITS (CUST_ID STRING, TOTAL_VISITS NUMBER, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
+
 Load it to internal user stage in snowflake via snowsql CLI. Note- you cannot use this in Snowflake console hence the CLI. Simlilarly load other data sets.
 e.g. put file://~/documents/datavault/snowflake101/customers.csv @~/staged AUTO_COMPRESS = FALSE
 
@@ -113,6 +123,61 @@ put file:///yourfilelocation @~/staged AUTO_COMPRESS = FALSE
 
 Copy  data from internal snoflake stage to the table
 e.g. COPY INTO "mydb"."myschema"."PRODUCTS" FROM (SELECT $1, $2, $3, 'PRODUCTS',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) FROM '@~/staged/products.csv') file_format = (format_name = 'myCSV');
+
+## Set data sources
+Add following lines to the schema.yml file found under models directory.
+version: 2
+sources:
+  - name: AV (custom name)
+    database: AUTOVAULT (your snowflake database)
+    schema: PUBLIC (your scheme under)
+    tables:
+      - name: CUSTOMERS
+      - name: PRODUCTS
+      - name: TRANSACTIONS
+      - name: CUSTOMER_VISITS
+      - name: TOTAL_CUST_VISITS
+
+## Flatten transcations data with json records
+flatten_transactions.sql flattens the transactions data using latteral flatten sql command.
+
+# Set creation of hubs, links and sats in the schema of choice
+By detault all the artefacts would be created in public schema. You can overide it in the specific model, by adding following lines at the start-
+e.g. hub customers.sql
+{{ config(materialized='incremental',
+  schema = "SATS" 
+) }}
+
+Also add custom schema macro called get_custom_schema.sql to the macros directory. This will ensure artefacts are created in your schema of choice.
+
+# Staging, Hubs, Links, Sats
+Set staging models to views in the dbt_project.yml as below-
+models:
+  +transient: false
+  autovault:
+      # Applies to all files under models/example/
+      stage:
+          materialized: view
+Stage sample data as views by creating staging models, under folder called stage under models directory, that add meta data to the source i.e. load_date, effective_from date, primary key hash, hashdiff etc.
+e.g. stg_customers.sql. Copy model from final model section of the following dbtvault doc. Update it to suit your project.
+https://dbtvault.readthedocs.io/en/latest/tutorial/tut_staging/
+
+## Hubs
+Create Hub tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_hubs/
+Copy hub template from this link. E.g. customers.sql model under hub directory. Update it to suit your project.
+If your primary key and natural key columns have different names across the different tables, they will need to be aliased to the same name in the respective staging layers via a derived column configuration, using the stage macro in the staging layer.
+e.g. stg_total_cust_visits.sql 
+
+derived_columns:
+CUSTOMER_ID: "CUST_ID" (total_cust_visits source dataset has natural key column called 'cust_id' that is different to the other data sources with column name as 'customer_id)) 
+
+## Links
+Create Link tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_links/
+Copy link template from this doc link. E.g. customer_prod.sql model under links directory. Update it to suit your project.
+
+## Sats
+Create satellite tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_satellites/
+Copy satellite template from this doc link. E.g. customer.sql model under sats directory. Update it to suit your project.
 
 ### Using the starter project
 
