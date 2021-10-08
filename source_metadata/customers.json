@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "source_name":"CUSTOMERS",
     "source_system":"CSV",
     "business_topics":{
