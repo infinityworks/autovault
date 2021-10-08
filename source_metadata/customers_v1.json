@@ -1,5 +1,6 @@
 {
     "source_name":"CUSTOMERS",
+    "version":"1",
     "source_system":"CSV",
     "business_topics":{
         "CUSTOMER":{
@@ -11,7 +12,7 @@
                     "business_definition":"CUSTOMERS",
                     "payload":{
                         "AVG_MONTHLY_VISITS":"STRING",
-                        "sat1_col1":"STRING"
+                        "sat1_col2":"STRING"
                     }
                 },
                 {
