@@ -12,27 +12,15 @@ def export_all_ddl_statments():
 def ddl_exporter(metadata_file_path):
     metadata = load_metadata_file(metadata_file_path)
     versioned_source_name = format_versioned_source_name(metadata)
-    ddl = create_source_table_ddl(
-        metadata,
-        versioned_source_name,
-        target_database="AUTOVAULT",
-        target_schema="PUBLIC",
-    )
+    ddl = create_source_table_ddl(metadata, versioned_source_name,)
     formatted_source_name = versioned_source_name.lower()
     with open(f"./source_tables/DDL/{formatted_source_name}.sql", "w") as sql_export:
         sql_export.write(ddl)
 
 
-def find_json_metadata():
-    metadata_files = [
-        file for file in glob.iglob("./source_metadata/**/*.json", recursive=True)
-    ]
-    return metadata_files
-
-
-def create_source_table_ddl(
-    metadata, versioned_source_name, target_database, target_schema
-):
+def create_source_table_ddl(metadata, versioned_source_name):
+    target_database = metadata.get("destination_database")
+    target_schema = metadata.get("destination_schema")
     business_topics = get_source_business_topics(metadata)
     primary_keys = get_business_key_list(business_topics)
     keys_and_types_str = format_column_and_dtype(primary_keys)
@@ -62,11 +50,11 @@ def create_ddl_statement(
     target_schema,
     source_name,
 ):
-    ddl = f"""CREATE TABLE {target_database}.{target_schema}.{source_name} (
+    ddl = f"""CREATE TABLE "{target_database}"."{target_schema}"."{source_name}" (
     {keys_and_types_str},
     {column_and_types_str},
-    RECORD_SOURCE STRING,
-    LOAD_DATETIME TIMESTAMP_TZ
+    "RECORD_SOURCE" STRING,
+    "LOAD_DATETIME" TIMESTAMP_TZ
     )
     """
     return ddl
@@ -74,7 +62,7 @@ def create_ddl_statement(
 
 def format_column_and_dtype(columns_and_types):
     x = [
-        f"""{list(column_and_type.keys())[0]} {list(column_and_type.values())[0]}"""
+        f'"{list(column_and_type.keys())[0]}" {list(column_and_type.values())[0]}'
         for column_and_type in columns_and_types
     ]
     column_and_types_str = f",\n{4*chr(32)}".join(x)
@@ -83,12 +71,13 @@ def format_column_and_dtype(columns_and_types):
 
 def get_source_business_topics(metadata):
     topics = [topic for topic in metadata.get("business_topics").values()]
+    print(topics)
     return topics
 
 
 def get_business_key_list(source_topics):
-    source_keys = [hub_info.get("business_keys") for hub_info in source_topics]
-    return source_keys
+    business_keys = [hub_info.get("business_keys") for hub_info in source_topics]
+    return business_keys
 
 
 def get_source_payload_list(metadata):
@@ -119,6 +108,13 @@ def load_metadata_file(metadata_path: str):
     with open(metadata_path) as metadata_file:
         metadata = json.load(metadata_file)
     return metadata
+
+
+def find_json_metadata():
+    metadata_files = [
+        file for file in glob.iglob("./source_metadata/**/*.json", recursive=True)
+    ]
+    return metadata_files
 
 
 if __name__ == "__main__":

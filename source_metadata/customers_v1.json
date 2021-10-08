@@ -2,6 +2,8 @@
     "source_name":"CUSTOMERS",
     "version":"1",
     "source_system":"CSV",
+    "destination_database" : "AUTOVAULT",
+    "destination_schema" : "PUBLIC",
     "business_topics":{
         "CUSTOMER":{
             "business_keys":{
@@ -23,13 +25,13 @@
                 }
             ]
         },
-        "hub2":{
+        "PRODUCT":{
             "business_keys":{
                 "sat3_key":"STRING"
             },
             "business_attributes":[
                 {
-                    "business_definition":"12",
+                    "business_definition":"PRODUCT_ID",
                     "payload":{
                         "sat3_col1":"STRING"
                     }
