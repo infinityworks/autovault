@@ -1,5 +1,5 @@
 {{ config(materialized='incremental',
-  schema = "HUBS" 
+  schema = "HUBS"
 
 ) }}
 

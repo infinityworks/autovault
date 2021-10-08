@@ -1,5 +1,5 @@
 {%- set yaml_metadata -%}
-source_model: 
+source_model:
   AV: "TOTAL_CUST_VISITS"
 derived_columns:
   CUSTOMER_ID: "CUST_ID"

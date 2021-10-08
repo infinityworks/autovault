@@ -1,11 +1,11 @@
 {{ config(materialized='incremental',
-  schema = "SATS" 
+  schema = "SATS"
 
 ) }}
 {%- set yaml_metadata -%}
 source_model: "stg_customers"
 src_pk: "CUSTOMER_HK"
-src_hashdiff: 
+src_hashdiff:
   source_column: "CUSTOMER_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:

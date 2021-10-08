@@ -1,5 +1,5 @@
 {%- set yaml_metadata -%}
-source_model: 
+source_model:
   AV: "CUSTOMER_VISITS"
 derived_columns:
   EFFECTIVE_FROM: "LOAD_DATE"
