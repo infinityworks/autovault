@@ -1,10 +1,12 @@
-from generate_raw_vault.app.load_metadata import load_metadata_file
+from generate_raw_vault.app.find_metadata_files import load_metadata_file
+from generate_raw_vault.tests.conftest import METADATA_TESTFILE_PATH
 from json import loads
 import pytest
 
 
-@pytest.mark.usefixtures("sample_metadata")
-def test_load_metadata_file(sample_metadata):
+# @pytest.mark.usefixtures("sample_metadata")
+def test_load_metadata_file():
+    test_file = load_metadata_file(METADATA_TESTFILE_PATH)
     test_json = """{
     "business_topics": {
         "HUB1": {
@@ -42,4 +44,4 @@ def test_load_metadata_file(sample_metadata):
     "source_system": "CSV",
     "version": "1"
     }"""
-    assert sample_metadata == loads(test_json)
+    assert test_file == loads(test_json)

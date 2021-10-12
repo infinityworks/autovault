@@ -1,46 +1,40 @@
-import json
-import itertools
-import glob
+from generate_raw_vault.app.find_metadata_files import find_json_metadata
+from generate_raw_vault.app.find_metadata_files import load_metadata_file
+from generate_raw_vault.app.load_metadata import Metadata
 
 
 def export_all_ddl_statments():
-    metadata_file_dirs = find_json_metadata()
+    metadata_file_dirs = find_json_metadata("source_metadata")
     for metadata_file_path in metadata_file_dirs:
         ddl_exporter(metadata_file_path)
 
 
 def ddl_exporter(metadata_file_path):
-    metadata = load_metadata_file(metadata_file_path)
-    versioned_source_name = format_versioned_source_name(metadata)
-    ddl = create_source_table_ddl(metadata, versioned_source_name,)
-    formatted_source_name = versioned_source_name.lower()
+    json_metadata = load_metadata_file(metadata_file_path)
+    metadata = Metadata(json_metadata)
+    ddl = create_source_table_ddl(metadata)
+    formatted_source_name = metadata.get_versioned_source_name().lower()
     with open(f"./source_tables/DDL/{formatted_source_name}.sql", "w") as sql_export:
         sql_export.write(ddl)
 
 
-def create_source_table_ddl(metadata, versioned_source_name):
-    target_database = metadata.get("destination_database")
-    target_schema = metadata.get("destination_schema")
-    business_topics = get_source_business_topics(metadata)
-    primary_keys = get_business_key_list(business_topics)
+def create_source_table_ddl(metadata):
+    target_database = metadata.get_target_database()
+    target_schema = metadata.get_target_schema()
+    versioned_source_name = metadata.get_versioned_source_name()
+    business_topics = metadata.get_source_business_topics()
+    primary_keys = [key for key in metadata.get_business_keys().values()]
     keys_and_types_str = format_column_and_dtype(primary_keys)
-    payload_columns = get_source_payload_list(metadata)
-    column_and_types_str = format_column_and_dtype(payload_columns)
+    payload_columns = metadata.get_source_attributes()
+    payload_columns_and_types_str = format_column_and_dtype(payload_columns)
     ddl_statement = create_ddl_statement(
         keys_and_types_str,
-        column_and_types_str,
+        payload_columns_and_types_str,
         target_database,
         target_schema,
         versioned_source_name,
     )
     return ddl_statement
-
-
-def format_versioned_source_name(metadata):
-    source_name = metadata.get("source_name")
-    version = "".join(["V", metadata.get("version")])
-    versioned_source_name = "_".join([source_name, version])
-    return versioned_source_name
 
 
 def create_ddl_statement(
@@ -67,54 +61,6 @@ def format_column_and_dtype(columns_and_types):
     ]
     column_and_types_str = f",\n{4*chr(32)}".join(x)
     return column_and_types_str
-
-
-def get_source_business_topics(metadata):
-    topics = [topic for topic in metadata.get("business_topics").values()]
-    print(topics)
-    return topics
-
-
-def get_business_key_list(source_topics):
-    business_keys = [hub_info.get("business_keys") for hub_info in source_topics]
-    return business_keys
-
-
-def get_source_payload_list(metadata):
-    topics = get_source_business_topics(metadata)
-    flattened_business_attributes = flatten_business_attributes(topics)
-    source_attributes = flatten_source_attributes(flattened_business_attributes)
-    return source_attributes
-
-
-def flatten_source_attributes(flattened_business_attributes):
-    source_attributes = [get_attributes(attr) for attr in flattened_business_attributes]
-    flatten_source_attributes = list(itertools.chain(*source_attributes))
-    return flatten_source_attributes
-
-
-def flatten_business_attributes(topics):
-    business_attributes = [topic.get("business_attributes") for topic in topics]
-    flatten_business_attributes = list(itertools.chain(*business_attributes))
-    return flatten_business_attributes
-
-
-def get_attributes(attr):
-    source_attributes = [{key: value} for key, value in attr.get("payload").items()]
-    return source_attributes
-
-
-def load_metadata_file(metadata_path: str):
-    with open(metadata_path) as metadata_file:
-        metadata = json.load(metadata_file)
-    return metadata
-
-
-def find_json_metadata():
-    metadata_files = [
-        file for file in glob.iglob("./source_metadata/**/*.json", recursive=True)
-    ]
-    return metadata_files
 
 
 if __name__ == "__main__":
