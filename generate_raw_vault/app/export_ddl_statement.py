@@ -49,17 +49,17 @@ def create_ddl_statement(
     {column_and_types_str},
     "RECORD_SOURCE" STRING,
     "LOAD_DATETIME" TIMESTAMP_TZ
-    )
+    );
     """
     return ddl
 
 
 def format_column_and_dtype(columns_and_types):
-    x = [
+    list_of_column_types = [
         f'"{list(column_and_type.keys())[0]}" {list(column_and_type.values())[0]}'
         for column_and_type in columns_and_types
     ]
-    column_and_types_str = f",\n{4*chr(32)}".join(x)
+    column_and_types_str = f",\n{4*chr(32)}".join(list_of_column_types)
     return column_and_types_str
 
 

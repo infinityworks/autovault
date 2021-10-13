@@ -75,5 +75,8 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file("./source_metadata/customers_v1.json")
+    metadata_file = load_metadata_file(
+        "generate_raw_vault/tests/fixtures/metadata_testfile.json"
+    )
     metadata = Metadata(metadata_file)
+    print(metadata.flatten_business_attributes())
