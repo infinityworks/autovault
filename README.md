@@ -45,7 +45,7 @@ example-
 
 ## authenticate snowsql connection
 This project uses rsa keys as secure methods for authentication. To generate a private key edit and run the following cmd
-    
+
     mkdir -p ~/.ssh/snowsql
     openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out ~/.ssh/snowsql/rsa_key.p8
 This will prompt you for a password to encrypt the private key. To keep passphrase safe and for convenience, to decrypt the key include it in the .zshrc file
@@ -68,8 +68,8 @@ select a directory to install dbt or create a new directory
 
 Create a virtual environment; standard convnetion of a virtual env is .venv
 
-    python3 -m venv .venv   
-    
+    python3 -m venv .venv
+
 Activate the environment
 
     source .venv/bin/activate
@@ -80,15 +80,15 @@ Install DBT
 
 Create and configure DBT project e.g. prj_xx
 
-    dbt init  prj_xx --adapter snowflake       
+    dbt init  prj_xx --adapter snowflake
 
 # Configure connection to snowflake
 Edit profile.yml ~/.dbt/profiles.yml
 
     default:
-        target: "{{ env_var('DBT_PROFILE_TARGET') }}" 
+        target: "{{ env_var('DBT_PROFILE_TARGET') }}"
         outputs:
-            dev: 
+            dev:
             type: snowflake
             account: infinityworkspartner.eu-west-1
             user: "{{ env_var('USER') }}@infinityworks.com"
@@ -129,7 +129,7 @@ e.g.
     put file:///yourfilelocation @~/staged AUTO_COMPRESS = FALSE
 
 Copy  data from internal snoflake stage to the table
-e.g. 
+e.g.
 
     COPY INTO "mydb"."myschema"."PRODUCTS" FROM (SELECT $1, $2, $3, 'PRODUCTS',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) FROM '@~/staged/products.csv') file_format = (format_name = 'myCSV');
 
@@ -156,7 +156,7 @@ By detault all the artefacts would be created in public schema. You can overide 
 e.g. hub customers.sql
 
     {{ config(materialized='incremental',
-    schema = "SATS" 
+    schema = "SATS"
     ) }}
 
 Also add custom schema macro called get_custom_schema.sql to the macros directory. This will ensure artefacts are created in your schema of choice.
@@ -179,10 +179,10 @@ https://dbtvault.readthedocs.io/en/latest/tutorial/tut_staging/
 Create Hub tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_hubs/
 Copy hub template from this link. E.g. customers.sql model under hub directory. Update it to suit your project.
 If your primary key and natural key columns have different names across the different tables, they will need to be aliased to the same name in the respective staging layers via a derived column configuration, using the stage macro in the staging layer.
-e.g. stg_total_cust_visits.sql 
+e.g. stg_total_cust_visits.sql
 
 derived_columns:
-CUSTOMER_ID: "CUST_ID" (total_cust_visits source dataset has natural key column called 'cust_id' that is different to the other data sources with column name as 'customer_id)) 
+CUSTOMER_ID: "CUST_ID" (total_cust_visits source dataset has natural key column called 'cust_id' that is different to the other data sources with column name as 'customer_id))
 
 ## Links
 Create Link tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_links/

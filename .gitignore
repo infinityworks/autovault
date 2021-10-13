@@ -4,3 +4,4 @@ dbt_modules/
 logs/
 .venv/
 .vscode/
+*__pycache__/

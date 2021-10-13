@@ -1,0 +1,42 @@
+{
+    "source_name":"CUSTOMERS",
+    "version":"1",
+    "source_system":"CSV",
+    "destination_database" : "AUTOVAULT",
+    "destination_schema" : "PUBLIC",
+    "business_topics":{
+        "CUSTOMER":{
+            "business_keys":{
+                "CUSTOMER_ID":"STRING"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"CUSTOMERS",
+                    "payload":{
+                        "AVG_MONTHLY_VISITS":"STRING",
+                        "sat1_col3":"STRING"
+                    }
+                },
+                {
+                    "business_definition":"CUSTOMER_ADDRESS_sat_2",
+                    "payload":{
+                        "sat2_col2":"STRING"
+                    }
+                }
+            ]
+        },
+        "PRODUCT":{
+            "business_keys":{
+                "PRODUCT_ID":"STRING"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"PRODUCTS",
+                    "payload":{
+                        "sat3_col2":"STRING"
+                    }
+                }
+            ]
+        }
+    }
+}
