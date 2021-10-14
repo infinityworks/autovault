@@ -5,7 +5,7 @@
     "destination_database" : "AUTOVAULT",
     "destination_schema" : "PUBLIC",
     "business_topics":{
-        "CUSTOMER":{
+        "PRODUCT":{
             "business_keys":{
                 "PRODUCT_ID":"STRING"
             },
