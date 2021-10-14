@@ -6,15 +6,12 @@ derived_columns:
   START_DATE: "LOAD_DATETIME"
   END_DATE: "TO_DATE('9999-12-31')"
 hashed_columns:
-  TRANSACTIONS_HK: "CUSTOMER_ID"
-  TRANSACTIONS_HASHDIFF
+  PRODUCT_HK: "PRODUCT_ID"
+  PRODUCT_HASHDIFF
     is_hashdiff: true
     columns:
-      - "CUSTOMER_ID"
       - "DATE_OF_SESSION"
-      - "PRODUCTS_VIEWED"
       - "PRICE"
-      - "PRODUCT_ID"
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

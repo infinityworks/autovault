@@ -36,6 +36,8 @@ def format_derived_columns(column_list):
 
 
 def format_columns(column_list):
+    if "null" in column_list:
+        column_list.remove("null")
     formatted_list = [f'"{column}"' for column in column_list]
     return f"\n{chr(32)*6}- ".join(formatted_list)
 
@@ -46,6 +48,7 @@ def create_staging_subsitutions(metadata, hub_name):
     source_name = f"{database_name}_{schema_name}"
     table_name = metadata.get_versioned_source_name()
 
+    # derive hubs and their keys, output list of keys
     derived_columns = [
         'EFFECTIVE_FROM: "LOAD_DATETIME"',
         'START_DATE: "LOAD_DATETIME"',

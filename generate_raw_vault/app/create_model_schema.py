@@ -9,9 +9,13 @@ from pathlib import Path
 import json
 
 
-def export_model_schema(metadata_file_path):
+# produce a map of sources
+
+
+def export_model_schema():
     metadata_files = [
         "./source_metadata/customers_v1.json",
+        "./source_metadata/customer_visits_v1.json",
         "./source_metadata/products_v1.json",
         "./source_metadata/transactions_v1.json",
     ]
@@ -36,21 +40,33 @@ def export_model_schema(metadata_file_path):
     for source in individual_sources.values():
         sources[source.get("name")]["tables"].append(f"- name: {source.get('tables')}")
 
-    sources["AUTOVAULT_PUBLIC"]["tables"] = format_table_list(
-        sources["AUTOVAULT_PUBLIC"]["tables"]
-    )
+    for key in sources.keys():
+        sources[key]["tables"] = format_table_list(sources[key]["tables"])
 
-    print(sources)
-    template_file = load_template_file(
+    source_template_file = load_template_file(
+        "generate_raw_vault/app/templates/source_schema.yml"
+    )
+    source_template = Template(source_template_file)
+
+    keys = sorted([key for key in sources.keys()])
+    subs = [generate_source_str(source_template, sources[key]) for key in keys]
+
+    model_template_file = load_template_file(
         "generate_raw_vault/app/templates/model_schema.yml"
     )
-    model_template = Template(template_file)
-    substitutions = sources["AUTOVAULT_PUBLIC"]
 
-    schema_yml = model_template.substitute(substitutions)
+    model_template = Template(model_template_file)
+    reps = {"sources": "  ".join(subs)}
+    schema_yml = model_template.substitute(reps)
 
     with open(Path(f"./models/schema.yml"), "w") as sql_export:
         sql_export.write(schema_yml)
+    return schema_yml
+
+
+def generate_source_str(source_template, substitutions):
+    schema_yml = source_template.substitute(substitutions)
+    return schema_yml
 
 
 def get_name(metadata):
@@ -81,4 +97,4 @@ def create_schema_subsitutions(metadata):
 
 
 if __name__ == "__main__":
-    export_model_schema(metadata_file_path="./source_metadata/customers_v1.json")
+    subs = export_model_schema()
