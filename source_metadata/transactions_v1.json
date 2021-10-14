@@ -1,0 +1,29 @@
+{
+    "source_name":"TRANSACTIONS",
+    "version":"1",
+    "source_system":"CSV",
+    "destination_database" : "AUTOVAULT",
+    "destination_schema" : "PUBLIC",
+    "business_topics":{
+        "TRANSACTIONS":{
+            "business_keys":{
+                "CUSTOMER_ID":"STRING",
+                "DATE_OF_SESSION":"STRING"
+
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"PRODUCTS",
+                    "payload":{
+                        "CUSTOMER_ID":"STRING",
+                        "DATE_OF_SESSION":"STRING",
+                        "CUSTOMER_ID":"STRING",
+                        "PRODUCTS_VIEWED":"STRING",
+                        "PRICE":"STRING",
+                        "PRODUCT_ID":"STRING"
+                    }
+                }
+            ]
+        }
+    }
+}

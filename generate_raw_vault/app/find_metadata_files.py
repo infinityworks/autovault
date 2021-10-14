@@ -17,5 +17,12 @@ def load_metadata_file(metadata_path: str):
     return metadata
 
 
+def load_template_file(template_path: str):
+    file_path = Path(template_path)
+    with open(file_path) as template_file:
+        template = template_file.read()
+    return template
+
+
 if __name__ == "__main__":
     paths = find_json_metadata("source_metadata")

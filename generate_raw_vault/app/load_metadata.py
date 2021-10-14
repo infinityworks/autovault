@@ -7,6 +7,9 @@ class Metadata:
     def __init__(self, metadata):
         self.metadata = metadata
 
+    def get_source_name(self):
+        return self.metadata.get("source_name")
+
     def get_target_schema(self):
         return self.metadata.get("destination_schema")
 
@@ -53,6 +56,10 @@ class Metadata:
             topic: business_topics.get(topic).get("business_keys") for topic in topics
         }
         return business_keys
+
+    def get_hub_business_key(self, hub_name):
+        primary_key = [key for key in self.get_business_keys().get(hub_name).keys()][0]
+        return primary_key
 
     def get_source_attributes(self):
         topics = self.get_source_business_topics()
