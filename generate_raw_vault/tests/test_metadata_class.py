@@ -96,3 +96,20 @@ class TestMetadata:
             {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}},
         ]
         assert test_target_flattened_attributes == expected_target_flattened_attributes
+
+    @pytest.mark.usefixtures("sample_metadata", "get_attrs_param")
+    def test_get_attributes(self, sample_metadata, get_attrs_param):
+        test_metadata = Metadata(sample_metadata)
+        test_target_attribute = test_metadata.get_attributes(get_attrs_param)
+        expected_target_attribute = [{"sat1_col1": "STRING"}, {"sat1_col2": "STRING"}]
+        assert test_target_attribute == expected_target_attribute
+
+    @pytest.mark.usefixtures("sample_metadata")
+    def test_get_business_keys(self, sample_metadata):
+        test_metadata = Metadata(sample_metadata)
+        test_target_business_keys = test_metadata.get_business_keys()
+        expected_target_business_keys = {
+            "HUB1": {"pk1": "STRING"},
+            "HUB2": {"pk2": "STRING"},
+        }
+        assert test_target_business_keys == expected_target_business_keys
