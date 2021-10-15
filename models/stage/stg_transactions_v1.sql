@@ -1,17 +1,17 @@
 {%- set yaml_metadata -%}
 source_model:
-  AV: "PRODUCTS"
+  AUTOVAULT_PUBLIC: "TRANSACTIONS_V1"
 derived_columns:
-  EFFECTIVE_FROM: "LOAD_DATE"
-  START_DATE: "LOAD_DATE"
-  END_DATE: "TO_DATE('2050-12-31')"
+  EFFECTIVE_FROM: "LOAD_DATETIME"
+  START_DATE: "LOAD_DATETIME"
+  END_DATE: "TO_DATE('9999-12-31')"
 hashed_columns:
   PRODUCT_HK: "PRODUCT_ID"
-  PRODUCT_HASHDIFF:
+  PRODUCT_HASHDIFF
     is_hashdiff: true
     columns:
-      - "MODEL"
-      - "MAKE"
+      - "DATE_OF_SESSION"
+      - "PRICE"
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

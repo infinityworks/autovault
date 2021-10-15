@@ -1,84 +1,108 @@
-from generate_raw_vault.app.find_metadata_files import find_json_metadata
 from generate_raw_vault.app.find_metadata_files import (
-    load_template_file,
+    find_json_metadata,
     load_metadata_file,
+    load_template,
 )
 from generate_raw_vault.app.load_metadata import Metadata
 from string import Template
 from pathlib import Path
-import json
+
+SOURCE_TEMPLATE = "generate_raw_vault/app/templates/data_source.txt"
+MODEL_SCHEMA_TEMPLATE = "generate_raw_vault/app/templates/model_schema.yml"
+SCHEMA_YML_PATH = "./models/schema.yml"
 
 
-def export_model_schema(metadata_file_path):
-    metadata_files = [
-        "./source_metadata/customers_v1.json",
-        "./source_metadata/products_v1.json",
-        "./source_metadata/transactions_v1.json",
-    ]
-    individual_sources = {}
-    for file in metadata_files:
-        metadata_file = load_metadata_file(file)
-        metadata = Metadata(metadata_file)
+def export_model_schema_yml_for_all_sources():
+    metadata_file_dirs = find_json_metadata("source_metadata")
+    export_model_schema(metadata_file_dirs)
 
-        substitutions = create_schema_subsitutions(metadata)
-        individual_sources.update({get_name(metadata): substitutions})
 
-    sources = {
-        source.get("name"): {
-            "name": source.get("name"),
-            "tables": [],
-            "database": source.get("database"),
-            "schema": source.get("schema"),
-        }
-        for source in individual_sources.values()
+def export_model_schema(metadata_file_dirs: list):
+    sources_files = {
+        str(file): get_individual_source(file) for file in metadata_file_dirs
     }
 
-    for source in individual_sources.values():
-        sources[source.get("name")]["tables"].append(f"- name: {source.get('tables')}")
+    aggregated_sources = {
+        source.get("source_name"): create_sources_map(source)
+        for source in sources_files.values()
+    }
 
-    sources["AUTOVAULT_PUBLIC"]["tables"] = format_table_list(
-        sources["AUTOVAULT_PUBLIC"]["tables"]
+    for original_source in sources_files.values():
+        aggregated_sources[original_source.get("source_name")].get("tables").append(
+            original_source.get("table")
+        )
+
+    for source_name in aggregated_sources.keys():
+        format_source_table_list(aggregated_sources[source_name])
+
+    source_template = load_template(SOURCE_TEMPLATE)
+    source_string_map = generate_source_substitutions(
+        source_template=source_template, aggregated_sources=aggregated_sources
     )
+    model_template = load_template(MODEL_SCHEMA_TEMPLATE)
+    schema_yml = model_template.substitute(source_string_map)
 
-    print(sources)
-    template_file = load_template_file(
-        "generate_raw_vault/app/templates/model_schema.yml"
-    )
-    model_template = Template(template_file)
-    substitutions = sources["AUTOVAULT_PUBLIC"]
-
-    schema_yml = model_template.substitute(substitutions)
-
-    with open(Path(f"./models/schema.yml"), "w") as sql_export:
-        sql_export.write(schema_yml)
+    with open(Path(SCHEMA_YML_PATH), "w") as schema_yml_export:
+        schema_yml_export.write(schema_yml)
+    return schema_yml
 
 
-def get_name(metadata):
-    database_name = metadata.get_target_database()
-    schema_name = metadata.get_target_schema()
-    table_name = metadata.get_versioned_source_name()
-    name = "_".join([database_name, schema_name, table_name])
-    return name
+def get_individual_source(file: Path) -> dict:
+    metadata_file = load_metadata_file(file)
+    metadata = Metadata(metadata_file)
+    return create_schema_subsitutions(metadata)
 
 
-def format_table_list(table_list):
-    return f"\n{chr(32)*6}".join(table_list)
-
-
-def create_schema_subsitutions(metadata):
+def create_schema_subsitutions(metadata) -> dict:
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
     source_name = f"{database_name}_{schema_name}"
-    table_name = metadata.get_versioned_source_name()
+    table_name = f"- name: {metadata.get_versioned_source_name()}"
 
     substitutions = {
-        "name": source_name,
+        "source_name": source_name,
         "database": database_name,
         "schema": schema_name,
-        "tables": table_name,
+        "table": table_name,
     }
     return substitutions
 
 
+def create_sources_map(source: dict) -> dict:
+    source = {
+        "source_name": source.get("source_name"),
+        "tables": [],
+        "database": source.get("database"),
+        "schema": source.get("schema"),
+    }
+    return source
+
+
+def format_source_table_list(source: dict) -> dict:
+    sorted_table_list = sorted(source["tables"])
+    yml_padder = f"\n{6*chr(32)}"
+    source["tables"] = yml_padder.join(sorted_table_list)
+    return source
+
+
+def generate_source_substitutions(
+    source_template: Template, aggregated_sources: dict
+) -> str:
+    source_name_list = sorted(
+        [source_name for source_name in aggregated_sources.keys()]
+    )
+    source_string_list = [
+        generate_source_str(source_template, aggregated_sources[name])
+        for name in source_name_list
+    ]
+    source_string_map = {"sources": "  ".join(source_string_list)}
+    return source_string_map
+
+
+def generate_source_str(source_template: Template, substitutions: dict) -> dict:
+    schema_yml = source_template.substitute(substitutions)
+    return schema_yml
+
+
 if __name__ == "__main__":
-    export_model_schema(metadata_file_path="./source_metadata/customers_v1.json")
+    subs = export_model_schema_yml_for_all_sources()

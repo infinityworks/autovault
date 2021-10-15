@@ -1,5 +1,7 @@
-from generate_raw_vault.app.find_metadata_files import find_json_metadata
-from generate_raw_vault.app.find_metadata_files import load_metadata_file
+from generate_raw_vault.app.find_metadata_files import (
+    load_metadata_file,
+    find_json_metadata,
+)
 from generate_raw_vault.app.load_metadata import Metadata
 from pathlib import Path
 
@@ -62,7 +64,8 @@ def format_column_and_dtype(columns_and_types):
         f'"{list(column_and_type.keys())[0]}" {list(column_and_type.values())[0]}'
         for column_and_type in columns_and_types
     ]
-    column_and_types_str = f",\n{4*chr(32)}".join(list_of_column_types)
+    deduped_column_types = set(list_of_column_types)
+    column_and_types_str = f",\n{4*chr(32)}".join(deduped_column_types)
     return column_and_types_str
 
 

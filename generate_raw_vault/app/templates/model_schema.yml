@@ -1,8 +1,4 @@
 version: 2
 
 sources:
-  - name: $name
-    database: $database
-    schema: $schema
-    tables:
-      $tables
+  $sources
