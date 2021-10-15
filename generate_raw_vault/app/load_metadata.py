@@ -71,6 +71,8 @@ class Metadata:
         return flatten_source_attributes
 
     def get_attributes(self, attr):
+        if "null" in attr.get("payload").keys():
+            del attr["payload"]["null"]
         source_attributes = [{key: value} for key, value in attr.get("payload").items()]
         return source_attributes
 
@@ -82,8 +84,6 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file(
-        "generate_raw_vault/tests/fixtures/metadata_testfile.json"
-    )
+    metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
     metadata = Metadata(metadata_file)
-    print(metadata.flatten_business_attributes())
+    metadata.get_source_attributes()
