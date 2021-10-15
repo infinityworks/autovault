@@ -86,4 +86,4 @@ if __name__ == "__main__":
         "generate_raw_vault/tests/fixtures/metadata_testfile.json"
     )
     metadata = Metadata(metadata_file)
-    print(metadata.flatten_business_attributes())
+    print(metadata.get_business_keys())
