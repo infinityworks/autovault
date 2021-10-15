@@ -31,51 +31,24 @@ def create_hub_file(metadata_file_path):
             sql_export.write(hub_model)
 
 
-# def format_derived_columns(column_list):
-#     return "\n  ".join(column_list)
-
-
-# def format_columns(column_list):
-#     formatted_list = [f'"{column}"' for column in column_list]
-#     return f"\n{chr(32)*6}- ".join(formatted_list)
-
-
 def create_hub_subsitutions(metadata, hub_name):
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
     source_name = f"{database_name}_{schema_name}"
     table_name = metadata.get_versioned_source_name().lower()
 
-    # derived_columns = [
-    #     'EFFECTIVE_FROM: "LOAD_DATETIME"',
-    #     'START_DATE: "LOAD_DATETIME"',
-    #     '''END_DATE: "TO_DATE('9999-12-31')"''',
-    # ]
-    # formatted_derived_columns = format_derived_columns(derived_columns)
-
     primary_key = metadata.get_hub_business_key(hub_name)
-    # hash_key = f'{hub_name}_HK: "{primary_key}"'
     hash_key = f'src_pk: "{hub_name}_HK"'
     hub_natural_key = f'src_nk: "{primary_key}"'
     load_datetime = f'src_ldts: "LOAD_DATETIME"'
     record_source = f'src_source: "RECORD_SOURCE"'
-    # hashdiff = f"{hub_name}_HASHDIFF"
-
-    # source_attributes = [
-    #     list(col.keys())[0] for col in metadata.get_source_attributes()
-    # ]
-
-    # columns = format_columns(source_attributes)
 
     substitutions = {
         "source_model": f'source_model: "stg_{table_name}"',
-        # "derived_columns": formatted_derived_columns,
         "src_pk": hash_key,
         "src_nk": hub_natural_key,
         "src_ldts": load_datetime,
-        "src_source": record_source
-        # "hashdiff": hashdiff,
-        # "columns": f"- {columns}",
+        "src_source": record_source,
     }
 
     return substitutions
