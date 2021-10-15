@@ -1,16 +1,16 @@
 {%- set yaml_metadata -%}
 source_model:
-  AV: "CUSTOMERS"
+  AUTOVAULT_ADOBE: "CUSTOMER_VISITS_V1"
 derived_columns:
-  EFFECTIVE_FROM: "LOAD_DATE"
-  START_DATE: "LOAD_DATE"
-  END_DATE: "TO_DATE('2050-12-31')"
+  EFFECTIVE_FROM: "LOAD_DATETIME"
+  START_DATE: "LOAD_DATETIME"
+  END_DATE: "TO_DATE('9999-12-31')"
 hashed_columns:
   CUSTOMER_HK: "CUSTOMER_ID"
-  CUSTOMER_HASHDIFF:
+  CUSTOMER_HASHDIFF
     is_hashdiff: true
     columns:
-      - "AVG_VISITS_PER_MONTH"
+      - "TOTAL_VISITS"
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

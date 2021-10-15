@@ -1,19 +1,20 @@
 {
-    "source_name":"CUSTOMERS",
+    "source_name":"PRODUCTS",
     "version":"1",
     "source_system":"CSV",
     "destination_database" : "AUTOVAULT",
     "destination_schema" : "PUBLIC",
     "business_topics":{
-        "CUSTOMER":{
+        "PRODUCT":{
             "business_keys":{
-                "CUSTOMER_ID":"STRING"
+                "PRODUCT_ID":"STRING"
             },
             "business_attributes":[
                 {
-                    "business_definition":"CUSTOMERS",
+                    "business_definition":"PRODUCTS",
                     "payload":{
-                        "AVG_MONTHLY_VISITS":"STRING"
+                        "MAKE":"STRING",
+                        "MODEL":"STRING"
                     }
                 }
             ]

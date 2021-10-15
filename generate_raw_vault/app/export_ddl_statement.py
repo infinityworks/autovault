@@ -1,6 +1,9 @@
-from generate_raw_vault.app.find_metadata_files import find_json_metadata
-from generate_raw_vault.app.find_metadata_files import load_metadata_file
+from generate_raw_vault.app.find_metadata_files import (
+    load_metadata_file,
+    find_json_metadata,
+)
 from generate_raw_vault.app.load_metadata import Metadata
+from pathlib import Path
 
 
 def export_all_ddl_statments():
@@ -14,7 +17,9 @@ def ddl_exporter(metadata_file_path):
     metadata = Metadata(json_metadata)
     ddl = create_source_table_ddl(metadata)
     formatted_source_name = metadata.get_versioned_source_name().lower()
-    with open(f"./source_tables/DDL/{formatted_source_name}.sql", "w") as sql_export:
+    with open(
+        Path(f"./source_tables/DDL/{formatted_source_name}.sql"), "w"
+    ) as sql_export:
         sql_export.write(ddl)
 
 
@@ -59,7 +64,8 @@ def format_column_and_dtype(columns_and_types):
         f'"{list(column_and_type.keys())[0]}" {list(column_and_type.values())[0]}'
         for column_and_type in columns_and_types
     ]
-    column_and_types_str = f",\n{4*chr(32)}".join(list_of_column_types)
+    deduped_column_types = set(list_of_column_types)
+    column_and_types_str = f",\n{4*chr(32)}".join(deduped_column_types)
     return column_and_types_str
 
 

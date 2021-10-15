@@ -7,6 +7,9 @@ class Metadata:
     def __init__(self, metadata):
         self.metadata = metadata
 
+    def get_source_name(self):
+        return self.metadata.get("source_name")
+
     def get_target_schema(self):
         return self.metadata.get("destination_schema")
 
@@ -54,6 +57,10 @@ class Metadata:
         }
         return business_keys
 
+    def get_hub_business_key(self, hub_name):
+        primary_key = [key for key in self.get_business_keys().get(hub_name).keys()][0]
+        return primary_key
+
     def get_source_attributes(self):
         topics = self.get_source_business_topics()
         flattened_business_attributes = self.flatten_business_attributes()
@@ -64,6 +71,8 @@ class Metadata:
         return flatten_source_attributes
 
     def get_attributes(self, attr):
+        if "null" in attr.get("payload").keys():
+            del attr["payload"]["null"]
         source_attributes = [{key: value} for key, value in attr.get("payload").items()]
         return source_attributes
 
@@ -75,8 +84,6 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file(
-        "generate_raw_vault/tests/fixtures/metadata_testfile.json"
-    )
+    metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
     metadata = Metadata(metadata_file)
     print(metadata.get_business_keys())

@@ -1,5 +1,5 @@
 {
-    "source_name":"CUSTOMERS",
+    "source_name":"CUSTOMER_VISITS",
     "version":"1",
     "source_system":"CSV",
     "destination_database" : "AUTOVAULT",
@@ -11,9 +11,9 @@
             },
             "business_attributes":[
                 {
-                    "business_definition":"CUSTOMERS",
+                    "business_definition":"CUSTOMER_VISITS",
                     "payload":{
-                        "AVG_MONTHLY_VISITS":"STRING"
+                        "TOTAL_VISITS":"STRING"
                     }
                 }
             ]

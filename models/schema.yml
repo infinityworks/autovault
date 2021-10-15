@@ -1,12 +1,11 @@
 version: 2
 
 sources:
-  - name: AV
+  - name: AUTOVAULT_PUBLIC
     database: AUTOVAULT
     schema: PUBLIC
     tables:
-      - name: CUSTOMERS
-      - name: PRODUCTS
-      - name: TRANSACTIONS
-      - name: CUSTOMER_VISITS
-      - name: TOTAL_CUST_VISITS
+      - name: CUSTOMERS_V1
+      - name: CUSTOMER_VISITS_V1
+      - name: PRODUCTS_V1
+      - name: TRANSACTIONS_V1
