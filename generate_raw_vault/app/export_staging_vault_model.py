@@ -14,7 +14,7 @@ def export_all_staging_files():
 
 
 def create_staging_file(metadata_file_path):
-    template = load_template_file("generate_raw_vault/app/templates/staging_model.sql")
+    template = load_template_file("generate_raw_vault/app/templates/staging_model.txt")
     staging_template = Template(template)
 
     metadata_file = load_metadata_file(metadata_file_path)
