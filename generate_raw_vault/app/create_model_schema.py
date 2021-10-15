@@ -16,42 +16,50 @@ def export_model_schema_yml_for_all_sources():
 
 def export_model_schema(metadata_file_dirs):
     sources_files = {file: get_individual_source(file) for file in metadata_file_dirs}
-
-    sources = {
-        source.get("name"): {
-            "name": source.get("name"),
-            "tables": [],
-            "database": source.get("database"),
-            "schema": source.get("schema"),
-        }
-        for source in sources_files.values()
-    }
+    sources = create_sources_map(sources_files)
 
     for source in sources_files.values():
-        sources[source.get("name")]["tables"].append(source.get("table"))
+        sources[source.get("source_name")]["tables"].append(source.get("table"))
 
-    for key in sources.keys():
-        sources[key]["tables"] = format_table_list(sources[key]["tables"])
+    for source_name in sources.keys():
+        sources[source_name]["tables"] = format_table_list(
+            sources[source_name]["tables"]
+        )
 
     source_template_file = load_template_file(
         "generate_raw_vault/app/templates/source_schema.txt"
     )
     source_template = Template(source_template_file)
 
-    keys = sorted([key for key in sources.keys()])
-    subs = [generate_source_str(source_template, sources[key]) for key in keys]
+    source_name_list = sorted([source_name for source_name in sources.keys()])
+    source_string_list = [
+        generate_source_str(source_template, sources[name]) for name in source_name_list
+    ]
 
     model_template_file = load_template_file(
         "generate_raw_vault/app/templates/model_schema.yml"
     )
 
     model_template = Template(model_template_file)
-    reps = {"sources": "  ".join(subs)}
-    schema_yml = model_template.substitute(reps)
+    source_string_map = {"sources": "  ".join(source_string_list)}
+    schema_yml = model_template.substitute(source_string_map)
 
     with open(Path(f"./models/schema.yml"), "w") as sql_export:
         sql_export.write(schema_yml)
     return schema_yml
+
+
+def create_sources_map(sources_files):
+    sources = {
+        source.get("source_name"): {
+            "source_name": source.get("source_name"),
+            "tables": [],
+            "database": source.get("database"),
+            "schema": source.get("schema"),
+        }
+        for source in sources_files.values()
+    }
+    return sources
 
 
 def get_individual_source(file):
@@ -72,8 +80,8 @@ def get_source_name_UID(metadata):
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
     table_name = metadata.get_versioned_source_name()
-    name = "_".join([database_name, schema_name, table_name])
-    return name
+    source_name = "_".join([database_name, schema_name, table_name])
+    return source_name
 
 
 def format_table_list(table_list):
@@ -87,7 +95,7 @@ def create_schema_subsitutions(metadata):
     table_name = f"- name: {metadata.get_versioned_source_name()}"
 
     substitutions = {
-        "name": source_name,
+        "source_name": source_name,
         "database": database_name,
         "schema": schema_name,
         "table": table_name,
