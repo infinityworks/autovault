@@ -3,7 +3,7 @@
     "version":"1",
     "source_system":"CSV",
     "destination_database" : "AUTOVAULT",
-    "destination_schema" : "ADOBE",
+    "destination_schema" : "PUBLIC",
     "business_topics":{
         "CUSTOMER":{
             "business_keys":{
