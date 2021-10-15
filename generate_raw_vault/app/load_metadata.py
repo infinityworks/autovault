@@ -86,4 +86,4 @@ class Metadata:
 if __name__ == "__main__":
     metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
     metadata = Metadata(metadata_file)
-    metadata.get_source_attributes()
+    print(metadata.get_business_keys())
