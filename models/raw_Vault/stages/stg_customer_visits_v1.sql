@@ -1,6 +1,6 @@
 {%- set yaml_metadata -%}
 source_model:
-  AUTOVAULT_ADOBE: "CUSTOMER_VISITS_V1"
+  AUTOVAULT_PUBLIC: "CUSTOMER_VISITS_V1"
 derived_columns:
   EFFECTIVE_FROM: "LOAD_DATETIME"
   START_DATE: "LOAD_DATETIME"
