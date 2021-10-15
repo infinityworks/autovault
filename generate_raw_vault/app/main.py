@@ -1,5 +1,3 @@
-import json
-import itertools
 from generate_raw_vault.app.find_metadata_files import find_json_metadata
 from generate_raw_vault.app.export_ddl_statement import ddl_exporter
 from generate_raw_vault.app.create_model_schema import export_model_schema

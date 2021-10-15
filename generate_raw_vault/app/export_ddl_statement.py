@@ -30,7 +30,6 @@ def create_source_table_ddl(metadata):
     business_topics = metadata.get_source_business_topics()
     primary_keys = [key for key in metadata.get_business_keys().values()]
     keys_and_types_str = format_column_and_dtype(primary_keys)
-    # print(keys_and_types_str)
     payload_columns = metadata.get_source_attributes()
     payload_columns_and_types_str = format_column_and_dtype(payload_columns)
     ddl_statement = create_ddl_statement(

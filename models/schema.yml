@@ -1,11 +1,6 @@
 version: 2
 
 sources:
-  - name: AUTOVAULT_ADOBE
-    database: AUTOVAULT
-    schema: ADOBE
-    tables:
-      - name: TRANSACTIONS_V1
   - name: AUTOVAULT_PUBLIC
     database: AUTOVAULT
     schema: PUBLIC
@@ -13,3 +8,4 @@ sources:
       - name: CUSTOMERS_V1
       - name: CUSTOMER_VISITS_V1
       - name: PRODUCTS_V1
+      - name: TRANSACTIONS_V1

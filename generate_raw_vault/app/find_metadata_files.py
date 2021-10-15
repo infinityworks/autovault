@@ -1,6 +1,7 @@
 import glob
 import json
 from pathlib import Path
+from string import Template
 
 
 def find_json_metadata(parent_dir):
@@ -15,6 +16,12 @@ def load_metadata_file(metadata_path: str):
     with open(file_path) as metadata_file:
         metadata = json.load(metadata_file)
     return metadata
+
+
+def load_template(template):
+    template_file = load_template_file(template)
+    template = Template(template_file)
+    return template
 
 
 def load_template_file(template_path: str):
