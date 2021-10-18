@@ -1,3 +1,5 @@
+{{ config(materialized='view') }}
+
 {%- set yaml_metadata -%}
 source_model:
   $source
@@ -5,7 +7,7 @@ derived_columns:
   $derived_columns
 hashed_columns:
   $hashed_primary_key
-  $hashdiff
+  $hashdiff:
     is_hashdiff: true
     columns:
       $columns

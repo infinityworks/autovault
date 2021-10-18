@@ -27,7 +27,7 @@ def create_hub_file(metadata_file_path):
         hub_model = hub_template.substitute(substitutions)
 
         file_name = metadata.get_versioned_source_name().lower()
-        with open(f"./models/raw_vault/hubs/{hub}.sql", "w") as sql_export:
+        with open(f"./models/raw_vault/hubs/{hub.lower()}.sql", "w") as sql_export:
             sql_export.write(hub_model)
 
 
@@ -38,13 +38,13 @@ def create_hub_subsitutions(metadata, hub_name):
     table_name = metadata.get_versioned_source_name().lower()
 
     primary_key = metadata.get_hub_business_key(hub_name)
-    hash_key = f'src_pk: "{hub_name}_HK"'
-    hub_natural_key = f'src_nk: "{primary_key}"'
-    load_datetime = f'src_ldts: "LOAD_DATETIME"'
-    record_source = f'src_source: "RECORD_SOURCE"'
+    hash_key = f'src_pk = "{hub_name}_HK"'
+    hub_natural_key = f'src_nk = "{primary_key}"'
+    load_datetime = f'src_ldts = "LOAD_DATETIME"'
+    record_source = f'src_source = "RECORD_SOURCE"'
 
     substitutions = {
-        "source_model": f'source_model: "stg_{table_name}"',
+        "source_model": f'source_model = "stg_{table_name}"',
         "src_pk": hash_key,
         "src_nk": hub_natural_key,
         "src_ldts": load_datetime,
