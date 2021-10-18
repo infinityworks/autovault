@@ -23,6 +23,8 @@ This data lists all products viewed by customers by datetime in json format and 
     Payload Columns:
         CUSTOMER_ID
         DATE_OF_SESSION
+        RECORD_SOURCE
+        LOAD_DATETIME
         PRODUCTS_VIEWED
             PRICE
             PRODUCT_ID
