@@ -46,7 +46,7 @@ def create_sat_subsitutions(metadata, hub_name):
 
     primary_key = metadata.get_hub_business_key(hub_name)
     hash_primary_key = f'src_pk: "{hub_name}_HK"'
-    hashdiff_column = f'source_column: "{table_name.upper()}_HASHDIFF"'
+    hashdiff_column = f'source_column: "{hub_name}_HASHDIFF"'
 
     source_attributes = [
         list(col.keys())[0] for col in metadata.get_source_attributes()

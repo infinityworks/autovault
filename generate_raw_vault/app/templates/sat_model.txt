@@ -1,7 +1,8 @@
-{{ config(materialized='incremental',
+{{ config(
+  materialized='incremental',
   schema = "SATS"
+  ) }}
 
-) }}
 {%- set yaml_metadata -%}
 $source_model
 $src_pk
@@ -11,7 +12,7 @@ src_hashdiff:
 src_payload:
   $payload
 src_eff: "EFFECTIVE_FROM"
-src_ldts: "LOAD_DATE"
+src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"
 {%- endset -%}
 

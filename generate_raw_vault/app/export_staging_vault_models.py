@@ -28,7 +28,7 @@ def create_staging_file(metadata_file_path):
     for hub in hubs:
         substitutions = create_staging_subsitutions(metadata, hub_name=hub)
         # print(hub)
-        print(json.dumps(substitutions, indent=4), "\n")
+        # print(json.dumps(substitutions, indent=4), "\n")
         staging_model = staging_template.substitute(substitutions)
 
         file_name = metadata.get_versioned_source_name().lower()

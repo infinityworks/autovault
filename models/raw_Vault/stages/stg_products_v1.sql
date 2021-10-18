@@ -1,3 +1,8 @@
+{{
+  config(materialized='view',
+  schema = "STAGING"
+  ) }}
+
 {%- set yaml_metadata -%}
 source_model:
   AUTOVAULT_PUBLIC: "PRODUCTS_V1"
@@ -7,7 +12,7 @@ derived_columns:
   END_DATE: "TO_DATE('9999-12-31')"
 hashed_columns:
   PRODUCT_HK: "PRODUCT_ID"
-  PRODUCT_HASHDIFF
+  PRODUCT_HASHDIFF:
     is_hashdiff: true
     columns:
       - "MAKE"

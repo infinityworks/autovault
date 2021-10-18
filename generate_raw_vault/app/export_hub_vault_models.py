@@ -37,20 +37,18 @@ def create_hub_subsitutions(metadata, hub_name):
     source_name = f"{database_name}_{schema_name}"
     table_name = metadata.get_versioned_source_name().lower()
 
-    primary_key = metadata.get_hub_business_key(hub_name)
-    hash_key = f'src_pk = "{hub_name}_HK"'
-    hub_natural_key = f'src_nk = "{primary_key}"'
-    load_datetime = f'src_ldts = "LOAD_DATETIME"'
-    record_source = f'src_source = "RECORD_SOURCE"'
+    hash_key = f"{hub_name}_HK"
+    hub_natural_key = metadata.get_hub_business_key(hub_name)
+    load_datetime = "LOAD_DATETIME"
+    record_source = "RECORD_SOURCE"
 
     substitutions = {
-        "source_model": f'source_model = "stg_{table_name}"',
+        "source_model": table_name,
         "src_pk": hash_key,
         "src_nk": hub_natural_key,
         "src_ldts": load_datetime,
         "src_source": record_source,
     }
-
     return substitutions
 
 
