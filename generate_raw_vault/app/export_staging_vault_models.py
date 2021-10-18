@@ -5,6 +5,9 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.load_metadata import Metadata
 from string import Template
+import json
+
+STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.txt"
 
 
 def export_all_staging_files():
@@ -14,7 +17,7 @@ def export_all_staging_files():
 
 
 def create_staging_file(metadata_file_path):
-    template = load_template_file("generate_raw_vault/app/templates/staging_model.txt")
+    template = load_template_file(STAGING_TEMPLATE)
     staging_template = Template(template)
 
     metadata_file = load_metadata_file(metadata_file_path)
@@ -24,10 +27,12 @@ def create_staging_file(metadata_file_path):
 
     for hub in hubs:
         substitutions = create_staging_subsitutions(metadata, hub_name=hub)
+        # print(hub)
+        # print(json.dumps(substitutions, indent=4), "\n")
         staging_model = staging_template.substitute(substitutions)
 
         file_name = metadata.get_versioned_source_name().lower()
-        with open(f"./models/stage/stg_{file_name}.sql", "w") as sql_export:
+        with open(f"./models/raw_vault/stages/stg_{file_name}.sql", "w") as sql_export:
             sql_export.write(staging_model)
 
 

@@ -1,17 +1,21 @@
+{{
+  config(materialized='view',
+  schema = "STAGING"
+  ) }}
+
 {%- set yaml_metadata -%}
 source_model:
-  AV: "TOTAL_CUST_VISITS"
+  AUTOVAULT_PUBLIC: "CUSTOMERS_V1"
 derived_columns:
-  CUSTOMER_ID: "CUST_ID"
-  EFFECTIVE_FROM: "LOAD_DATE"
-  START_DATE: "LOAD_DATE"
-  END_DATE: "TO_DATE('2050-12-31')"
+  EFFECTIVE_FROM: "LOAD_DATETIME"
+  START_DATE: "LOAD_DATETIME"
+  END_DATE: "TO_DATE('9999-12-31')"
 hashed_columns:
   CUSTOMER_HK: "CUSTOMER_ID"
-  TOTAL_CUST_VISITS_HASHDIFF:
+  CUSTOMER_HASHDIFF:
     is_hashdiff: true
     columns:
-      - "TOTAL_VISITS"
+      - "AVG_MONTHLY_VISITS"
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

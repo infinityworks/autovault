@@ -1,17 +1,19 @@
-{{ config(materialized='incremental',
+{{ config(
+  materialized='incremental',
   schema = "SATS"
+  ) }}
 
-) }}
 {%- set yaml_metadata -%}
-source_model: "stg_total_cust_visits"
-src_pk: "CUSTOMER_HK"
+source_model: "stg_products_v1"
+src_pk: "PRODUCT_HK"
 src_hashdiff:
-  source_column: "TOTAL_CUST_VISITS_HASHDIFF"
+  source_column: "PRODUCT_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:
-  - "TOTAL_VISITS"
+  - "MAKE"
+  - "MODEL"
 src_eff: "EFFECTIVE_FROM"
-src_ldts: "LOAD_DATE"
+src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"
 {%- endset -%}
 

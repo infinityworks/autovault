@@ -1,13 +1,18 @@
+{{
+  config(materialized='view',
+  schema = "STAGING"
+  ) }}
+
 {%- set yaml_metadata -%}
 source_model:
-  AUTOVAULT_ADOBE: "CUSTOMER_VISITS_V1"
+  AUTOVAULT_PUBLIC: "CUSTOMER_VISITS_V1"
 derived_columns:
   EFFECTIVE_FROM: "LOAD_DATETIME"
   START_DATE: "LOAD_DATETIME"
   END_DATE: "TO_DATE('9999-12-31')"
 hashed_columns:
   CUSTOMER_HK: "CUSTOMER_ID"
-  CUSTOMER_HASHDIFF
+  CUSTOMER_HASHDIFF:
     is_hashdiff: true
     columns:
       - "TOTAL_VISITS"
