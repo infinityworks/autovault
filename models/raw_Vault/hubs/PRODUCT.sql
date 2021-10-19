@@ -4,7 +4,7 @@
   schema = "HUBS"
   ) }}
 
-{%- set source_model = "stg_products_v1" -%}
+{%- set source_model = ["stg_products_v1"] -%}
 {%- set src_pk = "PRODUCT_HK" -%}
 {%- set src_nk = "PRODUCT_ID" -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}

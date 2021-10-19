@@ -40,7 +40,7 @@ def format_derived_columns(column_list):
 def format_columns(column_list):
     if "null" in column_list:
         column_list.remove("null")
-    quote_columns = [f'"{column}"' for column in column_list]
+    quote_columns = [f'"{column}"' for column in sorted(column_list)]
     return f"\n{chr(32)*6}- ".join(quote_columns)
 
 
@@ -61,11 +61,9 @@ def create_staging_subsitutions(metadata, hub_name):
     hash_key = f'{hub_name}_HK: "{primary_key}"'
     hashdiff = f"{hub_name}_HASHDIFF"
 
-    print(metadata.get_source_attributes())
     source_attributes = [
         list(column.keys())[0] for column in metadata.get_source_attributes()
     ]
-    print(source_attributes)
     columns = format_columns(source_attributes)
 
     substitutions = {
