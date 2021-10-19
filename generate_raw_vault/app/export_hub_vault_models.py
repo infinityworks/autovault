@@ -20,7 +20,7 @@ def export_all_hub_files():
 def create_hub_from_template(template, hub, substitutions):
     hub_template = Template(template)
     hub_model = hub_template.substitute(substitutions)
-    with open(f"./models/raw_vault/hubs/{hub.lower()}.sql", "w") as sql_export:
+    with open(f"./models/raw_vault/hubs/{hub.lower()}_hub.sql", "w") as sql_export:
         sql_export.write(hub_model)
 
 

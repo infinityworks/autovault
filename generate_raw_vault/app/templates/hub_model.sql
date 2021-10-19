@@ -1,7 +1,8 @@
 
 {{ config(
   materialized='incremental',
-  schema = "HUBS"
+  schema = "HUBS",
+  alias = "$hub_name"
   ) }}
 
 {%- set source_model = [$source_model] -%}

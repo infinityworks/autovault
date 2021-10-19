@@ -1,7 +1,8 @@
 
 {{ config(
   materialized='incremental',
-  schema = "HUBS"
+  schema = "HUBS",
+  alias = "PRODUCT"
   ) }}
 
 {%- set source_model = ["stg_products_v1"] -%}
