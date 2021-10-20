@@ -46,6 +46,20 @@
                     }
                 }
             ]
+        },
+        "COUNTRY":{
+            "business_keys":{
+                "DEPT_ID":"STRING"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"DEPARTMENTS",
+                    "payload":{
+                        "COUNTRY_NAME":"STRING",
+                        "COUNTRY_POPULATION":"STRING"
+                    }
+                }
+            ]
         }
     }
 }
