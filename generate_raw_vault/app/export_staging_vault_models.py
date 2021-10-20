@@ -24,11 +24,8 @@ def create_staging_file(metadata_file_path):
     metadata = Metadata(metadata_file)
 
     hubs = metadata.get_hubs_from_business_topics()
-
     for hub in hubs:
         substitutions = create_staging_subsitutions(metadata, hub_name=hub)
-        # print(hub)
-        # print(json.dumps(substitutions, indent=4), "\n")
         staging_model = staging_template.substitute(substitutions)
 
         file_name = metadata.get_versioned_source_name().lower()
@@ -43,8 +40,8 @@ def format_derived_columns(column_list):
 def format_columns(column_list):
     if "null" in column_list:
         column_list.remove("null")
-    formatted_list = [f'"{column}"' for column in column_list]
-    return f"\n{chr(32)*6}- ".join(formatted_list)
+    quote_columns = [f'"{column}"' for column in sorted(column_list)]
+    return f"\n{chr(32)*6}- ".join(quote_columns)
 
 
 def create_staging_subsitutions(metadata, hub_name):
@@ -53,7 +50,6 @@ def create_staging_subsitutions(metadata, hub_name):
     source_name = f"{database_name}_{schema_name}"
     table_name = metadata.get_versioned_source_name()
 
-    # derive hubs and their keys, output list of keys
     derived_columns = [
         'EFFECTIVE_FROM: "LOAD_DATETIME"',
         'START_DATE: "LOAD_DATETIME"',
@@ -63,13 +59,11 @@ def create_staging_subsitutions(metadata, hub_name):
 
     primary_key = metadata.get_hub_business_key(hub_name)
     hash_key = f'{hub_name}_HK: "{primary_key}"'
-
     hashdiff = f"{hub_name}_HASHDIFF"
 
     source_attributes = [
-        list(col.keys())[0] for col in metadata.get_source_attributes()
+        list(column.keys())[0] for column in metadata.get_source_attributes()
     ]
-
     columns = format_columns(source_attributes)
 
     substitutions = {

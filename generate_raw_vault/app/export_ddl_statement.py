@@ -64,7 +64,7 @@ def format_column_and_dtype(columns_and_types):
         f'"{list(column_and_type.keys())[0]}" {list(column_and_type.values())[0]}'
         for column_and_type in columns_and_types
     ]
-    deduped_column_types = set(list_of_column_types)
+    deduped_column_types = sorted(set(list_of_column_types))
     column_and_types_str = f",\n{4*chr(32)}".join(deduped_column_types)
     return column_and_types_str
 
