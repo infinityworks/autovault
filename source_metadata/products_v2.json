@@ -1,6 +1,6 @@
 {
     "source_name":"PRODUCTS",
-    "version":"1",
+    "version":"2",
     "source_system":"CSV",
     "destination_database" : "AUTOVAULT",
     "destination_schema" : "PUBLIC",

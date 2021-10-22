@@ -3,7 +3,7 @@
   schema = "LINKS"
   ) }}
 
-{%- set source_model = "stg_$source_model"       -%}
+{%- set source_model = $source_model     -%}
 {%- set src_pk = "$src_pk"         -%}
 {%- set src_fk = $src_fk  -%}
 {%- set src_ldts = "$src_ldts" -%}
