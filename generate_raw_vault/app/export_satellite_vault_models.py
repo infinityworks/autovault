@@ -23,7 +23,7 @@ def create_sat_file(metadata_file_path):
     hubs = metadata.get_hubs_from_business_topics()
 
     for hub in hubs:
-        substitutions = create_sat_subsitutions(metadata, hub_name=hub)
+        substitutions = create_sat_substitutions(metadata, hub_name=hub)
         sat_model = sat_template.substitute(substitutions)
 
         file_name = metadata.get_versioned_source_name().lower()
@@ -38,7 +38,7 @@ def format_columns(column_list):
     return f"\n{chr(32)*2}- ".join(formatted_list)
 
 
-def create_sat_subsitutions(metadata, hub_name):
+def create_sat_substitutions(metadata, hub_name):
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
     source_name = f"{database_name}_{schema_name}"

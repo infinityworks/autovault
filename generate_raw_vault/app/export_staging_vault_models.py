@@ -6,6 +6,7 @@ from generate_raw_vault.app.find_metadata_files import (
 from generate_raw_vault.app.load_metadata import Metadata
 from string import Template
 import json
+import itertools
 
 STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.txt"
 
@@ -24,27 +25,86 @@ def create_staging_file(metadata_file_path):
     metadata = Metadata(metadata_file)
 
     hubs = metadata.get_hubs_from_business_topics()
-    for hub in hubs:
-        substitutions = create_staging_subsitutions(metadata, hub_name=hub)
-        staging_model = staging_template.substitute(substitutions)
+    topics = metadata.get_business_topics()
+    unique_link_combis = itertools.combinations(sorted(hubs), 2)
 
-        file_name = metadata.get_versioned_source_name().lower()
-        with open(f"./models/raw_vault/stages/stg_{file_name}.sql", "w") as sql_export:
-            sql_export.write(staging_model)
+    hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
+    sat_substitutions_string = get_sat_substitutions_string(topics)
+    unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
+        metadata, unique_link_combis
+    )
+
+    substitutions = create_staging_subsitutions(
+        metadata,
+        hub_substitutions_string,
+        unique_link_combis_substitutions_string,
+        sat_substitutions_string,
+    )
+    staging_model = staging_template.substitute(substitutions)
+    file_name = metadata.get_versioned_source_name().lower()
+    with open(f"./models/raw_vault/stages/stg_{file_name}.sql", "w") as sql_export:
+        sql_export.write(staging_model)
 
 
 def format_derived_columns(column_list):
     return "\n  ".join(column_list)
 
 
-def format_columns(column_list):
-    if "null" in column_list:
-        column_list.remove("null")
-    quote_columns = [f'"{column}"' for column in sorted(column_list)]
-    return f"\n{chr(32)*6}- ".join(quote_columns)
+def create_substitutions_string(substitutions):
+    substitutions_string = "\n  ".join(substitutions)
+    return substitutions_string
 
 
-def create_staging_subsitutions(metadata, hub_name):
+def get_hub_substitutions_string(metadata, hubs):
+    hubs_substitutions = []
+    for hub in hubs:
+        primary_key = metadata.get_hub_business_key(hub)
+        hubs_substitutions.append(f'{hub}_HK: "{primary_key}"')
+    return create_substitutions_string(hubs_substitutions)
+
+
+def get_sat_substitutions_string(topics):
+    sats_substitutions = []
+    for topic in topics:
+        hub = f'"{topic}"'
+        hashdiff = f"{topic}_HASHDIFF"
+        sat_payload_columns_list = list(
+            topics[topic].get("business_attributes")[0].get("payload").keys()
+        )
+        formatted_sat_column_list = list(
+            map(lambda column: "- " + f'"{column}"', sat_payload_columns_list)
+        )
+        formatted_sat_column_list_string = "\n.   ".join(formatted_sat_column_list)
+        sat_string = (
+            hashdiff
+            + ":\n"
+            + "   is_hashdiff: true\n"
+            + "   columns:"
+            + "\n    "
+            + formatted_sat_column_list_string
+        )
+        sats_substitutions.append(sat_string)
+    return create_substitutions_string(sats_substitutions)
+
+
+def get_unique_link_combis_substitutions_string(metadata, unique_link_combis):
+    unique_link_combis_substitutions = []
+    for unique_link_combi in unique_link_combis:
+        link_join = "_".join(unique_link_combi)
+        combi_primary_keys = []
+        for hub_in_combi in unique_link_combi:
+            each_primary_key = metadata.get_hub_business_key(hub_in_combi)
+            combi_primary_keys.append(f'- "{each_primary_key}"')
+        primarykeys_join = "\n   ".join(combi_primary_keys)
+        unique_link_combis_substitutions.append(
+            f"{link_join}_HK:\n   {primarykeys_join}"
+        )
+    return create_substitutions_string(unique_link_combis_substitutions)
+
+
+def create_staging_subsitutions(
+    metadata, hubs_substitution, unique_link_combis_substitution, sat_substitution
+):
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
     source_name = f"{database_name}_{schema_name}"
@@ -57,23 +117,13 @@ def create_staging_subsitutions(metadata, hub_name):
     ]
     formatted_derived_columns = format_derived_columns(derived_columns)
 
-    primary_key = metadata.get_hub_business_key(hub_name)
-    hash_key = f'{hub_name}_HK: "{primary_key}"'
-    hashdiff = f"{hub_name}_HASHDIFF"
-
-    source_attributes = [
-        list(column.keys())[0] for column in metadata.get_source_attributes()
-    ]
-    columns = format_columns(source_attributes)
-
     substitutions = {
         "source": f'{source_name}: "{table_name}"',
         "derived_columns": formatted_derived_columns,
-        "hashed_primary_key": hash_key,
-        "hashdiff": hashdiff,
-        "columns": f"- {columns}",
+        "hashed_hubs_primary_key": hubs_substitution,
+        "hashed_links": unique_link_combis_substitution,
+        "hashdiff": sat_substitution,
     }
-
     return substitutions
 
 
