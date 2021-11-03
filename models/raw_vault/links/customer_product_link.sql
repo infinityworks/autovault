@@ -3,9 +3,10 @@
   schema = "LINKS"
   ) }}
 
-{%- set source_model = ["stg_PRODUCTS_V2"]     -%}
-{%- set src_pk = "COUNTRY_CUSTOMER_HK"         -%}
-{%- set src_fk = ["COUNTRY_HK", "CUSTOMER_HK"]  -%}
+{%- set source_model = ["stg_transactions_v1"]     -%}
+{%- set src_pk = "CUSTOMER_PRODUCT_HK"         -%}
+{%- set src_fk = ["CUSTOMER_HK",
+                  "PRODUCT_HK"]  -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
 
