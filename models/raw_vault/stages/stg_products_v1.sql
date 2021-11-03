@@ -13,7 +13,7 @@ derived_columns:
 hashed_columns:
   PRODUCT_HK: "PRODUCT_ID"
 
-  PRODUCT_HASHDIFF:
+  SAT1_HASHDIFF:
     is_hashdiff: true
     columns:
       - "MAKE"

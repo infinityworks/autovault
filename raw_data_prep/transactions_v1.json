@@ -13,7 +13,7 @@
                 {
                     "business_definition":"CUSTOMERS",
                     "payload":{
-                        "null" : "null"
+                        "AA" : "AA"
                     }
                 },
                 {
@@ -32,23 +32,23 @@
                 {
                     "business_definition":"PRODUCTS",
                     "payload":{
-                        "PRICE":"STRING"
+                        "YYYY":"STRING"
+                    }
+                }
+            ]
+        },
+        "TRANSACTION" : {
+            "business_keys":{
+                "PRODUCT_ID":"STRING"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"TRANSACTIONS",
+                    "payload":{
+                        "DATE_OF_SESSION":"STRING"
                     }
                 }
             ]
         }
-    },
-    "TRANSACTION" : {
-        "business_keys":{
-            "PRODUCT_ID":"STRING"
-        },
-        "business_attributes":[
-            {
-                "business_definition":"TRANSACTIONS",
-                "payload":{
-                    "DATE_OF_SESSION":"STRING"
-                }
-            }
-        ]
     }
 }

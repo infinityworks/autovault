@@ -46,10 +46,10 @@ class Metadata:
     def get_sat_from_hub(self, hub):
         business_topics = self.get_business_topics()
         topics = business_topics.get(hub)
-        sats = [
-            topic.get("business_definition")
+        sats = {
+            topic.get("business_definition"): topic.get("payload")
             for topic in topics.get("business_attributes")
-        ]
+        }
         return sats
 
     def get_business_keys(self):
@@ -87,6 +87,6 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
+    metadata_file = load_metadata_file("source_metadata/products_v1.json")
     metadata = Metadata(metadata_file)
-    print(metadata.get_business_keys())
+    print(metadata.get_sat_from_hub("PRODUCT"))

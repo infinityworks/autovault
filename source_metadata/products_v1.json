@@ -6,43 +6,15 @@
     "destination_schema" : "PUBLIC",
     "business_topics":{
         "PRODUCT":{
-            "business_keys":{
-                "PRODUCT_ID":"STRING"
-            },
+            "business_keys": {
+                "PRODUCT_ID": "STRING"
+                },
             "business_attributes":[
                 {
-                    "business_definition":"PRODUCTS",
+                    "business_definition":"SAT1",
                     "payload":{
                         "MAKE":"STRING",
                         "MODEL":"STRING"
-                    }
-                }
-            ]
-        },
-        "CUSTOMER":{
-            "business_keys":{
-                "CUSTOMER_ID":"STRING"
-            },
-            "business_attributes":[
-                {
-                    "business_definition":"CUSTOMERS",
-                    "payload":{
-                        "MAKEOFCAR":"STRING",
-                        "MODELOFCAR":"STRING"
-                    }
-                }
-            ]
-        },
-        "DEPARTMENT":{
-            "business_keys":{
-                "DEPT_ID":"STRING"
-            },
-            "business_attributes":[
-                {
-                    "business_definition":"DEPARTMENTS",
-                    "payload":{
-                        "DEPT_NAME":"STRING",
-                        "DEPT_BUSINESS":"STRING"
                     }
                 }
             ]

@@ -9,6 +9,7 @@ import json
 import itertools
 
 STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.txt"
+SAT_HASHDIFF_TEMPLATE = "generate_raw_vault/app/templates/sat_hashdiff.txt"
 
 
 def export_all_staging_files():
@@ -29,7 +30,7 @@ def create_staging_file(metadata_file_path):
     unique_link_combis = itertools.combinations(sorted(hubs), 2)
 
     hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
-    sat_substitutions_string = get_sat_substitutions_string(topics)
+    sat_substitutions_string = get_sat_substitutions_string(metadata, topics)
     unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
         metadata, unique_link_combis
     )
@@ -56,37 +57,44 @@ def create_substitutions_string(substitutions):
 
 
 def get_hub_substitutions_string(metadata, hubs):
-    hubs_substitutions = []
-    for hub in hubs:
-        primary_key = metadata.get_hub_business_key(hub)
-        hubs_substitutions.append(f'{hub}_HK: "{primary_key}"')
+    hubs_substitutions = [hashkey_substitution(metadata, hub) for hub in hubs]
     return create_substitutions_string(hubs_substitutions)
 
 
-def get_sat_substitutions_string(topics):
+def hashkey_substitution(metadata, hub):
+    primary_key = metadata.get_hub_business_key(hub)
+    hashkey_substitution = f'{hub}_HK: "{primary_key}"'
+    return hashkey_substitution
+
+
+def get_sat_substitutions_string(metadata, topics):
     sats_substitutions = []
-    for topic in topics:
-        hub = f'"{topic}"'
-        hashdiff = f"{topic}_HASHDIFF"
-        sat_payload_columns_list = list(
-            topics[topic].get("business_attributes")[0].get("payload").keys()
-        )
-        formatted_sat_column_list = [
-            f'- "{column}"' for column in sat_payload_columns_list
-        ]
-        formatted_sat_column_list_string = f"\n{chr(32)*5}".join(
-            formatted_sat_column_list
-        )
-        sat_string = (
-            hashdiff
-            + ":\n"
-            + "    is_hashdiff: true\n"
-            + "    columns:"
-            + "\n     "
-            + formatted_sat_column_list_string
-        )
-        sats_substitutions.append(sat_string)
+    for hub_name in topics:
+        sats_substitutions.append(get_sat_substitution_from_topic(metadata, hub_name))
     return create_substitutions_string(sats_substitutions)
+
+
+def get_sat_substitution_from_topic(metadata, hub_name):
+    template = load_template_file(SAT_HASHDIFF_TEMPLATE)
+    sat_hashdiff_template = Template(template)
+    satellites = metadata.get_sat_from_hub(hub_name)
+    sats = [
+        get_sat_subs(sat_hashdiff_template, sat_name, payload)
+        for sat_name, payload in satellites.items()
+    ]
+    return "\n  ".join(sats)
+
+
+def get_sat_subs(sat_hashdiff_template, sat_name, payload):
+    hashdiff = f"{sat_name}_HASHDIFF"
+    formatted_sat_column_list = [f'- "{column}"' for column in payload]
+    formatted_sat_column_list_string = f"\n{chr(32)*6}".join(formatted_sat_column_list)
+    substitutions = {
+        "hashdiff_name": hashdiff,
+        "columns": formatted_sat_column_list_string,
+    }
+    if "null" not in formatted_sat_column_list_string:
+        return sat_hashdiff_template.substitute(substitutions)
 
 
 def get_unique_link_combis_substitutions_string(metadata, unique_link_combis):
@@ -96,8 +104,9 @@ def get_unique_link_combis_substitutions_string(metadata, unique_link_combis):
         combi_primary_keys = []
         for hub_in_combi in unique_link_combi:
             each_primary_key = metadata.get_hub_business_key(hub_in_combi)
-            combi_primary_keys.append(f'- "{each_primary_key}"')
-        primarykeys_join = "\n   ".join(combi_primary_keys)
+            combi_primary_keys.append(each_primary_key)
+        link_keys = [f'- "{key}"' for key in set(combi_primary_keys)]
+        primarykeys_join = "\n   ".join(link_keys)
         unique_link_combis_substitutions.append(
             f"{link_join}_HK:\n   {primarykeys_join}"
         )

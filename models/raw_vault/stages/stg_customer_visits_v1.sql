@@ -13,7 +13,7 @@ derived_columns:
 hashed_columns:
   CUSTOMER_HK: "CUSTOMER_ID"
 
-  CUSTOMER_HASHDIFF:
+  CUSTOMER_VISITS_HASHDIFF:
     is_hashdiff: true
     columns:
       - "TOTAL_VISITS"
