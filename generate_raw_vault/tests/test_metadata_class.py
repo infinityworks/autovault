@@ -1,4 +1,4 @@
-from generate_raw_vault.app.load_metadata import Metadata
+from generate_raw_vault.app.metadata_handler import Metadata
 import pytest
 
 
