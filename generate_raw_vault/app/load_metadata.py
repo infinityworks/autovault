@@ -41,11 +41,6 @@ class Metadata:
         list_business_topics = list(business_topics.keys())
         return list_business_topics
 
-    def get_sats_from_source(self):
-        hubs = self.get_hubs_from_business_topics()
-        sats = {hub: self.get_sat_from_hub(hub) for hub in hubs}
-        return sats
-
     def get_sat_from_hub(self, hub):
         business_topics = self.get_business_topics()
         topics = business_topics.get(hub)
@@ -90,5 +85,6 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file("source_metadata/products_v1.json")
+    metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
     metadata = Metadata(metadata_file)
+    print(metadata.get_sats_from_source())

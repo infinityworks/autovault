@@ -58,17 +58,14 @@ class TestMetadata:
         assert test_target_hubs == expected_target_hubs
 
     @pytest.mark.usefixtures("sample_metadata")
-    def test_get_sats_from_source(self, sample_metadata):
-        test_metadata = Metadata(sample_metadata)
-        test_target_sats = test_metadata.get_sats_from_source()
-        expected_target_sats = {"HUB1": ["SAT1", "SAT2"], "HUB2": ["SAT3"]}
-        assert test_target_sats == expected_target_sats
-
-    @pytest.mark.usefixtures("sample_metadata")
     def test_get_sat_from_hub(self, sample_metadata):
         test_metadata = Metadata(sample_metadata)
         test_target_sat = test_metadata.get_sat_from_hub("HUB1")
-        expected_target_sat = ["SAT1", "SAT2"]
+        print(test_target_sat)
+        expected_target_sat = {
+            "SAT1": {"sat1_col1": "STRING", "sat1_col2": "STRING"},
+            "SAT2": {"sat2_col1": "STRING"},
+        }
         assert test_target_sat == expected_target_sat
 
     @pytest.mark.usefixtures("sample_metadata")
