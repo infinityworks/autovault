@@ -5,6 +5,9 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.load_metadata import Metadata
 from string import Template
+from itertools import chain
+
+SATELLITE_TEMPLATE = "generate_raw_vault/app/templates/sat_model.sql"
 
 
 def export_all_sat_files():
@@ -14,7 +17,7 @@ def export_all_sat_files():
 
 
 def create_sat_file(metadata_file_path):
-    template = load_template_file("generate_raw_vault/app/templates/sat_model.txt")
+    template = load_template_file(SATELLITE_TEMPLATE)
     sat_template = Template(template)
 
     metadata_file = load_metadata_file(metadata_file_path)
@@ -22,13 +25,20 @@ def create_sat_file(metadata_file_path):
 
     hubs = metadata.get_hubs_from_business_topics()
 
-    for hub in hubs:
-        substitutions = create_sat_substitutions(metadata, hub_name=hub)
-        sat_model = sat_template.substitute(substitutions)
-
-        file_name = metadata.get_versioned_source_name().lower()
-        with open(f"./models/raw_vault/sats/{file_name}.sql", "w") as sql_export:
-            sql_export.write(sat_model)
+    source_name = metadata.get_versioned_source_name().lower()
+    source_system = metadata.get_source_system().lower()
+    source_version = metadata.get_source_version().lower()
+    for hub_name in hubs:
+        satellites = metadata.get_sat_from_hub(hub_name)
+        for satellite in satellites:
+            if "null" not in satellites[satellite].keys():
+                substitutions = create_sat_substitutions(
+                    source_name, satellite, satellites, hub_name
+                )
+                sat_model = sat_template.substitute(substitutions)
+                file_name = f"{source_system}_{satellite.lower()}_v{source_version}.sql"
+                with open(f"./models/raw_vault/sats/{file_name}", "w") as sql_export:
+                    sql_export.write(sat_model)
 
 
 def format_columns(column_list):
@@ -38,19 +48,15 @@ def format_columns(column_list):
     return f"\n{chr(32)*2}- ".join(formatted_list)
 
 
-def create_sat_substitutions(metadata, hub_name):
-    table_name = metadata.get_versioned_source_name().lower()
+def create_sat_substitutions(source_name, satellite, satellites, hub_name):
     hash_primary_key = f'src_pk: "{hub_name}_HK"'
-    hashdiff_column = f'source_column: "{hub_name}_HASHDIFF"'
+    hashdiff_column = f'source_column: "{satellite}_HASHDIFF"'
 
-    source_attributes = [
-        list(col.keys())[0] for col in metadata.get_source_attributes()
-    ]
-
+    source_attributes = list(satellites[satellite].keys())
     columns = format_columns(source_attributes)
 
     substitutions = {
-        "source_model": f'source_model: "stg_{table_name}"',
+        "source_model": f'source_model: "stg_{source_name}"',
         "src_pk": hash_primary_key,
         "src_hashdiff_column": hashdiff_column,
         "payload": f"- {columns}",

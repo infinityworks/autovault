@@ -6,7 +6,7 @@ from generate_raw_vault.app.find_metadata_files import (
 from generate_raw_vault.app.load_metadata import Metadata
 from string import Template
 import json
-import itertools
+from itertools import combinations, chain
 
 HUB_TEMPLATE_PATH = "generate_raw_vault/app/templates/link_model.sql"
 
@@ -23,8 +23,8 @@ def export_all_link_files():
 
 def get_all_unique_link_combinations(metadata_file_dirs):
     hubs = get_hubs_from_metadata_files(metadata_file_dirs)
-    link_combinations = [list(itertools.combinations(sorted(hub), 2)) for hub in hubs]
-    all_files_link_combinations = set(list(itertools.chain(*link_combinations)))
+    link_combinations = [list(combinations(sorted(hub), 2)) for hub in hubs]
+    all_files_link_combinations = set(list(chain(*link_combinations)))
     return all_files_link_combinations
 
 
@@ -62,7 +62,7 @@ def create_link_model_files(link_combination, link_template, hub_source_map):
     file_name = f'{"_".join(link_combination)}'.lower()
     substitutions = create_link_subsitutions(source_list, file_name, link_combination)
     link_model = link_template.substitute(substitutions)
-    with open(f"./models/raw_vault/links/{file_name}_link.sql", "w") as sql_export:
+    with open(f"./models/raw_vault/links/{file_name}.sql", "w") as sql_export:
         sql_export.write(link_model)
 
 

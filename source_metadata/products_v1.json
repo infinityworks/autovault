@@ -11,7 +11,7 @@
                 },
             "business_attributes":[
                 {
-                    "business_definition":"SAT1",
+                    "business_definition":"PRODUCTS",
                     "payload":{
                         "MAKE":"STRING",
                         "MODEL":"STRING"

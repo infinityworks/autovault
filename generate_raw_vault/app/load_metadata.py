@@ -10,6 +10,9 @@ class Metadata:
     def get_source_name(self):
         return self.metadata.get("source_name")
 
+    def get_source_system(self):
+        return self.metadata.get("source_system")
+
     def get_target_schema(self):
         return self.metadata.get("destination_schema")
 
@@ -89,4 +92,3 @@ class Metadata:
 if __name__ == "__main__":
     metadata_file = load_metadata_file("source_metadata/products_v1.json")
     metadata = Metadata(metadata_file)
-    print(metadata.get_sat_from_hub("PRODUCT"))

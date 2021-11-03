@@ -7,8 +7,8 @@ from generate_raw_vault.app.load_metadata import Metadata
 from string import Template
 from pathlib import Path
 
-SOURCE_TEMPLATE = "generate_raw_vault/app/templates/data_source.txt"
-MODEL_SCHEMA_TEMPLATE = "generate_raw_vault/app/templates/model_schema.yml"
+SOURCE_TEMPLATE = "generate_raw_vault/app/templates/data_source.sql"
+MODEL_SCHEMA_TEMPLATE = "generate_raw_vault/app/templates/model_schema.sql"
 SCHEMA_YML_PATH = "./models/schema.yml"
 
 

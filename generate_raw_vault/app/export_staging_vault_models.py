@@ -5,11 +5,10 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.load_metadata import Metadata
 from string import Template
-import json
-import itertools
+from itertools import combinations
 
-STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.txt"
-SAT_HASHDIFF_TEMPLATE = "generate_raw_vault/app/templates/sat_hashdiff.txt"
+STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.sql"
+SAT_HASHDIFF_TEMPLATE = "generate_raw_vault/app/templates/sat_hashdiff.sql"
 
 
 def export_all_staging_files():
@@ -27,7 +26,7 @@ def create_staging_file(metadata_file_path):
 
     hubs = metadata.get_hubs_from_business_topics()
     topics = metadata.get_business_topics()
-    unique_link_combis = itertools.combinations(sorted(hubs), 2)
+    unique_link_combis = combinations(sorted(hubs), 2)
 
     hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
     sat_substitutions_string = get_sat_substitutions_string(metadata, topics)
@@ -51,14 +50,14 @@ def format_derived_columns(column_list):
     return "\n  ".join(column_list)
 
 
-def create_substitutions_string(substitutions):
-    substitutions_string = "\n  ".join(substitutions)
-    return substitutions_string
-
-
 def get_hub_substitutions_string(metadata, hubs):
     hubs_substitutions = [hashkey_substitution(metadata, hub) for hub in hubs]
     return create_substitutions_string(hubs_substitutions)
+
+
+def create_substitutions_string(substitutions):
+    substitutions_string = "\n  ".join(substitutions)
+    return substitutions_string
 
 
 def hashkey_substitution(metadata, hub):
@@ -71,7 +70,8 @@ def get_sat_substitutions_string(metadata, topics):
     sats_substitutions = []
     for hub_name in topics:
         sats_substitutions.append(get_sat_substitution_from_topic(metadata, hub_name))
-    return create_substitutions_string(sats_substitutions)
+    if sats_substitutions:
+        return create_substitutions_string(sats_substitutions)
 
 
 def get_sat_substitution_from_topic(metadata, hub_name):
@@ -82,7 +82,10 @@ def get_sat_substitution_from_topic(metadata, hub_name):
         get_sat_subs(sat_hashdiff_template, sat_name, payload)
         for sat_name, payload in satellites.items()
     ]
-    return "\n  ".join(sats)
+    if sats[0]:
+        return "\n  ".join(sats)
+    else:
+        return ""
 
 
 def get_sat_subs(sat_hashdiff_template, sat_name, payload):
