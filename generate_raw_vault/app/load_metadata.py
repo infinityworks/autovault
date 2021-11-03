@@ -16,6 +16,9 @@ class Metadata:
     def get_target_database(self):
         return self.metadata.get("destination_database")
 
+    def get_source_version(self):
+        return self.metadata.get("version")
+
     def get_business_topics(self):
         business_topics = self.metadata.get("business_topics")
         return business_topics

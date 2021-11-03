@@ -71,16 +71,18 @@ def get_sat_substitutions_string(topics):
         sat_payload_columns_list = list(
             topics[topic].get("business_attributes")[0].get("payload").keys()
         )
-        formatted_sat_column_list = list(
-            map(lambda column: "- " + f'"{column}"', sat_payload_columns_list)
+        formatted_sat_column_list = [
+            f'- "{column}"' for column in sat_payload_columns_list
+        ]
+        formatted_sat_column_list_string = f"\n{chr(32)*5}".join(
+            formatted_sat_column_list
         )
-        formatted_sat_column_list_string = "\n.   ".join(formatted_sat_column_list)
         sat_string = (
             hashdiff
             + ":\n"
-            + "   is_hashdiff: true\n"
-            + "   columns:"
-            + "\n    "
+            + "    is_hashdiff: true\n"
+            + "    columns:"
+            + "\n     "
             + formatted_sat_column_list_string
         )
         sats_substitutions.append(sat_string)

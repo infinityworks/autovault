@@ -39,12 +39,7 @@ def format_columns(column_list):
 
 
 def create_sat_substitutions(metadata, hub_name):
-    database_name = metadata.get_target_database()
-    schema_name = metadata.get_target_schema()
-    source_name = f"{database_name}_{schema_name}"
     table_name = metadata.get_versioned_source_name().lower()
-
-    primary_key = metadata.get_hub_business_key(hub_name)
     hash_primary_key = f'src_pk: "{hub_name}_HK"'
     hashdiff_column = f'source_column: "{hub_name}_HASHDIFF"'
 
