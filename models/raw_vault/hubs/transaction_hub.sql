@@ -1,13 +1,12 @@
 {{ config(
   materialized='incremental',
   schema = "HUBS",
-  alias = "PRODUCT"
+  alias = "TRANSACTION"
   ) }}
 
-{%- set source_model = ["stg_products_v1",
-                        "stg_transactions_v1"] -%}
-{%- set src_pk = "PRODUCT_HK" -%}
-{%- set src_nk = "PRODUCT_ID" -%}
+{%- set source_model = ["stg_transactions_v1"] -%}
+{%- set src_pk = "TRANSACTION_HK" -%}
+{%- set src_nk = "DATE_OF_SESSION" -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
 

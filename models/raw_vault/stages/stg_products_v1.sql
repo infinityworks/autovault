@@ -13,11 +13,12 @@ derived_columns:
 hashed_columns:
   PRODUCT_HK: "PRODUCT_ID"
 
-  SAT1_HASHDIFF:
+  PRODUCTS_HASHDIFF:
     is_hashdiff: true
     columns:
       - "MAKE"
       - "MODEL"
+
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}
