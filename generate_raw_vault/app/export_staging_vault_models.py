@@ -33,10 +33,12 @@ def create_staging_file(metadata_file_path):
     unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
         metadata, unique_link_combis
     )
+    hub_alias_substitution_string = get_hub_alias_substitutions_string(metadata, topics)
 
     substitutions = create_staging_subsitutions(
         metadata,
         hub_substitutions_string,
+        hub_alias_substitution_string,
         unique_link_combis_substitutions_string,
         sat_substitutions_string,
     )
@@ -116,8 +118,21 @@ def get_unique_link_combis_substitutions_string(metadata, unique_link_combis):
     return create_substitutions_string(unique_link_combis_substitutions)
 
 
+def get_hub_alias_substitutions_string(metadata, topics):
+    hubs_alias_substitutions = [
+        f'{"".join(list(topic_value.get("business_keys").keys()))}: "{topic_value.get("alias")}"'
+        for topic_value in list(topics.values())
+        if topic_value.get("alias") is not None
+    ]
+    return create_substitutions_string(hubs_alias_substitutions)
+
+
 def create_staging_subsitutions(
-    metadata, hubs_substitution, unique_link_combis_substitution, sat_substitution
+    metadata,
+    hubs_substitution,
+    hub_alias_substitution_string,
+    unique_link_combis_substitution,
+    sat_substitution,
 ):
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
@@ -135,6 +150,7 @@ def create_staging_subsitutions(
         "source": f'{source_name}: "{table_name}"',
         "derived_columns": formatted_derived_columns,
         "hashed_hubs_primary_key": hubs_substitution,
+        "alias_columns": hub_alias_substitution_string,
         "hashed_links": unique_link_combis_substitution,
         "hashdiff": sat_substitution,
     }
