@@ -7,8 +7,9 @@
     "business_topics":{
         "CUSTOMER":{
             "business_keys":{
-                "CUSTOMER_ID":"STRING"
+                "CUST_ID":"STRING"
             },
+            "alias":"CUSTOMER_ID",
             "business_attributes":[
                 {
                     "business_definition":"CUSTOMER_VISITS",
