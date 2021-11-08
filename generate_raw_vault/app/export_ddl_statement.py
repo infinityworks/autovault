@@ -4,12 +4,14 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from pathlib import Path
+import json
 
 
 def export_all_ddl_statments():
     metadata_file_dirs = find_json_metadata("source_metadata")
     for metadata_file_path in metadata_file_dirs:
         ddl_exporter(metadata_file_path)
+        break
 
 
 def ddl_exporter(metadata_file_path):
@@ -28,7 +30,8 @@ def create_source_table_ddl(metadata):
     target_schema = metadata.get_target_schema()
     versioned_source_name = metadata.get_versioned_source_name()
     business_topics = metadata.get_source_business_topics()
-    primary_keys = [key for key in metadata.get_business_keys().values()]
+    business_keys = metadata.get_business_keys().values()
+    primary_keys = [key.get("natural_keys") for key in business_keys]
     keys_and_types_str = format_column_and_dtype(primary_keys)
     payload_columns = metadata.get_source_attributes()
     payload_columns_and_types_str = format_column_and_dtype(payload_columns)

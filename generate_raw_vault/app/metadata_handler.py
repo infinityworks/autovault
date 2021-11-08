@@ -41,6 +41,11 @@ class Metadata:
         list_business_topics = list(business_topics.keys())
         return list_business_topics
 
+    def get_hub_alias(self, hub):
+        topics = self.get_business_topics()
+        hub_alias = topics.get(hub).get("alias")
+        return hub_alias
+
     def get_sat_from_hub(self, hub):
         business_topics = self.get_business_topics()
         topics = business_topics.get(hub)
@@ -54,12 +59,22 @@ class Metadata:
         business_topics = self.get_business_topics()
         topics = business_topics.keys()
         business_keys = {
-            topic: business_topics.get(topic).get("business_keys") for topic in topics
+            topic: self.get_topic_key(topic, business_topics) for topic in topics
         }
         return business_keys
 
+    def get_topic_key(self, topic, business_topics):
+        return {
+            "natural_keys": business_topics.get(topic).get("business_keys"),
+            "alias": business_topics.get(topic).get("alias"),
+        }
+
     def get_hub_business_key(self, hub_name):
-        primary_key = [key for key in self.get_business_keys().get(hub_name).keys()][0]
+        business_keys = self.get_business_keys().get(hub_name)
+        if business_keys.get("alias") is not None:
+            primary_key = business_keys.get("alias")
+        else:
+            primary_key = list(business_keys.get("natural_keys").keys())[0]
         return primary_key
 
     def get_source_attributes(self):
@@ -85,6 +100,10 @@ class Metadata:
 
 
 if __name__ == "__main__":
+    metadata_file = load_metadata_file("source_metadata/customer_visits_v1.json")
     metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
+    # metadata_file = load_metadata_file("source_metadata/customers_v1.json")
     metadata = Metadata(metadata_file)
-    print(metadata.get_sats_from_source())
+    # print(json.dumps(metadata.get_hub_alias("CUSTOMER"), indent=4))
+    print(json.dumps(metadata.get_hub_business_key("TRANSACTION"), indent=4))
+    # print(json.dumps(metadata.get_business_keys(), indent=4))

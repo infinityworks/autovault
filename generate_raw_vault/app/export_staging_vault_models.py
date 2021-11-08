@@ -33,7 +33,7 @@ def create_staging_file(metadata_file_path):
     unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
         metadata, unique_link_combis
     )
-    hub_alias_substitution_string = get_hub_alias_substitutions_string(metadata, topics)
+    hub_alias_substitution_string = get_hub_alias_substitutions_string(topics)
 
     substitutions = create_staging_subsitutions(
         metadata,
@@ -64,6 +64,9 @@ def create_substitutions_string(substitutions):
 
 def hashkey_substitution(metadata, hub):
     primary_key = metadata.get_hub_business_key(hub)
+    topic = metadata.get_business_topics()
+    if topic.get("alias"):
+        primary_key = topic.get("alias")
     hashkey_substitution = f'{hub}_HK: "{primary_key}"'
     return hashkey_substitution
 
@@ -118,9 +121,9 @@ def get_unique_link_combis_substitutions_string(metadata, unique_link_combis):
     return create_substitutions_string(unique_link_combis_substitutions)
 
 
-def get_hub_alias_substitutions_string(metadata, topics):
+def get_hub_alias_substitutions_string(topics):
     hubs_alias_substitutions = [
-        f'{"".join(list(topic_value.get("business_keys").keys()))}: "{topic_value.get("alias")}"'
+        f'{topic_value.get("alias")}: "{"".join(list(topic_value.get("business_keys").keys()))}"'
         for topic_value in list(topics.values())
         if topic_value.get("alias") is not None
     ]
