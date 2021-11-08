@@ -106,7 +106,7 @@ class TestMetadata:
         test_metadata = Metadata(sample_metadata)
         test_target_business_keys = test_metadata.get_business_keys()
         expected_target_business_keys = {
-            "HUB1": {"pk1": "STRING"},
-            "HUB2": {"pk2": "STRING"},
+            "HUB1": {"alias": None, "natural_keys": {"pk1": "STRING"}},
+            "HUB2": {"alias": None, "natural_keys": {"pk2": "STRING"}},
         }
         assert test_target_business_keys == expected_target_business_keys

@@ -10,6 +10,7 @@ derived_columns:
   EFFECTIVE_FROM: "LOAD_DATETIME"
   START_DATE: "LOAD_DATETIME"
   END_DATE: "TO_DATE('9999-12-31')"
+
 hashed_columns:
   CUSTOMER_HK: "CUSTOMER_ID"
   PRODUCT_HK: "PRODUCT_ID"
@@ -21,8 +22,8 @@ hashed_columns:
    - "CUSTOMER_ID"
    - "DATE_OF_SESSION"
   PRODUCT_TRANSACTION_HK:
-   - "DATE_OF_SESSION"
    - "PRODUCT_ID"
+   - "DATE_OF_SESSION"
 
   PRODUCTS_HASHDIFF:
     is_hashdiff: true
