@@ -5,12 +5,12 @@
 
 {%- set yaml_metadata -%}
 source_model: "stg_transactions_v1"
-src_pk: "TRANSACTION_HK"
+src_pk: "PRODUCT_HK"
 src_hashdiff:
-  source_column: "TRANSACTIONS_HASHDIFF"
+  source_column: "PRODUCTS_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:
-  - "DATE_OF_SESSION"
+  - "PRICE"
 src_eff: "EFFECTIVE_FROM"
 src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"

@@ -95,7 +95,8 @@ def get_sat_substitution_from_topic(metadata, hub_name):
 
 def get_sat_subs(sat_hashdiff_template, sat_name, payload):
     hashdiff = f"{sat_name}_HASHDIFF"
-    formatted_sat_column_list = [f'- "{column}"' for column in payload]
+    sorted_payload_keys = sorted(payload.keys())
+    formatted_sat_column_list = [f'- "{column}"' for column in sorted_payload_keys]
     formatted_sat_column_list_string = f"\n{chr(32)*6}".join(formatted_sat_column_list)
     substitutions = {
         "hashdiff_name": hashdiff,
@@ -113,7 +114,8 @@ def get_unique_link_combis_substitutions_string(metadata, unique_link_combis):
         for hub_in_combi in unique_link_combi:
             each_primary_key = metadata.get_hub_business_key(hub_in_combi)
             combi_primary_keys.append(each_primary_key)
-        link_keys = [f'- "{key}"' for key in set(combi_primary_keys)]
+        ordered_combination_primary_keys = sorted(set(combi_primary_keys))
+        link_keys = [f'- "{key}"' for key in ordered_combination_primary_keys]
         primarykeys_join = "\n   ".join(link_keys)
         unique_link_combis_substitutions.append(
             f"{link_join}_HK:\n   {primarykeys_join}"

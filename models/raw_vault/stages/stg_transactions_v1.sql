@@ -22,18 +22,14 @@ hashed_columns:
    - "CUSTOMER_ID"
    - "DATE_OF_SESSION"
   PRODUCT_TRANSACTION_HK:
-   - "PRODUCT_ID"
    - "DATE_OF_SESSION"
+   - "PRODUCT_ID"
 
   PRODUCTS_HASHDIFF:
     is_hashdiff: true
     columns:
       - "PRICE"
 
-  TRANSACTIONS_HASHDIFF:
-    is_hashdiff: true
-    columns:
-      - "DATE_OF_SESSION"
 
 {%- endset -%}
 

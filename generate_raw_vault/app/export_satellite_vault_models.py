@@ -52,9 +52,8 @@ def create_sat_substitutions(source_name, satellite, satellites, hub_name):
     hash_primary_key = f'src_pk: "{hub_name}_HK"'
     hashdiff_column = f'source_column: "{satellite}_HASHDIFF"'
 
-    source_attributes = list(satellites[satellite].keys())
-    columns = format_columns(source_attributes)
-
+    sorted_source_attributes = sorted(list(satellites[satellite].keys()))
+    columns = format_columns(sorted_source_attributes)
     substitutions = {
         "source_model": f'source_model: "stg_{source_name}"',
         "src_pk": hash_primary_key,

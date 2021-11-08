@@ -24,7 +24,7 @@ def export_all_link_files():
 def get_all_unique_link_combinations(metadata_file_dirs):
     hubs = get_hubs_from_metadata_files(metadata_file_dirs)
     link_combinations = [list(combinations(sorted(hub), 2)) for hub in hubs]
-    all_files_link_combinations = set(list(chain(*link_combinations)))
+    all_files_link_combinations = sorted(set(list(chain(*link_combinations))))
     return all_files_link_combinations
 
 
@@ -67,7 +67,6 @@ def create_link_model_files(link_combination, link_template, hub_source_map):
 
 
 def create_link_subsitutions(source_list, file_name, link_combination):
-
     table_name = json.dumps(list(map(lambda source: "stg_" + source, source_list)))
     table_name = f",\n{chr(32)*24}".join(
         [f'"stg_{source.lower()}"' for source in source_list]

@@ -1,7 +1,7 @@
 {
     "source_name":"TRANSACTIONS",
     "version":"1",
-    "source_system":"CSV",
+    "source_system":"ONLINE",
     "destination_database" : "AUTOVAULT",
     "destination_schema" : "PUBLIC",
     "business_topics":{
@@ -26,7 +26,7 @@
                 {
                     "business_definition":"PRODUCTS",
                     "payload":{
-                        "PRICE":"INT"
+                        "PRICE":"NUMBER"
                     }
                 }
             ]
@@ -39,7 +39,7 @@
                 {
                     "business_definition":"TRANSACTIONS",
                     "payload":{
-                        "DATE_OF_SESSION":"STRING"
+                        "null":"null"
                     }
                 }
             ]

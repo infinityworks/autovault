@@ -13,8 +13,8 @@
                 {
                     "business_definition":"PRODUCTS",
                     "payload":{
-                        "MAKE":"STRING",
-                        "MODEL":"STRING"
+                        "MODEL":"STRING",
+                        "MAKE":"STRING"
                     }
                 }
             ]
