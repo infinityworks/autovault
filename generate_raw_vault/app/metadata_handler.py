@@ -1,4 +1,3 @@
-import json
 import itertools
 from generate_raw_vault.app.find_metadata_files import load_metadata_file
 
@@ -102,8 +101,4 @@ class Metadata:
 if __name__ == "__main__":
     metadata_file = load_metadata_file("source_metadata/customer_visits_v1.json")
     metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
-    # metadata_file = load_metadata_file("source_metadata/customers_v1.json")
     metadata = Metadata(metadata_file)
-    # print(json.dumps(metadata.get_hub_alias("CUSTOMER"), indent=4))
-    print(json.dumps(metadata.get_hub_business_key("TRANSACTION"), indent=4))
-    # print(json.dumps(metadata.get_business_keys(), indent=4))

@@ -4,14 +4,12 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from pathlib import Path
-import json
 
 
 def export_all_ddl_statments():
     metadata_file_dirs = find_json_metadata("source_metadata")
     for metadata_file_path in metadata_file_dirs:
         ddl_exporter(metadata_file_path)
-        break
 
 
 def ddl_exporter(metadata_file_path):
