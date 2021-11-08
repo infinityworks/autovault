@@ -3,12 +3,12 @@ from generate_raw_vault.app.find_metadata_files import (
     load_metadata_file,
     load_template,
 )
-from generate_raw_vault.app.load_metadata import Metadata
+from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
 from pathlib import Path
 
-SOURCE_TEMPLATE = "generate_raw_vault/app/templates/data_source.txt"
-MODEL_SCHEMA_TEMPLATE = "generate_raw_vault/app/templates/model_schema.yml"
+SOURCE_TEMPLATE = "generate_raw_vault/app/templates/data_source.sql"
+MODEL_SCHEMA_TEMPLATE = "generate_raw_vault/app/templates/model_schema.sql"
 SCHEMA_YML_PATH = "./models/schema.yml"
 
 

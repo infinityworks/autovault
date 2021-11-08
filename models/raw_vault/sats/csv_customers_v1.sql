@@ -7,7 +7,7 @@
 source_model: "stg_customers_v1"
 src_pk: "CUSTOMER_HK"
 src_hashdiff:
-  source_column: "CUSTOMER_HASHDIFF"
+  source_column: "CUSTOMERS_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:
   - "AVG_MONTHLY_VISITS"

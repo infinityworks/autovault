@@ -12,10 +12,12 @@ derived_columns:
   END_DATE: "TO_DATE('9999-12-31')"
 hashed_columns:
   CUSTOMER_HK: "CUSTOMER_ID"
-  CUSTOMER_HASHDIFF:
+
+  CUSTOMERS_HASHDIFF:
     is_hashdiff: true
     columns:
       - "AVG_MONTHLY_VISITS"
+
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

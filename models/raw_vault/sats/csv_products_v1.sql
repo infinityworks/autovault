@@ -4,13 +4,13 @@
   ) }}
 
 {%- set yaml_metadata -%}
-source_model: "stg_customer_visits_v1"
-src_pk: "CUSTOMER_HK"
+source_model: "stg_transactions_v1"
+src_pk: "PRODUCT_HK"
 src_hashdiff:
-  source_column: "CUSTOMER_HASHDIFF"
+  source_column: "PRODUCTS_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:
-  - "TOTAL_VISITS"
+  - "PRICE"
 src_eff: "EFFECTIVE_FROM"
 src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"

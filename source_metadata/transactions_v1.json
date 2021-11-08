@@ -15,12 +15,6 @@
                     "payload":{
                         "null" : "null"
                     }
-                },
-                {
-                    "business_definition":"KIRAN",
-                    "payload":{
-                        "PRICE":"STRING"
-                    }
                 }
             ]
         },
@@ -32,23 +26,23 @@
                 {
                     "business_definition":"PRODUCTS",
                     "payload":{
-                        "PRICE":"STRING"
+                        "PRICE":"INT"
+                    }
+                }
+            ]
+        },
+        "TRANSACTION" : {
+            "business_keys":{
+                "DATE_OF_SESSION":"TIMESTAMP_TZ(9)"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"TRANSACTIONS",
+                    "payload":{
+                        "DATE_OF_SESSION":"STRING"
                     }
                 }
             ]
         }
-    },
-    "TRANSACTION" : {
-        "business_keys":{
-            "PRODUCT_ID":"STRING"
-        },
-        "business_attributes":[
-            {
-                "business_definition":"TRANSACTIONS",
-                "payload":{
-                    "DATE_OF_SESSION":"STRING"
-                }
-            }
-        ]
     }
 }

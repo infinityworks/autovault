@@ -9,11 +9,9 @@ source_model:
 derived_columns:
   $derived_columns
 hashed_columns:
-  $hashed_primary_key
-  $hashdiff:
-    is_hashdiff: true
-    columns:
-      $columns
+  $hashed_hubs_primary_key
+  $hashed_links
+  $hashdiff
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

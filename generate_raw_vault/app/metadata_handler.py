@@ -10,11 +10,17 @@ class Metadata:
     def get_source_name(self):
         return self.metadata.get("source_name")
 
+    def get_source_system(self):
+        return self.metadata.get("source_system")
+
     def get_target_schema(self):
         return self.metadata.get("destination_schema")
 
     def get_target_database(self):
         return self.metadata.get("destination_database")
+
+    def get_source_version(self):
+        return self.metadata.get("version")
 
     def get_business_topics(self):
         business_topics = self.metadata.get("business_topics")
@@ -35,18 +41,13 @@ class Metadata:
         list_business_topics = list(business_topics.keys())
         return list_business_topics
 
-    def get_sats_from_source(self):
-        hubs = self.get_hubs_from_business_topics()
-        sats = {hub: self.get_sat_from_hub(hub) for hub in hubs}
-        return sats
-
     def get_sat_from_hub(self, hub):
         business_topics = self.get_business_topics()
         topics = business_topics.get(hub)
-        sats = [
-            topic.get("business_definition")
+        sats = {
+            topic.get("business_definition"): topic.get("payload")
             for topic in topics.get("business_attributes")
-        ]
+        }
         return sats
 
     def get_business_keys(self):
@@ -86,4 +87,4 @@ class Metadata:
 if __name__ == "__main__":
     metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
     metadata = Metadata(metadata_file)
-    print(metadata.get_business_keys())
+    print(metadata.get_sats_from_source())

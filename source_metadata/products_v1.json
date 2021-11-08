@@ -6,9 +6,9 @@
     "destination_schema" : "PUBLIC",
     "business_topics":{
         "PRODUCT":{
-            "business_keys":{
-                "PRODUCT_ID":"STRING"
-            },
+            "business_keys": {
+                "PRODUCT_ID": "STRING"
+                },
             "business_attributes":[
                 {
                     "business_definition":"PRODUCTS",

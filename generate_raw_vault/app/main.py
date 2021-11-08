@@ -4,6 +4,7 @@ from generate_raw_vault.app.export_ddl_statement import ddl_exporter
 from generate_raw_vault.app.export_staging_vault_models import export_all_staging_files
 from generate_raw_vault.app.export_hub_vault_models import export_all_hub_files
 from generate_raw_vault.app.export_satellite_vault_models import export_all_sat_files
+from generate_raw_vault.app.export_link_vault_models import export_all_link_files
 
 
 def main():
@@ -15,7 +16,7 @@ def main():
     export_all_hub_files()
     export_all_staging_files()
     export_all_sat_files()
-    # create_links()
+    export_all_link_files()
 
 
 if __name__ == "__main__":
