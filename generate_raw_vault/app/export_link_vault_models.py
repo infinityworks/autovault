@@ -17,54 +17,46 @@ def export_all_link_files():
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
     link_template = Template(template)
     metadata_file_dirs = find_json_metadata("source_metadata")
-    hub_source_map = create_hub_source_map(metadata_file_dirs)
-    link_source_map = concatinate_hubs_to_link(hub_source_map)
-    link_combinations = set(link_source_map.values())
+
+    file_map = get_file_map(metadata_file_dirs)
+    link_source_map = create_hub_source_map(file_map)
+    link_combinations = set(
+        [
+            f'{descriptors["link"]}_{descriptors["unit_of_work"]}'
+            for descriptors in link_source_map.values()
+        ]
+    )
+    #  include UoW
     for link_combination in link_combinations:
         create_link_model_files(
-            link_source_map, link_combination, link_template, naming_dictionary
+            file_map,
+            link_source_map,
+            link_combination,
+            link_template,
+            naming_dictionary,
         )
 
 
-def concatinate_hubs_to_link(hub_source_map):
-    link_map = {source: "_".join(hubs) for source, hubs in hub_source_map.items()}
-    return link_map
-
-
-def create_hub_source_map(metadata_file_dirs):
-    hub_source_map = {
-        list(get_map_of_source_and_hubs(metadata_file_path).keys())[0]: list(
-            get_map_of_source_and_hubs(metadata_file_path).values()
-        )[0]
-        for metadata_file_path in metadata_file_dirs
-        if len(list(get_map_of_source_and_hubs(metadata_file_path).values())[0]) > 1
-    }
-    return hub_source_map
-
-
-def get_map_of_source_and_hubs(metadata_file_path):
-    metadata_file = load_metadata_file(metadata_file_path)
-    metadata = Metadata(metadata_file)
-    hubs = metadata.get_hubs_from_business_topics()
-    return {metadata.get_versioned_source_name(): hubs}
-
-
 def create_link_model_files(
-    link_source_map, link_combination, link_template, naming_dictionary
+    file_map, link_source_map, link_combination, link_template, naming_dictionary
 ):
     source_list = [
-        source_name
-        for source_name, link in link_source_map.items()
-        if link == link_combination
+        descriptors["source_name"]
+        for descriptors in link_source_map.values()
+        if f'{descriptors["link"]}_{descriptors["unit_of_work"]}' == link_combination
     ]
+    # print(source_list)
     link_keys = link_combination.split("_")
-    short_name = "_".join([naming_dictionary[key] for key in link_keys])
-    file_name = short_name.lower()
+    print(link_keys)
+    # short name to include UoW A_B_C_UoW
+    # create short name and concat UoW
+    # short_name = "_".join([naming_dictionary[key] for key in link_keys])
+    # file_name = short_name.lower()
 
-    substitutions = create_link_substitutions(source_list, link_keys, short_name)
-    link_model = link_template.substitute(substitutions)
-    with open(f"./models/raw_vault/links/{file_name}.sql", "w") as sql_export:
-        sql_export.write(link_model)
+    # substitutions = create_link_substitutions(source_list, link_keys, short_name)
+    # link_model = link_template.substitute(substitutions)
+    # with open(f"./models/raw_vault/links/{file_name}.sql", "w") as sql_export:
+    #     sql_export.write(link_model)
 
 
 def create_link_substitutions(source_list, link_keys, short_name):
@@ -86,6 +78,34 @@ def create_link_substitutions(source_list, link_keys, short_name):
     }
 
     return substitutions
+
+
+def get_file_map(metadata_file_dirs):
+    file_map = {
+        str(file_path): load_metadata_file(file_path)
+        for file_path in metadata_file_dirs
+    }
+    return file_map
+
+
+def create_hub_source_map(file_map):
+    metadata_files = file_map.values()
+    hub_source_map = {
+        file_path: {
+            "source_name": list(get_map_of_source_and_hubs(metadata).keys())[0],
+            "link": "_".join(list(get_map_of_source_and_hubs(metadata).values())[0]),
+            "unit_of_work": metadata.get("unit_of_work"),
+        }
+        for file_path, metadata in file_map.items()
+        if len(list(get_map_of_source_and_hubs(metadata).values())[0]) > 1
+    }
+    return hub_source_map
+
+
+def get_map_of_source_and_hubs(metadata):
+    read_metadata = Metadata(metadata)
+    hubs = read_metadata.get_hubs_from_business_topics()
+    return {read_metadata.get_versioned_source_name(): hubs}
 
 
 if __name__ == "__main__":
