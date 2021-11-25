@@ -1,0 +1,49 @@
+{
+    "unit_of_work" : "STORE_TILLS",
+    "source_name":"TRANSACTIONS",
+    "version":"2",
+    "source_system":"ONLINE",
+    "destination_database" : "AUTOVAULT",
+    "destination_schema" : "PUBLIC",
+    "business_topics":{
+        "CUSTOMER" : {
+            "business_keys":{
+                "CUSTOMER_ID":"STRING"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"CUSTOMERS",
+                    "payload":{
+                        "null" : "null"
+                    }
+                }
+            ]
+        },
+        "PRODUCT" : {
+            "business_keys":{
+                "PRODUCT_ID":"STRING"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"PRODUCTS",
+                    "payload":{
+                        "PRICE":"NUMBER"
+                    }
+                }
+            ]
+        },
+        "TRANSACTION" : {
+            "business_keys":{
+                "DATE_OF_SESSION":"TIMESTAMP_TZ(9)"
+            },
+            "business_attributes":[
+                {
+                    "business_definition":"TRANSACTIONS",
+                    "payload":{
+                        "null":"null"
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -205,3 +205,9 @@ Try running the following commands:
 - Join the [chat](http://slack.getdbt.com/) on Slack for live discussions and support
 - Find [dbt events](https://events.getdbt.com) near you
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+
+## Raw Vault Rules
+
+The unit of work is the foundation of forming hubs and links; the business process must be preserved to have a full audit trail of the source data into the raw vault - you should be able to recreate the original source and business process from it.
+
+Write the metadata file with the hubs in order of the unit of work - the business key hierarchy must be maintained; the business key in the first hub will become the driving key.
