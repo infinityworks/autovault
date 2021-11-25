@@ -19,47 +19,41 @@ def export_all_link_files():
     metadata_file_dirs = find_json_metadata("source_metadata")
 
     file_map = get_file_map(metadata_file_dirs)
-    link_source_map = create_hub_source_map(file_map)
-    link_combinations = set(
-        [
-            f'{descriptors["link"]}_{descriptors["unit_of_work"]}'
-            for descriptors in link_source_map.values()
-        ]
-    )
-    #  include UoW
-    for link_combination in link_combinations:
+    link_source_map = create_link_source_map(file_map)
+    link_combinations = set(link_source_map.values())
+    for link in link_combinations:
+        source_list = []
+        for file_path, metadata in file_map.items():
+            hub_list = Metadata(metadata).get_hubs_from_business_topics()
+            if len(hub_list) > 1:
+                linked_hubs = "_".join(hub_list)
+                unit_of_work = metadata.get("unit_of_work")
+                if f"{linked_hubs}_{unit_of_work}" == link:
+                    source_list.append(Metadata(metadata).get_versioned_source_name())
+                    short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
+                    name = f"{short_name}_{unit_of_work}"
+                    substitution_values = {"hubs": hub_list, "file_name": name.lower()}
+        substitution_values.update({"source_list": sorted(source_list)})
+        substitutions = create_link_substitutions(substitution_values)
         create_link_model_files(
-            file_map,
-            link_source_map,
-            link_combination,
-            link_template,
-            naming_dictionary,
+            substitutions, link_template, substitution_values["file_name"]
         )
 
-
-def create_link_model_files(
-    file_map, link_source_map, link_combination, link_template, naming_dictionary
-):
-    source_list = [
-        descriptors["source_name"]
-        for descriptors in link_source_map.values()
-        if f'{descriptors["link"]}_{descriptors["unit_of_work"]}' == link_combination
-    ]
-    # print(source_list)
-    link_keys = link_combination.split("_")
-    print(link_keys)
-    # short name to include UoW A_B_C_UoW
-    # create short name and concat UoW
-    # short_name = "_".join([naming_dictionary[key] for key in link_keys])
-    # file_name = short_name.lower()
-
-    # substitutions = create_link_substitutions(source_list, link_keys, short_name)
-    # link_model = link_template.substitute(substitutions)
-    # with open(f"./models/raw_vault/links/{file_name}.sql", "w") as sql_export:
-    #     sql_export.write(link_model)
+    #  use the full hub names for the filename to void duplicate files generated if naming dictionary changes
+    #  update link template to to include an alias to use shorterned naming for tablename
 
 
-def create_link_substitutions(source_list, link_keys, short_name):
+def create_link_model_files(substitutions, link_template, file_name):
+    link_model = link_template.substitute(substitutions)
+    with open(f"./models/raw_vault/links/{file_name}.sql", "w") as sql_export:
+        sql_export.write(link_model)
+
+
+def create_link_substitutions(substitution_values):
+    source_list = substitution_values["source_list"]
+    link_keys = substitution_values["hubs"]
+    short_name = substitution_values["file_name"]
+
     table_name = f",\n{chr(32)*24}".join(
         [f'"stg_{source.lower()}"' for source in source_list]
     )
@@ -88,18 +82,14 @@ def get_file_map(metadata_file_dirs):
     return file_map
 
 
-def create_hub_source_map(file_map):
+def create_link_source_map(file_map):
     metadata_files = file_map.values()
-    hub_source_map = {
-        file_path: {
-            "source_name": list(get_map_of_source_and_hubs(metadata).keys())[0],
-            "link": "_".join(list(get_map_of_source_and_hubs(metadata).values())[0]),
-            "unit_of_work": metadata.get("unit_of_work"),
-        }
+    link_source_map = {
+        file_path: f'{"_".join(list(get_map_of_source_and_hubs(metadata).values())[0])}_{metadata.get("unit_of_work")}'
         for file_path, metadata in file_map.items()
         if len(list(get_map_of_source_and_hubs(metadata).values())[0]) > 1
     }
-    return hub_source_map
+    return link_source_map
 
 
 def get_map_of_source_and_hubs(metadata):

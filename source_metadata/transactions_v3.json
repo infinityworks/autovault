@@ -1,5 +1,5 @@
 {
-    "unit_of_work" : "STORE_TILLS",
+    "unit_of_work" : "ONLINE",
     "source_name":"TRANSACTIONS",
     "version":"3",
     "source_system":"ONLINE",
