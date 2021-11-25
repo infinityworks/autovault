@@ -15,25 +15,13 @@ def export_all_link_files():
     template = load_template_file(HUB_TEMPLATE_PATH)
     link_template = Template(template)
     metadata_file_dirs = find_json_metadata("source_metadata")
-    all_unique_link_combinations = get_all_unique_link_combinations(metadata_file_dirs)
     hub_source_map = create_hub_source_map(metadata_file_dirs)
-    for link_combination in all_unique_link_combinations:
-        create_link_model_files(link_combination, link_template, hub_source_map)
+    print(hub_source_map)
+    # print("_".join(hub_source_map["TRANSACTIONS_V1"]))
 
-
-def get_all_unique_link_combinations(metadata_file_dirs):
-    hubs = get_hubs_from_metadata_files(metadata_file_dirs)
-    link_combinations = [list(combinations(sorted(hub), 2)) for hub in hubs]
-    all_files_link_combinations = sorted(set(list(chain(*link_combinations))))
-    return all_files_link_combinations
-
-
-def get_hubs_from_metadata_files(metadata_file_dirs):
-    hubs = [
-        Metadata(load_metadata_file(file_path)).get_hubs_from_business_topics()
-        for file_path in metadata_file_dirs
-    ]
-    return hubs
+    for link in hub_source_map.values():
+        print("_".join(link))
+        create_link_model_files(link, link_template, hub_source_map)
 
 
 def create_hub_source_map(metadata_file_dirs):
@@ -42,6 +30,7 @@ def create_hub_source_map(metadata_file_dirs):
             get_map_of_source_and_hubs(metadata_file_path).values()
         )[0]
         for metadata_file_path in metadata_file_dirs
+        if len(list(get_map_of_source_and_hubs(metadata_file_path).values())[0]) > 1
     }
     return hub_source_map
 
@@ -53,14 +42,14 @@ def get_map_of_source_and_hubs(metadata_file_path):
     return {metadata.get_versioned_source_name(): hubs}
 
 
-def create_link_model_files(link_combination, link_template, hub_source_map):
+def create_link_model_files(link, link_template, hub_source_map):
     source_list = [
         source_name
         for source_name, hubs in hub_source_map.items()
-        if set(link_combination).issubset(hubs)
+        if set(link).issubset(hubs)
     ]
-    file_name = f'{"_".join(link_combination)}'.lower()
-    substitutions = create_link_subsitutions(source_list, file_name, link_combination)
+    file_name = f'{"_".join(link)}'.lower()
+    substitutions = create_link_subsitutions(source_list, file_name, link)
     link_model = link_template.substitute(substitutions)
     with open(f"./models/raw_vault/links/{file_name}.sql", "w") as sql_export:
         sql_export.write(link_model)

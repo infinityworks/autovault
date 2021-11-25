@@ -1,4 +1,5 @@
 {
+    "unit_of_work" : "PRODUCT_CATALOGUE",
     "source_name":"PRODUCTS",
     "version":"1",
     "source_system":"CSV",
