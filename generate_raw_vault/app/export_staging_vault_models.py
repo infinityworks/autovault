@@ -9,6 +9,7 @@ from itertools import combinations
 
 STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.sql"
 SAT_HASHDIFF_TEMPLATE = "generate_raw_vault/app/templates/sat_hashdiff.sql"
+NAME_DICTIONARY = "./name_dictionary.json"
 
 
 def export_all_staging_files():
@@ -23,15 +24,12 @@ def create_staging_file(metadata_file_path):
 
     metadata_file = load_metadata_file(metadata_file_path)
     metadata = Metadata(metadata_file)
-
     hubs = metadata.get_hubs_from_business_topics()
     topics = metadata.get_business_topics()
-    unique_link_combis = combinations(sorted(hubs), 2)
-
     hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
     sat_substitutions_string = get_sat_substitutions_string(metadata, topics)
     unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
-        metadata, unique_link_combis
+        metadata, hubs
     )
     hub_alias_substitution_string = get_hub_alias_substitutions_string(topics)
 
@@ -106,19 +104,22 @@ def get_sat_subs(sat_hashdiff_template, sat_name, payload):
         return sat_hashdiff_template.substitute(substitutions)
 
 
-def get_unique_link_combis_substitutions_string(metadata, unique_link_combis):
+def get_unique_link_combis_substitutions_string(metadata, hubs):
     unique_link_combis_substitutions = []
-    for unique_link_combi in unique_link_combis:
-        link_join = "_".join(unique_link_combi)
+
+    if len(hubs) > 1:
+        naming_dictionary = load_metadata_file(NAME_DICTIONARY)
+        link_combination_string = "_".join([naming_dictionary[hub] for hub in hubs])
+        unit_of_work = metadata.get_unit_of_work()
+        link_name = f"{link_combination_string}_{unit_of_work}"
         combi_primary_keys = []
-        for hub_in_combi in unique_link_combi:
-            each_primary_key = metadata.get_hub_business_key(hub_in_combi)
+        for hub in hubs:
+            each_primary_key = metadata.get_hub_business_key(hub)
             combi_primary_keys.append(each_primary_key)
-        ordered_combination_primary_keys = sorted(set(combi_primary_keys))
-        link_keys = [f'- "{key}"' for key in ordered_combination_primary_keys]
+        link_keys = [f'- "{key}"' for key in combi_primary_keys]
         primarykeys_join = "\n   ".join(link_keys)
         unique_link_combis_substitutions.append(
-            f"{link_join}_HK:\n   {primarykeys_join}"
+            f"{link_name}_HK:\n   {primarykeys_join}"
         )
     return create_substitutions_string(unique_link_combis_substitutions)
 

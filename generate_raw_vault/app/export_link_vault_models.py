@@ -6,7 +6,6 @@ from generate_raw_vault.app.find_metadata_files import (
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
 import json
-from itertools import combinations, chain
 
 LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/link_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"

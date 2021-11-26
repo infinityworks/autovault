@@ -9,6 +9,9 @@ class Metadata:
     def get_source_name(self):
         return self.metadata.get("source_name")
 
+    def get_unit_of_work(self):
+        return self.metadata.get("unit_of_work")
+
     def get_source_system(self):
         return self.metadata.get("source_system")
 

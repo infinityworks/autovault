@@ -1,5 +1,5 @@
 {
-    "unit_of_work" : "ONLINE",
+    "unit_of_work" : "ON-LINE",
     "source_name":"TRANSACTIONS",
     "version":"2",
     "source_system":"ONLINE",
