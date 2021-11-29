@@ -7,19 +7,20 @@ class Metadata:
         self.metadata = metadata
 
     def get_source_name(self):
-        return self.metadata.get("source_name")
+        return self.metadata.get("source_name").replace("-", "_")
 
     def get_unit_of_work(self):
-        return self.metadata.get("unit_of_work")
+        unit_of_work = self.metadata.get("unit_of_work").replace("-", "_")
+        return unit_of_work
 
     def get_source_system(self):
-        return self.metadata.get("source_system")
+        return self.metadata.get("source_system").replace("-", "_")
 
     def get_target_schema(self):
-        return self.metadata.get("destination_schema")
+        return self.metadata.get("destination_schema").replace("-", "_")
 
     def get_target_database(self):
-        return self.metadata.get("destination_database")
+        return self.metadata.get("destination_database").replace("-", "_")
 
     def get_source_version(self):
         return self.metadata.get("version")
@@ -29,13 +30,13 @@ class Metadata:
         return business_topics
 
     def get_versioned_source_name(self):
-        source_name = self.metadata.get("source_name")
+        source_name = self.get_source_name()
         version = "".join(["V", self.metadata.get("version")])
         versioned_source_name = "_".join([source_name, version])
         return versioned_source_name
 
     def get_source_business_topics(self):
-        topics = [topic for topic in self.metadata.get("business_topics").values()]
+        topics = [topic for topic in self.get_business_topics().values()]
         return topics
 
     def get_hubs_from_business_topics(self):

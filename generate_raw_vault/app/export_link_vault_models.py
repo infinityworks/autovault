@@ -22,13 +22,14 @@ def export_all_link_files():
     link_combinations = set(link_source_map.values())
     for link in link_combinations:
         source_list = []
-        for file_path, metadata in file_map.items():
-            hub_list = Metadata(metadata).get_hubs_from_business_topics()
+        for file_path, metadata_dict in file_map.items():
+            metadata = Metadata(metadata_dict)
+            hub_list = metadata.get_hubs_from_business_topics()
             if len(hub_list) > 1:
                 linked_hubs = "_".join(hub_list)
-                unit_of_work = metadata.get("unit_of_work")
+                unit_of_work = metadata.get_unit_of_work()
                 if f"{linked_hubs}_{unit_of_work}" == link:
-                    source_list.append(Metadata(metadata).get_versioned_source_name())
+                    source_list.append(metadata.get_versioned_source_name())
                     short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
                     name = f"{short_name}_{unit_of_work}"
                     substitution_values = {"hubs": hub_list, "file_name": name.lower()}
@@ -84,7 +85,7 @@ def get_file_map(metadata_file_dirs):
 def create_link_source_map(file_map):
     metadata_files = file_map.values()
     link_source_map = {
-        file_path: f'{"_".join(list(get_map_of_source_and_hubs(metadata).values())[0])}_{metadata.get("unit_of_work")}'
+        file_path: f'{"_".join(list(get_map_of_source_and_hubs(metadata).values())[0])}_{Metadata(metadata).get_unit_of_work()}'
         for file_path, metadata in file_map.items()
         if len(list(get_map_of_source_and_hubs(metadata).values())[0]) > 1
     }
