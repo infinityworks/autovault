@@ -1,7 +1,7 @@
 {
-    "unit_of_work" : "STORE-TILLS",
+    "unit_of_work" : "ONLINE",
     "source_name":"TRANSACTIONS",
-    "version":"1",
+    "version":"3",
     "source_system":"ONLINE",
     "destination_database" : "AUTOVAULT",
     "destination_schema" : "PUBLIC",
@@ -28,19 +28,6 @@
                     "business_definition":"PRODUCTS",
                     "payload":{
                         "PRICE":"NUMBER"
-                    }
-                }
-            ]
-        },
-        "TRANSACTION" : {
-            "business_keys":{
-                "DATE_OF_SESSION":"TIMESTAMP_TZ(9)"
-            },
-            "business_attributes":[
-                {
-                    "business_definition":"TRANSACTIONS",
-                    "payload":{
-                        "null":"null"
                     }
                 }
             ]

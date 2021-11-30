@@ -1,4 +1,5 @@
 {
+    "unit_of_work" : "CUST_VSTS",
     "source_name":"CUSTOMER_VISITS",
     "version":"1",
     "source_system":"CSV",

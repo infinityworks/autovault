@@ -4,8 +4,9 @@
   ) }}
 
 {%- set source_model = ["stg_transactions_v1"]     -%}
-{%- set src_pk = "PRODUCT_TRANSACTION_HK"         -%}
-{%- set src_fk = ["PRODUCT_HK",
+{%- set src_pk = "CUST_PRDCT_TRNSCTN_STORE_TILLS_HK"         -%}
+{%- set src_fk = ["CUSTOMER_HK",
+                  "PRODUCT_HK",
                   "TRANSACTION_HK"]  -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
