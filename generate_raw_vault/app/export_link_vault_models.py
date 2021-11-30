@@ -29,42 +29,47 @@ def export_all_link_files():
                 linked_hubs = "_".join(hub_list)
                 unit_of_work = metadata.get_unit_of_work()
                 if f"{linked_hubs}_{unit_of_work}" == link:
-                    source_list.append(metadata.get_versioned_source_name())
+                    source_list.append(Metadata(metadata).get_versioned_source_name())
+                    filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
                     short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
-                    name = f"{short_name}_{unit_of_work}"
-                    substitution_values = {"hubs": hub_list, "file_name": name.lower()}
+                    link_name = f"{short_name}_{unit_of_work}"
+                    substitution_values = {
+                        "hubs": hub_list,
+                        "link_name": link_name,
+                        "filename": filename,
+                    }
         substitution_values.update({"source_list": sorted(source_list)})
         substitutions = create_link_substitutions(substitution_values)
-        create_link_model_files(
-            substitutions, link_template, substitution_values["file_name"]
-        )
+        filename = substitution_values["filename"]
+        create_link_model_files(substitutions, link_template, filename)
 
-    #  use the full hub names for the filename to void duplicate files generated if naming dictionary changes
+    #  use the full hub names for the filename to avoid duplicate files generated if naming dictionary changes
     #  update link template to to include an alias to use shorterned naming for tablename
 
 
-def create_link_model_files(substitutions, link_template, file_name):
+def create_link_model_files(substitutions, link_template, filename):
     link_model = link_template.substitute(substitutions)
-    with open(f"./models/raw_vault/links/{file_name}.sql", "w") as sql_export:
+    with open(f"./models/raw_vault/links/{filename}.sql", "w") as sql_export:
         sql_export.write(link_model)
 
 
 def create_link_substitutions(substitution_values):
     source_list = substitution_values["source_list"]
     link_keys = substitution_values["hubs"]
-    short_name = substitution_values["file_name"]
+    link_name = substitution_values["link_name"]
 
-    table_name = f",\n{chr(32)*24}".join(
+    source_tables = f",\n{chr(32)*24}".join(
         [f'"stg_{source.lower()}"' for source in source_list]
     )
-    hash_key = (short_name + "_HK").upper()
+    hash_key = (link_name + "_HK").upper()
     src_fk = f",\n{chr(32)*18}".join(
         [f'"{combination}_HK"' for combination in link_keys]
     )
     load_datetime = "LOAD_DATETIME"
     record_source = "RECORD_SOURCE"
     substitutions = {
-        "source_model": table_name,
+        "alias": link_name,
+        "source_model": source_tables,
         "src_pk": hash_key,
         "src_fk": src_fk,
         "src_ldts": load_datetime,
