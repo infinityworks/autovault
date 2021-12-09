@@ -164,50 +164,53 @@ Data sources are referenced in schema.yml, this file will be generated from your
         - name: TOTAL_CUST_VISITS
 
 # JSON Metadata
+
 Metadata Template
-{
-“unit_of_work”: “<UNIT_OF_WORK>”,
-“source_name”: “<SOURCE_NAME>”,
-“source_system”: “<SOURCE_SYSTEM>”,
-“version”: “<VERSION>”,
-“destination_database”: “<DESTINATION_DATABASE>”,
-“destination_schema”: “<DESTINATION_SCHEMA>”
-{
-  "business_topics": {
-    "<BUSINESS_TOPIC_1>": {
-      "business_keys": {
-                "<BUSINESS_KEY_1>":"STRING"
-            },
-      "alias": "<ALIAS_BUSINESS_KEY>",
-      "business_attributes": [
+
+    {
+    “unit_of_work”: “<UNIT_OF_WORK>”,
+    “source_name”: “<SOURCE_NAME>”,
+    “source_system”: “<SOURCE_SYSTEM>”,
+    “version”: “<VERSION>”,
+    “destination_database”: “<DESTINATION_DATABASE>”,
+    “destination_schema”: “<DESTINATION_SCHEMA>”
+    {
+    "business_topics": {
+        "<BUSINESS_TOPIC_1>": {
+        "business_keys": {
+                    "<BUSINESS_KEY_1>":"STRING"
+                },
+        "alias": "<ALIAS_BUSINESS_KEY>",
+        "business_attributes": [
+            {
+            "business_definition": "<BUSINESS_DEFINITION_1>",
+            "payload": {
+                "COL1": "DECIMAL(38,10)",
+                "COL2": "STRING",
+                "COL3": "STRING"
+            }
+            }
+        ]
+        }
+    },
+    "<BUSINESS_TOPIC_2>": {
+        "business_keys": {
+                    "<BUSINESS_KEY_2>>":"STRING"
+                },
+        "alias": "<ALIAS_BUSINESS_KEY>",
+        "business_attributes": [
         {
-          "business_definition": "<BUSINESS_DEFINITION_1>",
-          "payload": {
+            "business_definition: "<BUSINESS_DEFINITION_2>",
+            "payload": {
             "COL1": "DECIMAL(38,10)",
-            "COL2": "STRING",
-            "COL3": "STRING"
-          }
+            "COL2": "STRING"
+            }
         }
-      ]
+        ]
     }
-  },
-  "<BUSINESS_TOPIC_2>": {
-    "business_keys": {
-                "<BUSINESS_KEY_2>>":"STRING"
-            },
-    "alias": "<ALIAS_BUSINESS_KEY>",
-    "business_attributes": [
-      {
-        "business_definition: "<BUSINESS_DEFINITION_2>",
-        "payload": {
-          "COL1": "DECIMAL(38,10)",
-          "COL2": "STRING"
-        }
-      }
-    ]
-  }
-}
-}
+    }
+    }
+
 ## unit_of_work
 Unit of work represents the business process or activity that the source table represents. It is used to distinguish between processes/activities with overlapping business topics (hubs).
 ## source_name
