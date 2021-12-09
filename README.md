@@ -278,11 +278,11 @@ The unit of work is the foundation of forming hubs and links; the business proce
 
 Write the metadata file with the hubs in order of the unit of work - the business key hierarchy must be maintained; the business key in the first hub will become the driving key.
 
-•	Each business topic corresponds to a unique hub.
-•	A link connects all business topics, to avoid breaking relationship between multiple business topics that preserves the unit of work (business process/activity) which is useful for optimisation and lineage.
-•	Source data must include a timestamp of when the record was produced; updates are seen as a new piece of data that is produced and so must also include a created timestamp. The timestamp is used in the append only raw vault to filter to the latest record or state of any given process.
-•	Payload columns can only be persisted to satellites which retains their business context, if the context is lost it is in the wrong satellite e.g. Party role agreements only makes sense when the role is attached to the agreement, detaching the two breaks the business logic continuity.
-•	If the source data has a business topic which does not have any related business keys, the record will only be populated in the hub and link table preserving the lineage and connection to other business hubs and satellites within said data.
+- Each business topic corresponds to a unique hub.
+- A link connects all business topics, to avoid breaking relationship between multiple business topics that preserves the unit of work (business process/activity) which is useful for optimisation and lineage.
+- ource data must include a timestamp of when the record was produced; updates are seen as a new piece of data that is produced and so must also include a created timestamp. The timestamp is used in the append only raw vault to filter to the latest record or state of any given process.
+- Payload columns can only be persisted to satellites which retains their business context, if the context is lost it is in the wrong satellite e.g. Party role agreements only makes sense when the role is attached to the agreement, detaching the two breaks the business logic continuity.
+- If the source data has a business topic which does not have any related business keys, the record will only be populated in the hub and link table preserving the lineage and connection to other business hubs and satellites within said data.
 
 
 # Running the project
