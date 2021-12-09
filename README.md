@@ -227,7 +227,7 @@ The column name/s in the source that stores the business key e.g. customer_id. T
 ## alias
 If your business key columns have different names across the different tables, they will need to be aliased to the same name.
 ## business_definition
-A satellite is named by combining source system, business definition and version. It is usefull when attributes of a business are split into multiple satellies.
+A satellite is named by combining source system, business definition and version. It is useful when attributes of a business are split into multiple satellites.
 ## payload
 List of business_topic attributes represented by column names and relevant data types.
 
@@ -279,7 +279,6 @@ Write the metadata file with the hubs in order of the unit of work - the busines
 •	A link connects all business topics, to avoid breaking relationship between multiple business topics that preserves the unit of work (business process/activity) which is useful for optimisation and lineage.
 •	Source data must include a timestamp of when the record was produced; updates are seen as a new piece of data that is produced and so must also include a created timestamp. The timestamp is used in the append only raw vault to filter to the latest record or state of any given process.
 •	Payload columns can only be persisted to satellites which retains their business context, if the context is lost it is in the wrong satellite e.g. Party role agreements only makes sense when the role is attached to the agreement, detaching the two breaks the business logic continuity.
-•	Metadata of CDC flags, row hashes etc do not persist to the raw vault, they are used to construct it in the raw landing layers to establish change data capture and what is the most up to date version of data.
 •	If the source data has a business topic which does not have any related business keys, the record will only be populated in the hub and link table preserving the lineage and connection to other business hubs and satellites within said data.
 
 
