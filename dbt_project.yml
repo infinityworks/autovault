@@ -43,3 +43,21 @@ models:
           materialized: table
       stage:
           materialized: view
+seeds:
+  +enabled: true
+  +database: AUTOVAULT
+  +schema: PUBLIC
+  autovault:
+    customers_v1:
+      +column_types:
+        LOAD_DATETIME: TIMESTAMP_TZ(9)
+    products_v1:
+      +column_types:
+        LOAD_DATETIME: TIMESTAMP_TZ(9)
+    transactions_v1:
+      +column_types:
+        LOAD_DATETIME: TIMESTAMP_TZ(9)
+        DATE_OF_SESSION: TIMESTAMP_TZ(9)
+    customer_visits_v1:
+      +column_types:
+        LOAD_DATETIME: TIMESTAMP_TZ(9)
