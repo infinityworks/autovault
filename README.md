@@ -1,31 +1,72 @@
-# dbtvault practice
+# Introduction
+This project is a framework to automate the creation of a raw vault data model for a Snowflake datawarehouse that uses Data Vault 2.0 standards and rules.
+
+The project generates dbt files which build the vault model through defined metadata which describes the source data. Along with generating the dbt files, it also generates SQL DDL statements for creating the landing / staging layer.
+
+The data vault entities produced are:
+- Staging enrichment layer (for hashes etc)
+- Hubs
+- Links
+- Satellites
+
+# Dependencies
+
+## Tools
+The project relies on the following tools:
+- Python 3.8
+- dbt 0.20.2
+- dbtvault 0.7.8
+- pre-commit 2.15.0
+
+Optional:
+- snowsql CLI 1.2.21
+
+## Connecting to Snowflake
+
+### Authentication with RSA keys
+This project uses rsa keys as secure methods for authentication. To generate a private key edit and run the following cmd
+
+    mkdir -p ~/.ssh/snowsql
+    openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out ~/.ssh/snowsql/rsa_key.p8
+
+This will prompt you for a password to encrypt the private key. Each time you connect to Snowflake you will be prompted for the passphrase, alternatively you can export it as an environment variable. If you wish you can include it in your .zshrc file.
+
+    export SNOWSQL_PRIVATE_KEY_PASSPHRASE=<your passphrase>
+
+Create your public key using the private key with the following command:
+
+    openssl rsa -in  ~/.ssh/snowsql/rsa_key.p8 -pubout -out ~/.ssh/snowsql/rsa_key.pub
+
+#### Testing the connection
+To test your connection to Snowflake and that dbt can deploy tables and views, you may want to use the snowsql CLI:
+
 Install Snowsql
 
     brew install snowflake-snowsql
 
-Run snowsql to install the cli; if the cmd is not recognised then add snowsql to your path. To add snowsql to the path on mac, add the following to your .zshrc file. If .zshrc file does not exist run:
+Run snowsql to install the cli; if the cmd is not recognised then add snowsql to your path. To add snowsql to the path on mac, add the following to your .zshrc file.
 
-    touch .zshrc
     export PATH=/Applications/SnowSQL.app/Contents/MacOS:$PATH
 
-## setting up snowsql cli
-Populate the the snowsql config file with connection details of your snowflake a/c and update the options particularly for the log file location.
-example-
+[mac only] If .zshrc file does not exist run:
+
+    touch .zshrc
+
+##### Setting up snowsql cli
+Populate the the snowsql config file with connection details of your snowflake account and update the options particularly for the log file location.
 
     [connections.iw]
     accountname = infinityworkspartner
     region = eu-west-1
     role = infra_builder
-    username = kiran.bhat@infinityworks.com
+    username = firstname.surname@infinityworks.com
     warehouse = demo_wh
-    private_key_path = /Users/kiran.bhat/.ssh/snowsql/rsa_key.p8
+    private_key_path = /Users/firstname.surname/.ssh/snowsql/rsa_key.p8
 
     [variables]
     # SnowSQL defines the variables in this section on startup.
     # You can use these variables in SQL statements. For details, see
     # https://docs.snowflake.com/en/user-guide/snowsql-use.html#using-variables
-
-    # example_variable=27
 
     [options]
     # If set to false auto-completion will not occur interactive mode.
@@ -43,30 +84,16 @@ example-
     # executable.
     # log_bootstrap_file = ~/.snowsql/log_bootstrap
 
-## authenticate snowsql connection
-This project uses rsa keys as secure methods for authentication. To generate a private key edit and run the following cmd
 
-    mkdir -p ~/.ssh/snowsql
-    openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out ~/.ssh/snowsql/rsa_key.p8
-This will prompt you for a password to encrypt the private key. To keep passphrase safe and for convenience, to decrypt the key include it in the .zshrc file
-
-    export SNOWSQL_PRIVATE_KEY_PASSPHRASE=
-
-Create you public key using the private key using the following cmd-
-
-    openssl rsa -in  ~/.ssh/snowsql/rsa_key.p8 -pubout -out ~/.ssh/snowsql/rsa_key.pub
-
-To test the connection run the snowsql cmd to your desired profile e.g. `connections.iw`
+To test the connection run the snowsql command to your desired profile e.g. `connections.iw`
 
         snowsql --connection  iw
         !exit
 
-# Install DBT
-select a directory to install dbt or create a new directory
+This should validate your connectivity.
 
-    mkdir dbtpractice (e.g.)
-
-Create a virtual environment; standard convnetion of a virtual env is .venv
+## Installing dbt
+Create a virtual environment:
 
     python3 -m venv .venv
 
@@ -74,71 +101,59 @@ Activate the environment
 
     source .venv/bin/activate
 
-Install DBT
+Install dbt
 
-    pip3 install dbt==x.x.x (latest version)
+    pip3 install dbt
 
-Create and configure DBT project e.g. prj_xx
+# Configure dbt connection to snowflake
+If you do not have a dbt profiles.yml, you must create one:
 
-    dbt init  prj_xx --adapter snowflake
+    touch ~/.dbt/profiles.yml
 
-# Configure connection to snowflake
-Edit profile.yml ~/.dbt/profiles.yml
+Include the following in the file and change out the relevant account and database details etc:
 
     default:
         target: "{{ env_var('DBT_PROFILE_TARGET') }}"
         outputs:
             dev:
-            type: snowflake
-            account: infinityworkspartner.eu-west-1
-            user: "{{ env_var('USER') }}@infinityworks.com"
-            private_key_path: "{{ env_var('HOME') }}/.ssh/snowsql/rsa_key.p8"
-            private_key_passphrase: "{{ env_var('SNOWSQL_PRIVATE_KEY_PASSPHRASE') }}"
-            role: INFRA_BUILDER
-            database: AUTOVAULT
-            warehouse: DEMO_WH
-            schema: PUBLIC
-            threads: 2
-            client_session_keep_alive: False
+                type: snowflake
+                account: infinityworkspartner.eu-west-1
+                user: "{{ env_var('USER') }}@infinityworks.com"
+                private_key_path: "{{ env_var('HOME') }}/.ssh/snowsql/rsa_key.p8"
+                private_key_passphrase: "{{ env_var('SNOWSQL_PRIVATE_KEY_PASSPHRASE') }}"
+                role: INFRA_BUILDER
+                database: AUTOVAULT
+                warehouse: DEMO_WH
+                schema: PUBLIC
+                threads: 2
+                client_session_keep_alive: False
 
-Test DBT connection
+Export the dbt profile you wish to use, e.g. dev, staging, prod:
+
+    export DBT_PROFILE_TARGET=dev
+
+Test the dbt connection to Snowflake:
 
     dbt debug
 
-# Install dbtvault
-Refer link - https://hub.getdbt.com/datavault-uk/dbtvault/latest/
+## Installing dbtvault
+dbt packages can be [installed via packages.yml](https://hub.getdbt.com/datavault-uk/dbtvault/latest/).
 
-# Load sample source data into snowflake and set data sources for the project
-Create raw data tables using following DDLs-
+Include the following in your packages.yml file:
+packages:
+  - package: Datavault-UK/dbtvault
+    version: 0.7.8
 
-    CREATE  OR REPLACE TABLE "AUTOVAULT"."PUBLIC".TRANSACTIONS (TRSACTION VARIANT, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
+Then run the command:
 
-    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".CUSTOMERS (CUSTOMER_ID STRING, AVG_VISITS_PER_MONTH NUMBER, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
+    dbt deps
 
-    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".PRODUCTS (PRODUCT_ID STRING, MODEL STRING, MAKE STRING, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
-
-    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".CUSTOMER_VISITS (CUSTOMER_ID STRING, MONTHLY_VISITS_AVG NUMBER, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
-
-    CREATE OR REPLACE TABLE "AUTOVAULT"."PUBLIC".TOTAL_CUST_VISITS (CUST_ID STRING, TOTAL_VISITS NUMBER, RECORD_SOURCE STRING, LOAD_DATE TIMESTAMP_NTZ);
-
-Load it to internal user stage in snowflake via snowsql CLI. Note- you cannot use this in Snowflake console hence the CLI. Simlilarly load other data sets.
-e.g.
-
-    put file://~/documents/datavault/snowflake101/customers.csv @~/staged AUTO_COMPRESS = FALSE
-
-    put file:///yourfilelocation @~/staged AUTO_COMPRESS = FALSE
-
-Copy  data from internal snoflake stage to the table
-e.g.
-
-    COPY INTO "mydb"."myschema"."PRODUCTS" FROM (SELECT $1, $2, $3, 'PRODUCTS',TO_TIMESTAMP_NTZ(CURRENT_TIMESTAMP) FROM '@~/staged/products.csv') file_format = (format_name = 'myCSV');
-
-## Set data sources
-Add following lines to the schema.yml file found under models directory.
+# Data sources
+Data sources are referenced in schema.yml, this file will be generated from your JSON metadata that descibes your source files and will resemble the following.
 
     version: 2
     sources:
-    - name: AV (custom name)
+    - name: AUTOVAULT_PUBLIC (custom name)
         database: AUTOVAULT (your snowflake database)
         schema: PUBLIC (your scheme under)
         tables:
@@ -148,20 +163,95 @@ Add following lines to the schema.yml file found under models directory.
         - name: CUSTOMER_VISITS
         - name: TOTAL_CUST_VISITS
 
-## Flatten transcations data with json records
-flatten_transactions.sql flattens the transactions data using latteral flatten sql command.
+# JSON Metadata
+Metadata Template
+{
+“unit_of_work”: “<UNIT_OF_WORK>”,
+“source_name”: “<SOURCE_NAME>”,
+“source_system”: “<SOURCE_SYSTEM>”,
+“version”: “<VERSION>”,
+“destination_database”: “<DESTINATION_DATABASE>”,
+“destination_schema”: “<DESTINATION_SCHEMA>”
+{
+  "business_topics": {
+    "<BUSINESS_TOPIC_1>": {
+      "business_keys": {
+                "<BUSINESS_KEY_1>":"STRING"
+            },
+      "alias": "<ALIAS_BUSINESS_KEY>",
+      "business_attributes": [
+        {
+          "business_definition": "<BUSINESS_DEFINITION_1>",
+          "payload": {
+            "COL1": "DECIMAL(38,10)",
+            "COL2": "STRING",
+            "COL3": "STRING"
+          }
+        }
+      ]
+    }
+  },
+  "<BUSINESS_TOPIC_2>": {
+    "business_keys": {
+                "<BUSINESS_KEY_2>>":"STRING"
+            },
+    "alias": "<ALIAS_BUSINESS_KEY>",
+    "business_attributes": [
+      {
+        "business_definition: "<BUSINESS_DEFINITION_2>",
+        "payload": {
+          "COL1": "DECIMAL(38,10)",
+          "COL2": "STRING"
+        }
+      }
+    ]
+  }
+}
+}
+## unit_of_work
+Unit of work represents the business process or activity that the source table represents. It is used to distinguish between processes/activities with overlapping business topics (hubs).
+## source_name
+It represents the source name i.e. table name from the source system.
+## source_system
+It represent the source system the source belongs too.
+## version
+It is the user defined version of the source system. It is used to identify the changed version of the source system and create a new satellite based on new version of the source.
+## destination_database
+It the database in snowflake where the raw vault resides.
+## destination_schema
+It the schema where raw data will land, usually "public".
+## business_topic
+Concepts such as customer, product, agreement etc. are used to represent ideas, identified as business keys represented across multiple lines of business.
+## business_key
+The column name/s in the source that stores the business key e.g. customer_id. The business_key should be understood by business and mean something to the business and is exposed to the user. It could be a composite key.
+## alias
+If your business key columns have different names across the different tables, they will need to be aliased to the same name.
+## business_definition
+A satellite is named by combining source system, business definition and version. It is useful when attributes of a business are split into multiple satellites.
+## payload
+List of business_topic attributes represented by column names and relevant data types.
 
-# Set creation of hubs, links and sats in the schema of choice
+# Raw vault objects
+
+## HUB
+It is a uniquely identifiable business element. It has the semantic meaning accross the business and same granularity.
+
+## SATELLITE
+It represents descriptive attributes of a business key/business element at a point in time. i.e. customer name, customer date of birth.
+
+## LINK
+It is a uniquely identifiable relationship between business elements(Hubs) and represents an unit of work(process/activity) or hierarchy.
+
+## Set creation of hubs, links and sats in the schema of choice
 By detault all the artefacts would be created in public schema. You can overide it in the specific model, by adding following lines at the start-
 e.g. hub customers.sql
 
     {{ config(materialized='incremental',
     schema = "SATS"
     ) }}
+Note the above line of code is automatically added to the artefact files. Also add custom schema macro called get_custom_schema.sql to the macros directory. This will ensure artefacts are created in your schema of choice.
 
-Also add custom schema macro called get_custom_schema.sql to the macros directory. This will ensure artefacts are created in your schema of choice.
-
-# Staging, Hubs, Links, Sats
+## Staging, Hubs, Links, Sats
 Set staging models to views in the dbt_project.yml as below-
 
     models:
@@ -171,43 +261,53 @@ Set staging models to views in the dbt_project.yml as below-
         stage:
             materialized: view
 
-Stage sample data as views by creating staging models, under folder called stage under models directory, that add meta data to the source i.e. load_date, effective_from date, primary key hash, hashdiff etc.
-e.g. stg_customers.sql. Copy model from final model section of the following dbtvault doc. Update it to suit your project.
-https://dbtvault.readthedocs.io/en/latest/tutorial/tut_staging/
+To compute the incremental update in the hubs, links and satellites, dbt will calculate hash of the business keys and hashdiff of payload columns which can ve expensive as it happens multiple times for each hub, link and satellite related to a source table. If performance is as issue the staging layer that feeds the raw vault can be materialised as table. There is a trade of between cost of materialising the staging layer and speed and the compute cost if it relies on virtualised staging layer.
+To materialise staging layer as a table, update the staging template - generate_raw_vault/app/templates/staging_model.sql with following lines:
 
-## Hubs
-Create Hub tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_hubs/
-Copy hub template from this link. E.g. customers.sql model under hub directory. Update it to suit your project.
-If your primary key and natural key columns have different names across the different tables, they will need to be aliased to the same name in the respective staging layers via a derived column configuration, using the stage macro in the staging layer.
-e.g. stg_total_cust_visits.sql
-
-derived_columns:
-CUSTOMER_ID: "CUST_ID" (total_cust_visits source dataset has natural key column called 'cust_id' that is different to the other data sources with column name as 'customer_id))
-
-## Links
-Create Link tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_links/
-Copy link template from this doc link. E.g. customer_prod.sql model under links directory. Update it to suit your project.
-
-## Sats
-Create satellite tables from the stating views. Refer dbtvault doc link - https://dbtvault.readthedocs.io/en/latest/tutorial/tut_satellites/
-Copy satellite template from this doc link. E.g. customer.sql model under sats directory. Update it to suit your project.
-
-### Using the starter project
-
-Try running the following commands:
-- dbt run
-- dbt test
-
-
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](http://slack.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+    {{
+    config(materialized='table',
+    schema = "STAGING"
+    ) }}
 
 ## Raw Vault Rules
 
 The unit of work is the foundation of forming hubs and links; the business process must be preserved to have a full audit trail of the source data into the raw vault - you should be able to recreate the original source and business process from it.
 
 Write the metadata file with the hubs in order of the unit of work - the business key hierarchy must be maintained; the business key in the first hub will become the driving key.
+
+•	Each business topic corresponds to a unique hub.
+•	A link connects all business topics, to avoid breaking relationship between multiple business topics that preserves the unit of work (business process/activity) which is useful for optimisation and lineage.
+•	Source data must include a timestamp of when the record was produced; updates are seen as a new piece of data that is produced and so must also include a created timestamp. The timestamp is used in the append only raw vault to filter to the latest record or state of any given process.
+•	Payload columns can only be persisted to satellites which retains their business context, if the context is lost it is in the wrong satellite e.g. Party role agreements only makes sense when the role is attached to the agreement, detaching the two breaks the business logic continuity.
+•	If the source data has a business topic which does not have any related business keys, the record will only be populated in the hub and link table preserving the lineage and connection to other business hubs and satellites within said data.
+
+
+# Running the project
+
+## Sample data
+Sample data can be found in the `./data` and their schemas can be found in `./sample_data_schema`. The sample data will create 3 hubs, 1 link and multiple satellites.
+
+## Generating the raw vault
+To ingest sample data in the snowflake public schema, run command:
+
+    dbt seed
+
+To generate dbt raw vault model files ensure you have create the metadata file `./source_metadata`; metadata files for example source data have been provided. Run the command:
+
+    python3 ./generate_raw_vault/app/main.py
+
+To deploy the model in snowflake run command:
+
+    dbt run
+
+Raw vault artefacts would be created in the target database.
+
+## Name dictionary
+Database name and system directory often have character length limits. The naming convention dictionary has been included to standardise shortened naming for models. This can be found in `./name_dictionary`; add more key value name conventions as required that will be used in link creation.
+
+### Resources:
+- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
+- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
+- Join the [chat](http://slack.getdbt.com/) on Slack for live discussions and support
+- Find [dbt events](https://events.getdbt.com) near you
+- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best

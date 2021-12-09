@@ -1,30 +1,37 @@
+# Sample data schema
 
-# Customers
+## Customers
 This data lists customers' average monthly visits
     Primary Key:
         CUSTOMER_ID
     Payload columns:
         AVG_MONTHLY_VISITS
-# Total Customer Visits
+        RECORD_SOURCE
+        LOAD_DATETIME
+## Total Customer Visits
 This data lists customers' total visits
     Primary Key:
         CUSTOMER_ID
     Payload columns:
         TOTAL_VISITS
-# Products
+        RECORD_SOURCE
+        LOAD_DATETIME
+## Products
 This data lists all products
     Primary Key:
         PRODUCT_ID
     Payload columns:
         MAKE
         MODEL
-# Transactions
-This data lists all products viewed by customers by datetime in json format and must be flattened
-    Payload Columns:
-        CUSTOMER_ID
-        DATE_OF_SESSION
         RECORD_SOURCE
         LOAD_DATETIME
-        PRODUCTS_VIEWED
-            PRICE
-            PRODUCT_ID
+## Transactions
+This data lists all products viewed by customers by datetime
+    Primary Key:
+        DATE_OF_SESSION
+    Payload Columns:
+        CUSTOMER_ID
+        PRODUCT_ID
+        PRICE
+        RECORD_SOURCE
+        LOAD_DATETIME
