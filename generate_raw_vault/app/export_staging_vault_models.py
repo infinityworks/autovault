@@ -29,7 +29,7 @@ def create_staging_file(metadata_file_path):
     hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
     sat_substitutions_string = get_sat_substitutions_string(metadata, topics)
     unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
-        metadata, hubs
+        NAME_DICTIONARY, metadata, hubs
     )
     hub_alias_substitution_string = get_hub_alias_substitutions_string(topics)
 
@@ -104,11 +104,11 @@ def get_sat_subs(sat_hashdiff_template, sat_name, payload):
         return sat_hashdiff_template.substitute(substitutions)
 
 
-def get_unique_link_combis_substitutions_string(metadata, hubs):
+def get_unique_link_combis_substitutions_string(name_dictionary, metadata, hubs):
     unique_link_combis_substitutions = []
 
     if len(hubs) > 1:
-        naming_dictionary = load_metadata_file(NAME_DICTIONARY)
+        naming_dictionary = load_metadata_file(name_dictionary)
         link_combination_string = "_".join([naming_dictionary[hub] for hub in hubs])
         unit_of_work = metadata.get_unit_of_work()
         link_name = f"{link_combination_string}_{unit_of_work}"
