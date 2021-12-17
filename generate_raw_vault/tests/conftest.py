@@ -95,9 +95,56 @@ def test_get_unique_link_combi_string_dict_param():
     return "./test_name_dictionary.json"
 
 
+hub_alias_subs_string_topics = {
+    "HUB1": {
+        "business_keys": {"pk1": "STRING"},
+        "business_attributes": [
+            {
+                "business_definition": "SAT1",
+                "payload": {"sat1_col1": "STRING", "sat1_col2": "STRING"},
+            },
+            {"business_definition": "SAT2", "payload": {"sat2_col1": "STRING"}},
+        ],
+    },
+    "HUB2": {
+        "business_keys": {"pk2": "STRING"},
+        "business_attributes": [
+            {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}}
+        ],
+    },
+}
+
+
 @pytest.fixture(scope="function")
 def test_get_hub_alias_subs_string_topics_param():
-    return {}
+    return hub_alias_subs_string_topics
+
+
+hub_alias_subs_string_topics_with_alias_param = {
+    "HUB1": {
+        "business_keys": {"pk1": "STRING"},
+        "alias": "HB1",
+        "business_attributes": [
+            {
+                "business_definition": "SAT1",
+                "payload": {"sat1_col1": "STRING", "sat1_col2": "STRING"},
+            },
+            {"business_definition": "SAT2", "payload": {"sat2_col1": "STRING"}},
+        ],
+    },
+    "HUB2": {
+        "business_keys": {"pk2": "STRING"},
+        "alias": "HB2",
+        "business_attributes": [
+            {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}}
+        ],
+    },
+}
+
+
+@pytest.fixture(scope="function")
+def test_get_hub_alias_subs_string_topics_with_alias_param():
+    return hub_alias_subs_string_topics_with_alias_param
 
 
 @pytest.fixture(scope="function")
