@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 def test_find_json_metadata():
-    metadata_files = find_json_metadata("generate_raw_vault/tests")
+    metadata_files = find_json_metadata("generate_raw_vault/tests/fixtures")
     expected_metadata_files = [
         Path("generate_raw_vault/tests/fixtures/metadata_testfile.json")
     ]
