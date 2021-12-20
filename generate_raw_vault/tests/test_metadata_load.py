@@ -42,6 +42,7 @@ def test_load_metadata_file():
     "destination_schema": "PUBLIC",
     "source_name": "TEST",
     "source_system": "CSV",
+    "unit_of_work": "TEST_UOW",
     "version": "1"
     }"""
     assert test_file == loads(test_json)
