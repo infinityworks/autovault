@@ -6,6 +6,7 @@ from generate_raw_vault.app.find_metadata_files import (
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
 import itertools
+from typing import Set, Any
 
 HUB_TEMPLATE = "generate_raw_vault/app/templates/hub_model.sql"
 
@@ -27,15 +28,13 @@ def create_hub_from_template(template, hub, substitutions):
 def aggregate_hubs():
     metadata_file_dirs = find_json_metadata("source_metadata")
     hubs = [get_hubs_from_file(file) for file in metadata_file_dirs]
-    unique_hubs = set(list(itertools.chain(*hubs)))
-
+    unique_hubs = get_unique_hubs(hubs)
     all_metadata = [
         Metadata(load_metadata_file(metadata_file_path))
         for metadata_file_path in metadata_file_dirs
     ]
-    aggregated_hubs = {
-        hub_name: substitution_template(hub_name) for hub_name in unique_hubs
-    }
+
+    aggregated_hubs = get_aggregated_hubs(unique_hubs)
     for hub_name in unique_hubs:
         for metadata in all_metadata:
             if hub_name in metadata.get_business_topics():
@@ -70,7 +69,15 @@ def substitution_template(hub_name):
     return substitutions
 
 
-def format_aggregated_hub_sources(aggregated_hubs, hub_name):
+def get_unique_hubs(hubs) -> Set[str]:
+    return set(list(itertools.chain(*hubs)))
+
+
+def get_aggregated_hubs(unique_hubs: Set[str]):
+    return {hub_name: substitution_template(hub_name) for hub_name in unique_hubs}
+
+
+def format_aggregated_hub_sources(aggregated_hubs: dict[str, dict[str, Any]], hub_name):
     aggregated_hubs[hub_name]["source_model"] = f",\n{chr(32)*24}".join(
         aggregated_hubs[hub_name]["source_model"]
     )
