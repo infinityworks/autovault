@@ -91,8 +91,18 @@ def test_get_hub_subs_string_param():
 
 
 @pytest.fixture(scope="function")
+def test_get_hubs_from_file_param():
+    return [["HUB1", "HUB2"]]
+
+
+@pytest.fixture(scope="function")
 def test_get_unique_link_combi_string_dict_param():
     return "./test_name_dictionary.json"
+
+
+@pytest.fixture(scope="function")
+def test_get_metadata_testfile_path_param():
+    return METADATA_TESTFILE_PATH
 
 
 hub_alias_subs_string_topics = {
