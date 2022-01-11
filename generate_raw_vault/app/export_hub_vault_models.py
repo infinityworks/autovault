@@ -77,7 +77,7 @@ def get_aggregated_hubs(unique_hubs: Set[str]):
     return {hub_name: substitution_template(hub_name) for hub_name in unique_hubs}
 
 
-def format_aggregated_hub_sources(aggregated_hubs: dict[str, dict[str, Any]], hub_name):
+def format_aggregated_hub_sources(aggregated_hubs, hub_name):
     aggregated_hubs[hub_name]["source_model"] = f",\n{chr(32)*24}".join(
         aggregated_hubs[hub_name]["source_model"]
     )
