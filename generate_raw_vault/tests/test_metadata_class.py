@@ -4,6 +4,13 @@ import pytest
 
 class TestMetadata:
     @pytest.mark.usefixtures("sample_metadata")
+    def test_get_unit_of_work(self, sample_metadata):
+        test_metadata = Metadata(sample_metadata)
+        test_target_UOW = test_metadata.get_unit_of_work()
+        expected_target_UOW = "TEST_UOW"
+        assert test_target_UOW == expected_target_UOW
+
+    @pytest.mark.usefixtures("sample_metadata")
     def test_get_target_schema(self, sample_metadata):
         test_metadata = Metadata(sample_metadata)
         test_target_schema = test_metadata.get_target_schema()
@@ -110,3 +117,27 @@ class TestMetadata:
             "HUB2": {"alias": None, "natural_keys": {"pk2": "STRING"}},
         }
         assert test_target_business_keys == expected_target_business_keys
+
+    @pytest.mark.usefixtures("sample_metadata")
+    def test_get_business_topics(self, sample_metadata):
+        test_metadata = Metadata(sample_metadata)
+        test_target_business_topics = test_metadata.get_business_topics()
+        expected_target_business_topics = {
+            "HUB1": {
+                "business_keys": {"pk1": "STRING"},
+                "business_attributes": [
+                    {
+                        "business_definition": "SAT1",
+                        "payload": {"sat1_col1": "STRING", "sat1_col2": "STRING"},
+                    },
+                    {"business_definition": "SAT2", "payload": {"sat2_col1": "STRING"}},
+                ],
+            },
+            "HUB2": {
+                "business_keys": {"pk2": "STRING"},
+                "business_attributes": [
+                    {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}}
+                ],
+            },
+        }
+        assert test_target_business_topics == expected_target_business_topics

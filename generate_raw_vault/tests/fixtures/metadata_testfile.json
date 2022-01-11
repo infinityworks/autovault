@@ -1,4 +1,5 @@
 {
+    "unit_of_work" : "TEST_UOW",
     "source_name":"TEST",
     "version":"1",
     "source_system":"CSV",
