@@ -54,7 +54,7 @@ def test_format_aggregated_hub_sources():
         aggregated_hubs, hub_name
     )
     assert formated_aggregated_hub_sources == {
-        "hub_1": {"source_model": "s_1,\n                        s_2"}
+        "hub_1": {"source_model": f"s_1,\n{chr(32)*24}s_2"}
     }
 
 
