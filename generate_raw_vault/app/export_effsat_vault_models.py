@@ -7,20 +7,20 @@ from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
 import json
 
-LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/effect_sat_model.sql"
+EFFSAT_TEMPLATE_PATH = "generate_raw_vault/app/templates/effect_sat_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
 
 
-def export_all_link_files():
-    template = load_template_file(LINK_TEMPLATE_PATH)
+def export_all_effsat_files():
+    template = load_template_file(EFFSAT_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
-    link_template = Template(template)
+    effsat_template = Template(template)
     metadata_file_dirs = find_json_metadata("source_metadata")
 
     file_map = get_file_map(metadata_file_dirs)
-    link_source_map = create_link_source_map(file_map)
-    link_combinations = set(link_source_map.values())
-    for link in link_combinations:
+    effsat_source_map = create_effsat_source_map(file_map)
+    effsat_link_combinations = set(effsat_source_map.values())
+    for effsat_link in effsat_link_combinations:
         source_list = []
         for file_path, metadata_dict in file_map.items():
             metadata = Metadata(metadata_dict)
@@ -28,38 +28,35 @@ def export_all_link_files():
             if len(hub_list) > 1:
                 linked_hubs = "_".join(hub_list)
                 unit_of_work = metadata.get_unit_of_work()
-                if f"{linked_hubs}_{unit_of_work}" == link:
+                if f"{linked_hubs}_{unit_of_work}" == effsat_link:
                     source_list.append(metadata.get_versioned_source_name())
                     short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
                     name = f"{short_name}_{unit_of_work}"
                     substitution_values = {"hubs": hub_list, "file_name": name.lower()}
         substitution_values.update({"source_list": sorted(source_list)})
-        substitutions = create_link_substitutions(substitution_values)
-        create_link_model_files(
-            substitutions, link_template, substitution_values["file_name"]
+        substitutions = create_effsat_substitutions(substitution_values)
+        create_effsat_model_files(
+            substitutions, effsat_template, substitution_values["file_name"]
         )
 
-    #  use the full hub names for the filename to void duplicate files generated if naming dictionary changes
-    #  update link template to to include an alias to use shorterned naming for tablename
 
-
-def create_link_model_files(substitutions, link_template, file_name):
-    link_model = link_template.substitute(substitutions)
+def create_effsat_model_files(substitutions, effsat_template, file_name):
+    effsat_model = effsat_template.substitute(substitutions)
     with open(f"./models/raw_vault/sats/eff_sat_{file_name}.sql", "w") as sql_export:
-        sql_export.write(link_model)
+        sql_export.write(effsat_model)
 
 
-def create_link_substitutions(substitution_values):
+def create_effsat_substitutions(substitution_values):
     source_list = substitution_values["source_list"]
-    link_keys = substitution_values["hubs"]
+    effsat_keys = substitution_values["hubs"]
     short_name = substitution_values["file_name"]
 
     table_name = f",\n{chr(32)*24}".join(
         [f'"stg_{source.lower()}"' for source in source_list]
     )
     hash_key = (short_name + "_HK").upper()
-    src_dfk = f"{link_keys[0]}_HK"
-    dependent_keys = link_keys[1:]
+    src_dfk = f"{effsat_keys[0]}_HK"
+    dependent_keys = effsat_keys[1:]
     src_fk = f",\n{chr(32)*19}".join(
         [f'"{combination}_HK"' for combination in dependent_keys]
     )
@@ -91,14 +88,14 @@ def get_file_map(metadata_file_dirs):
     return file_map
 
 
-def create_link_source_map(file_map):
+def create_effsat_source_map(file_map):
     metadata_files = file_map.values()
-    link_source_map = {
+    effsat_source_map = {
         file_path: f'{"_".join(list(get_map_of_source_and_hubs(metadata).values())[0])}_{Metadata(metadata).get_unit_of_work()}'
         for file_path, metadata in file_map.items()
         if len(list(get_map_of_source_and_hubs(metadata).values())[0]) > 1
     }
-    return link_source_map
+    return effsat_source_map
 
 
 def get_map_of_source_and_hubs(metadata):
@@ -108,4 +105,4 @@ def get_map_of_source_and_hubs(metadata):
 
 
 if __name__ == "__main__":
-    export_all_link_files()
+    export_all_effsat_files()
