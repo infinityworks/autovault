@@ -59,9 +59,9 @@ def create_link_substitutions(substitution_values):
     )
     hash_key = (short_name + "_HK").upper()
     src_dfk = f"{link_keys[0]}_HK"
-    del link_keys[0]
+    dependent_keys = link_keys[1:]
     src_fk = f",\n{chr(32)*19}".join(
-        [f'"{combination}_HK"' for combination in link_keys]
+        [f'"{combination}_HK"' for combination in dependent_keys]
     )
     src_start_date = "START_DATE"
     src_end_date = "END_DATE"
