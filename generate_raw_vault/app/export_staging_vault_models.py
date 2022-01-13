@@ -104,11 +104,16 @@ def get_sat_subs(sat_hashdiff_template, sat_name, payload):
         return sat_hashdiff_template.substitute(substitutions)
 
 
-def get_unique_link_combis_substitutions_string(name_dictionary, metadata, hubs):
+def get_unique_link_combis_substitutions_string(name_dictionary_path, metadata, hubs):
     unique_link_combis_substitutions = []
 
     if len(hubs) > 1:
-        naming_dictionary = load_metadata_file(name_dictionary)
+        naming_dictionary = load_metadata_file(name_dictionary_path)
+        for hub in hubs:
+            if hub not in naming_dictionary:
+                raise Exception(
+                    "Hub name missing from name dictionary, check hub name convention and existance in file ./name_dictionary.json"
+                )
         link_combination_string = "_".join([naming_dictionary[hub] for hub in hubs])
         unit_of_work = metadata.get_unit_of_work()
         link_name = f"{link_combination_string}_{unit_of_work}"
