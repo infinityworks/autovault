@@ -1,6 +1,8 @@
 from pathlib import Path
 
 model_directories = [
+    "source_metadata",
+    "./source_tables/DDL",
     "./models/raw_vault/hubs",
     "./models/raw_vault/links",
     "./models/raw_vault/sats",
