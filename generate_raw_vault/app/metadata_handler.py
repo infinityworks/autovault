@@ -103,6 +103,5 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file("source_metadata/customer_visits_v1.json")
     metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
-    metadata = Metadata(metadata_file)
+    metadata = Metadata(metadata_file).get_versioned_source_name()

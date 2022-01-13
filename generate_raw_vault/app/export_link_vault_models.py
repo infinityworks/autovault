@@ -5,7 +5,6 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
-import json
 
 LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/link_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
@@ -17,34 +16,46 @@ def export_all_link_files():
     link_template = Template(template)
     metadata_file_dirs = find_json_metadata("source_metadata")
 
-    file_map = get_file_map(metadata_file_dirs)
-    link_source_map = create_link_source_map(file_map)
+    metadata_map = get_metadata_map(metadata_file_dirs)
+    link_source_map = create_link_source_map(metadata_map)
     link_combinations = set(link_source_map.values())
-    for link in link_combinations:
-        source_list = []
-        for file_path, metadata_dict in file_map.items():
-            metadata = Metadata(metadata_dict)
-            hub_list = metadata.get_hubs_from_business_topics()
-            if len(hub_list) > 1:
-                linked_hubs = "_".join(hub_list)
-                unit_of_work = metadata.get_unit_of_work()
-                if f"{linked_hubs}_{unit_of_work}" == link:
-                    source_list.append(Metadata(metadata).get_versioned_source_name())
-                    filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
-                    short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
-                    link_name = f"{short_name}_{unit_of_work}"
-                    substitution_values = {
-                        "hubs": hub_list,
-                        "link_name": link_name,
-                        "filename": filename,
-                    }
-        substitution_values.update({"source_list": sorted(source_list)})
-        substitutions = create_link_substitutions(substitution_values)
-        filename = substitution_values["filename"]
-        create_link_model_files(substitutions, link_template, filename)
 
-    #  use the full hub names for the filename to avoid duplicate files generated if naming dictionary changes
-    #  update link template to to include an alias to use shorterned naming for tablename
+    for link in link_combinations:
+        for metadata_dict in metadata_map.values():
+            substitution_values = create_substitution_values(
+                link, metadata_dict, naming_dictionary
+            )
+            link_substitutions = create_link_substitutions(substitution_values)
+            filename = substitution_values["filename"]
+            create_link_model_files(link_substitutions, link_template, filename)
+
+
+def create_substitution_values(link, metadata_dict, naming_dictionary):
+    substitution_values = {
+        "hubs": "",
+        "filename": "",
+        "link_name": "",
+        "source_list": [],
+    }
+    metadata = Metadata(metadata_dict)
+    hub_list = metadata.get_hubs_from_business_topics()
+    if len(hub_list) > 1:
+        linked_hubs = "_".join(hub_list)
+        unit_of_work = metadata.get_unit_of_work()
+        if f"{linked_hubs}_{unit_of_work}" == link:
+            versioned_source_name = metadata.get_versioned_source_name()
+            filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
+            short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
+            link_name = f"{short_name}_{unit_of_work}"
+            versioned_source_name = metadata.get_versioned_source_name()
+            filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
+            short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
+            link_name = f"{short_name}_{unit_of_work}"
+            substitution_values["hubs"] = hub_list
+            substitution_values["filename"] = filename
+            substitution_values["link_name"] = link_name
+            substitution_values["source_list"].append(versioned_source_name)
+    return substitution_values
 
 
 def create_link_model_files(substitutions, link_template, filename):
@@ -79,19 +90,19 @@ def create_link_substitutions(substitution_values):
     return substitutions
 
 
-def get_file_map(metadata_file_dirs):
-    file_map = {
+def get_metadata_map(metadata_file_dirs):
+    metadata_map = {
         str(file_path): load_metadata_file(file_path)
         for file_path in metadata_file_dirs
     }
-    return file_map
+    return metadata_map
 
 
-def create_link_source_map(file_map):
-    metadata_files = file_map.values()
+def create_link_source_map(metadata_map):
+    metadata_files = metadata_map.values()
     link_source_map = {
         file_path: f'{"_".join(list(get_map_of_source_and_hubs(metadata).values())[0])}_{Metadata(metadata).get_unit_of_work()}'
-        for file_path, metadata in file_map.items()
+        for file_path, metadata in metadata_map.items()
         if len(list(get_map_of_source_and_hubs(metadata).values())[0]) > 1
     }
     return link_source_map

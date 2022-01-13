@@ -5,7 +5,6 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
-from itertools import combinations
 
 STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.sql"
 SAT_HASHDIFF_TEMPLATE = "generate_raw_vault/app/templates/sat_hashdiff.sql"
@@ -24,12 +23,13 @@ def create_staging_file(metadata_file_path):
 
     metadata_file = load_metadata_file(metadata_file_path)
     metadata = Metadata(metadata_file)
+    naming_dictionary = load_metadata_file(NAME_DICTIONARY)
     hubs = metadata.get_hubs_from_business_topics()
     topics = metadata.get_business_topics()
     hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
     sat_substitutions_string = get_sat_substitutions_string(metadata, topics)
     unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
-        NAME_DICTIONARY, metadata, hubs
+        metadata, hubs, naming_dictionary
     )
     hub_alias_substitution_string = get_hub_alias_substitutions_string(topics)
 
@@ -117,10 +117,7 @@ def get_unique_link_combis_substitutions_string(name_dictionary_path, metadata, 
         link_combination_string = "_".join([naming_dictionary[hub] for hub in hubs])
         unit_of_work = metadata.get_unit_of_work()
         link_name = f"{link_combination_string}_{unit_of_work}"
-        combi_primary_keys = []
-        for hub in hubs:
-            each_primary_key = metadata.get_hub_business_key(hub)
-            combi_primary_keys.append(each_primary_key)
+        combi_primary_keys = [metadata.get_hub_business_key(hub) for hub in hubs]
         link_keys = [f'- "{key}"' for key in combi_primary_keys]
         primarykeys_join = "\n   ".join(link_keys)
         unique_link_combis_substitutions.append(
