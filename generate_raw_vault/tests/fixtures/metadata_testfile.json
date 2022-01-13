@@ -1,5 +1,5 @@
 {
-    "unit_of_work" : "TEST_UOW",
+    "unit_of_work" : "TEST_UoW",
     "source_name":"TEST",
     "version":"1",
     "source_system":"CSV",

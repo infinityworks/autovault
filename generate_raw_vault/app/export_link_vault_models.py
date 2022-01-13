@@ -21,41 +21,16 @@ def export_all_link_files():
     link_combinations = set(link_source_map.values())
 
     for link in link_combinations:
+        substitution_values_template = create_substitution_values_template()
         for metadata_dict in metadata_map.values():
             substitution_values = create_substitution_values(
-                link, metadata_dict, naming_dictionary
+                link, metadata_dict, substitution_values_template, naming_dictionary
             )
-            link_substitutions = create_link_substitutions(substitution_values)
-            filename = substitution_values["filename"]
-            create_link_model_files(link_substitutions, link_template, filename)
-
-
-def create_substitution_values(link, metadata_dict, naming_dictionary):
-    substitution_values = {
-        "hubs": "",
-        "filename": "",
-        "link_name": "",
-        "source_list": [],
-    }
-    metadata = Metadata(metadata_dict)
-    hub_list = metadata.get_hubs_from_business_topics()
-    if len(hub_list) > 1:
-        linked_hubs = "_".join(hub_list)
-        unit_of_work = metadata.get_unit_of_work()
-        if f"{linked_hubs}_{unit_of_work}" == link:
-            versioned_source_name = metadata.get_versioned_source_name()
-            filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
-            short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
-            link_name = f"{short_name}_{unit_of_work}"
-            versioned_source_name = metadata.get_versioned_source_name()
-            filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
-            short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
-            link_name = f"{short_name}_{unit_of_work}"
-            substitution_values["hubs"] = hub_list
-            substitution_values["filename"] = filename
-            substitution_values["link_name"] = link_name
-            substitution_values["source_list"].append(versioned_source_name)
-    return substitution_values
+            if substitution_values:
+                link_substitutions = create_link_substitutions(substitution_values)
+                create_link_model_files(
+                    link_substitutions, link_template, substitution_values["filename"]
+                )
 
 
 def create_link_model_files(substitutions, link_template, filename):
@@ -90,16 +65,42 @@ def create_link_substitutions(substitution_values):
     return substitutions
 
 
-def get_metadata_map(metadata_file_dirs):
-    metadata_map = {
-        str(file_path): load_metadata_file(file_path)
-        for file_path in metadata_file_dirs
+def create_substitution_values(
+    link, metadata_dict, substitution_values, naming_dictionary
+):
+    metadata = Metadata(metadata_dict)
+    hub_list = metadata.get_hubs_from_business_topics()
+    if len(hub_list) > 1:
+        linked_hubs = "_".join(hub_list)
+        unit_of_work = metadata.get_unit_of_work()
+        if f"{linked_hubs}_{unit_of_work}" == link:
+            filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
+            short_name = "_".join(
+                [
+                    naming_dictionary[hub] if hub in naming_dictionary else hub
+                    for hub in hub_list
+                ]
+            )
+            link_name = f"{short_name}_{unit_of_work}"
+            versioned_source_name = metadata.get_versioned_source_name()
+            filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
+            substitution_values["hubs"] = hub_list
+            substitution_values["filename"] = filename
+            substitution_values["link_name"] = link_name
+            substitution_values["source_list"].append(versioned_source_name)
+            return substitution_values
+
+
+def create_substitution_values_template():
+    return {
+        "hubs": "",
+        "filename": "",
+        "link_name": "",
+        "source_list": [],
     }
-    return metadata_map
 
 
 def create_link_source_map(metadata_map):
-    metadata_files = metadata_map.values()
     link_source_map = {
         file_path: f'{"_".join(list(get_map_of_source_and_hubs(metadata).values())[0])}_{Metadata(metadata).get_unit_of_work()}'
         for file_path, metadata in metadata_map.items()
@@ -112,6 +113,14 @@ def get_map_of_source_and_hubs(metadata):
     read_metadata = Metadata(metadata)
     hubs = read_metadata.get_hubs_from_business_topics()
     return {read_metadata.get_versioned_source_name(): hubs}
+
+
+def get_metadata_map(metadata_file_dirs):
+    metadata_map = {
+        str(file_path): load_metadata_file(file_path)
+        for file_path in metadata_file_dirs
+    }
+    return metadata_map
 
 
 if __name__ == "__main__":

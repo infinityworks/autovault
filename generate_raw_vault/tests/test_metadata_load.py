@@ -4,7 +4,6 @@ from json import loads
 import pytest
 
 
-# @pytest.mark.usefixtures("sample_metadata")
 def test_load_metadata_file():
     test_file = load_metadata_file(METADATA_TESTFILE_PATH)
     test_json = """{
@@ -42,7 +41,7 @@ def test_load_metadata_file():
     "destination_schema": "PUBLIC",
     "source_name": "TEST",
     "source_system": "CSV",
-    "unit_of_work": "TEST_UOW",
+    "unit_of_work" : "TEST_UoW",
     "version": "1"
     }"""
     assert test_file == loads(test_json)

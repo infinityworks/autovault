@@ -1,4 +1,5 @@
 from json import load, dumps
+from generate_raw_vault.app.metadata_handler import Metadata
 import pytest
 from pathlib import Path
 from generate_raw_vault.app.metadata_handler import Metadata
@@ -12,6 +13,11 @@ NAME_DICTIONARY = "generate_raw_vault/name_dictionary.json"
 def sample_metadata():
     test_metadata = read_file(METADATA_TESTFILE_PATH)
     return test_metadata
+
+
+@pytest.fixture(scope="function")
+def sample_metadata_class():
+    return Metadata(sample_metadata())
 
 
 def read_file(path, mode="r"):
@@ -199,3 +205,16 @@ def test_get_business_topics_param():
             ],
         },
     }
+
+
+def metadata_file_dirs_fixture():
+    return [Path("generate_raw_vault/tests/fixtures/metadata_testfile.json")]
+
+
+@pytest.fixture(scope="function")
+def sample_metadata_map():
+    test_metadata = read_file(METADATA_TESTFILE_PATH)
+    sample_metadata_map = {
+        "generate_raw_vault/tests/fixtures/metadata_testfile.json": test_metadata
+    }
+    return sample_metadata_map
