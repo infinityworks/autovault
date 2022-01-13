@@ -1,13 +1,16 @@
 import pytest
 import generate_raw_vault.app.export_link_vault_models as link_exporter
+from generate_raw_vault.app.model_creation import create_substitution_values_template
 
 
 def test_create_substitution_values_template():
-    substitution_values_template = link_exporter.create_substitution_values_template()
+    substitution_values_template = create_substitution_values_template()
     test_substitution_values_template = {
         "hubs": "",
         "filename": "",
         "link_name": "",
+        "record_load_datetime": "LOAD_DATETIME",
+        "record_source": "RECORD_SOURCE",
         "source_list": [],
     }
     assert substitution_values_template == test_substitution_values_template
@@ -87,7 +90,7 @@ def test_create_link_source_map(sample_metadata_map):
         "link_name": "HUB1_HUB2_TEST_UoW",
         "source_list": ["TEST_V1"],
     }
-    test_substitution_values = link_exporter.create_substitution_values(
+    test_substitution_values = link_exporter.populate_substitution_values(
         link, metadata_dict, substitution_values, naming_dictionary
     )
     assert test_substitution_values == expected_output
@@ -99,6 +102,11 @@ def test_create_link_substitutions():
         "filename": "hub1_hub2_test_uow",
         "link_name": "HUB1_HUB2_TEST_UoW",
         "source_list": ["TEST_V1"],
+        "source_tables": '"stg_test_v1"',
+        "hash_key": "HUB1_HUB2_TEST_UOW_HK",
+        "foreign_keys": f'"HUB1_HK",\n{chr(32)*18}"HUB2_HK"',
+        "record_source": "RECORD_SOURCE",
+        "record_load_datetime": "LOAD_DATETIME",
     }
     test_create_link_substitutions = link_exporter.create_link_substitutions(
         substitution_values

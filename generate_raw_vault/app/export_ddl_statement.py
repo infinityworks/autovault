@@ -1,13 +1,9 @@
-from generate_raw_vault.app.find_metadata_files import (
-    load_metadata_file,
-    find_json_metadata,
-)
+from generate_raw_vault.app.find_metadata_files import load_metadata_file
 from generate_raw_vault.app.metadata_handler import Metadata
 from pathlib import Path
 
 
-def export_all_ddl_statments():
-    metadata_file_dirs = find_json_metadata("source_metadata")
+def export_all_ddl_statments(metadata_file_dirs):
     for metadata_file_path in metadata_file_dirs:
         ddl_exporter(metadata_file_path)
 
@@ -71,4 +67,5 @@ def format_column_and_dtype(columns_and_types):
 
 
 if __name__ == "__main__":
-    export_all_ddl_statments()
+    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    export_all_ddl_statments(metadata_file_dirs)

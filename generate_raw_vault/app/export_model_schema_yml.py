@@ -12,11 +12,6 @@ MODEL_SCHEMA_TEMPLATE = "generate_raw_vault/app/templates/model_schema.sql"
 SCHEMA_YML_PATH = "./models/schema.yml"
 
 
-def export_model_schema_yml_for_all_sources():
-    metadata_file_dirs = find_json_metadata("source_metadata")
-    export_model_schema(metadata_file_dirs)
-
-
 def export_model_schema(metadata_file_dirs: list):
     sources_files = {
         str(file): get_individual_source(file) for file in metadata_file_dirs
@@ -105,4 +100,5 @@ def generate_source_str(source_template: Template, substitutions: dict) -> dict:
 
 
 if __name__ == "__main__":
-    subs = export_model_schema_yml_for_all_sources()
+    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    subs = export_model_schema(metadata_file_dirs)

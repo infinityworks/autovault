@@ -10,8 +10,7 @@ from itertools import chain
 SATELLITE_TEMPLATE = "generate_raw_vault/app/templates/sat_model.sql"
 
 
-def export_all_sat_files():
-    metadata_file_dirs = find_json_metadata("source_metadata")
+def export_all_sat_files(metadata_file_dirs):
     for metadata_file_path in metadata_file_dirs:
         create_sat_file(metadata_file_path)
 
@@ -64,4 +63,5 @@ def create_sat_substitutions(source_name, satellite, satellites, hub_name):
 
 
 if __name__ == "__main__":
-    export_all_sat_files()
+    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    export_all_sat_files(metadata_file_dirs)

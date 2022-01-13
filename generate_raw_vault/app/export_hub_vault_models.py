@@ -1,7 +1,6 @@
 from generate_raw_vault.app.find_metadata_files import (
     load_template_file,
     load_metadata_file,
-    find_json_metadata,
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
@@ -11,8 +10,8 @@ from typing import Set, Any
 HUB_TEMPLATE = "generate_raw_vault/app/templates/hub_model.sql"
 
 
-def export_all_hub_files():
-    aggregated_hubs = aggregate_hubs()
+def export_all_hub_files(metadata_file_dirs):
+    aggregated_hubs = aggregate_hubs(metadata_file_dirs)
     for hub, substitutions in aggregated_hubs.items():
         template = load_template_file(HUB_TEMPLATE)
         create_hub_from_template(template, hub, substitutions)
@@ -25,8 +24,7 @@ def create_hub_from_template(template, hub, substitutions):
         sql_export.write(hub_model)
 
 
-def aggregate_hubs():
-    metadata_file_dirs = find_json_metadata("source_metadata")
+def aggregate_hubs(metadata_file_dirs):
     hubs = [get_hubs_from_file(file) for file in metadata_file_dirs]
     unique_hubs = get_unique_hubs(hubs)
     all_metadata = [
@@ -85,4 +83,5 @@ def format_aggregated_hub_sources(aggregated_hubs, hub_name):
 
 
 if __name__ == "__main__":
-    export_all_hub_files()
+    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    export_all_hub_files(metadata_file_dirs)

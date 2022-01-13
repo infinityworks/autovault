@@ -3,6 +3,10 @@ from generate_raw_vault.app.find_metadata_files import (
     load_metadata_file,
     find_json_metadata,
 )
+from generate_raw_vault.app.model_creation import (
+    create_model_files,
+    create_substitution_values_template,
+)
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
 
@@ -10,11 +14,10 @@ LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/link_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
 
 
-def export_all_link_files():
+def export_all_link_files(metadata_file_dirs):
     template = load_template_file(LINK_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
-    link_template = Template(template)
-    metadata_file_dirs = find_json_metadata("source_metadata")
+    model_template = Template(template)
 
     metadata_map = get_metadata_map(metadata_file_dirs)
     link_source_map = create_link_source_map(metadata_map)
@@ -23,49 +26,57 @@ def export_all_link_files():
     for link in link_combinations:
         substitution_values_template = create_substitution_values_template()
         for metadata_dict in metadata_map.values():
-            substitution_values = create_substitution_values(
+            substitution_values = populate_substitution_values(
                 link, metadata_dict, substitution_values_template, naming_dictionary
             )
             if substitution_values:
-                link_substitutions = create_link_substitutions(substitution_values)
-                create_link_model_files(
-                    link_substitutions, link_template, substitution_values["filename"]
+                enriched_substitution_values = enrich_substitution_values(
+                    substitution_values
+                )
+                substitutions = create_link_substitutions(enriched_substitution_values)
+                create_model_files(
+                    substitutions,
+                    model_template,
+                    model_type="links",
+                    filename=substitution_values["filename"],
                 )
 
 
-def create_link_model_files(substitutions, link_template, filename):
-    link_model = link_template.substitute(substitutions)
-    with open(f"./models/raw_vault/links/{filename}.sql", "w") as sql_export:
-        sql_export.write(link_model)
+def create_link_substitutions(enriched_substitution_values):
+    link_name = enriched_substitution_values["link_name"]
+    source_tables = enriched_substitution_values["source_tables"]
+    hash_key = enriched_substitution_values["hash_key"]
+    foreign_keys = enriched_substitution_values["foreign_keys"]
+    record_source = enriched_substitution_values["record_source"]
+    record_load_datetime = enriched_substitution_values["record_load_datetime"]
 
-
-def create_link_substitutions(substitution_values):
-    source_list = substitution_values["source_list"]
-    link_keys = substitution_values["hubs"]
-    link_name = substitution_values["link_name"]
-
-    source_tables = f",\n{chr(32)*24}".join(
-        [f'"stg_{source.lower()}"' for source in source_list]
-    )
-    hash_key = (link_name + "_HK").upper()
-    src_fk = f",\n{chr(32)*18}".join(
-        [f'"{combination}_HK"' for combination in link_keys]
-    )
-    load_datetime = "LOAD_DATETIME"
-    record_source = "RECORD_SOURCE"
     substitutions = {
         "alias": link_name,
         "source_model": source_tables,
         "src_pk": hash_key,
-        "src_fk": src_fk,
-        "src_ldts": load_datetime,
+        "src_fk": foreign_keys,
+        "src_ldts": record_load_datetime,
         "src_source": record_source,
     }
-
     return substitutions
 
 
-def create_substitution_values(
+def enrich_substitution_values(substitution_values):
+    source_list = substitution_values["source_list"]
+    link_keys = substitution_values["hubs"]
+    link_name = substitution_values["link_name"]
+
+    substitution_values["source_tables"] = f",\n{chr(32)*24}".join(
+        [f'"stg_{source.lower()}"' for source in source_list]
+    )
+    substitution_values["hash_key"] = (link_name + "_HK").upper()
+    substitution_values["foreign_keys"] = f",\n{chr(32)*18}".join(
+        [f'"{combination}_HK"' for combination in link_keys]
+    )
+    return substitution_values
+
+
+def populate_substitution_values(
     link, metadata_dict, substitution_values, naming_dictionary
 ):
     metadata = Metadata(metadata_dict)
@@ -89,15 +100,6 @@ def create_substitution_values(
             substitution_values["link_name"] = link_name
             substitution_values["source_list"].append(versioned_source_name)
             return substitution_values
-
-
-def create_substitution_values_template():
-    return {
-        "hubs": "",
-        "filename": "",
-        "link_name": "",
-        "source_list": [],
-    }
 
 
 def create_link_source_map(metadata_map):
@@ -124,4 +126,5 @@ def get_metadata_map(metadata_file_dirs):
 
 
 if __name__ == "__main__":
-    export_all_link_files()
+    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    export_all_link_files(metadata_file_dirs)
