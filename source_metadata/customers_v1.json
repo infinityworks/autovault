@@ -18,19 +18,6 @@
                     }
                 }
             ]
-        },
-        "COUNTRY":{
-            "business_keys":{
-                "COUNTRY_ID":"STRING"
-            },
-            "business_attributes":[
-                {
-                    "business_definition":"COUNTRIES",
-                    "payload":{
-                        "COUNTRY_NAME":"STRING"
-                    }
-                }
-            ]
         }
     }
 }
