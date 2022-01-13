@@ -10,7 +10,7 @@ model_directories = [
 ]
 
 
-def create_model_directories():
+def create_model_directories(model_directories):
     for directory in model_directories:
         path = Path(directory)
         path.mkdir(parents=True, exist_ok=True)
@@ -19,4 +19,12 @@ def create_model_directories():
 
 
 if __name__ == "__main__":
-    create_model_directories()
+    model_directories = [
+        "source_metadata",
+        "./source_tables/DDL",
+        "./models/raw_vault/hubs",
+        "./models/raw_vault/links",
+        "./models/raw_vault/sats",
+        "./models/raw_vault/stages",
+    ]
+    create_model_directories(model_directories)

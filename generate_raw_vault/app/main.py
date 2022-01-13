@@ -9,7 +9,15 @@ from create_model_directories import create_model_directories
 
 
 def main():
-    create_model_directories()
+    model_directories = [
+        "./source_metadata",
+        "./source_tables/DDL",
+        "./models/raw_vault/hubs",
+        "./models/raw_vault/links",
+        "./models/raw_vault/sats",
+        "./models/raw_vault/stages",
+    ]
+    create_model_directories(model_directories)
     metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
 
     export_all_ddl_statments(metadata_file_dirs)
