@@ -11,7 +11,7 @@ from create_model_directories import create_model_directories
 def main():
     model_directories = [
         "./source_metadata",
-        "./source_tables/DDL",
+        "./source_tables/ddl",
         "./models/raw_vault/hubs",
         "./models/raw_vault/links",
         "./models/raw_vault/sats",

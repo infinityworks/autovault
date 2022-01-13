@@ -67,7 +67,7 @@ def enrich_substitution_values(substitution_values):
     link_name = substitution_values["link_name"]
 
     substitution_values["source_tables"] = f",\n{chr(32)*24}".join(
-        [f'"stg_{source.lower()}"' for source in source_list]
+        sorted([f'"stg_{source.lower()}"' for source in source_list])
     )
     substitution_values["hash_key"] = (link_name + "_HK").upper()
     substitution_values["foreign_keys"] = f",\n{chr(32)*18}".join(

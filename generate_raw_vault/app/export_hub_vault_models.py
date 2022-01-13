@@ -77,7 +77,7 @@ def get_aggregated_hubs(unique_hubs: Set[str]):
 
 def format_aggregated_hub_sources(aggregated_hubs, hub_name):
     aggregated_hubs[hub_name]["source_model"] = f",\n{chr(32)*24}".join(
-        aggregated_hubs[hub_name]["source_model"]
+        sorted(aggregated_hubs[hub_name]["source_model"])
     )
     return aggregated_hubs
 

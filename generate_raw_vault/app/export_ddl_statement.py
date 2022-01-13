@@ -14,7 +14,7 @@ def ddl_exporter(metadata_file_path):
     ddl = create_source_table_ddl(metadata)
     formatted_source_name = metadata.get_versioned_source_name().lower()
     with open(
-        Path(f"./source_tables/DDL/{formatted_source_name}.sql"), "w"
+        Path(f"./source_tables/ddl/{formatted_source_name}.sql"), "w"
     ) as sql_export:
         sql_export.write(ddl)
 

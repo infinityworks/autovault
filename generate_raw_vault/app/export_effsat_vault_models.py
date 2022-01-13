@@ -40,9 +40,6 @@ def export_all_link_files():
         )
 
 
-a
-
-
 def create_link_model_files(substitutions, link_template, file_name):
     link_model = link_template.substitute(substitutions)
     with open(f"./models/raw_vault/sats/eff_sat_{file_name}.sql", "w") as sql_export:
