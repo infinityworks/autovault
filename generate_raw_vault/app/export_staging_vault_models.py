@@ -22,13 +22,12 @@ def create_staging_file(metadata_file_path):
 
     metadata_file = load_metadata_file(metadata_file_path)
     metadata = Metadata(metadata_file)
-    naming_dictionary = load_metadata_file(NAME_DICTIONARY)
     hubs = metadata.get_hubs_from_business_topics()
     topics = metadata.get_business_topics()
     hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
     sat_substitutions_string = get_sat_substitutions_string(metadata, topics)
-    unique_link_combis_substitutions_string = get_unique_link_combis_substitutions_string(
-        metadata, hubs, naming_dictionary
+    unique_link_combinations_substitutions_string = get_unique_link_combinations_substitutions_string(
+        metadata, hubs, NAME_DICTIONARY
     )
     hub_alias_substitution_string = get_hub_alias_substitutions_string(topics)
 
@@ -36,7 +35,7 @@ def create_staging_file(metadata_file_path):
         metadata,
         hub_substitutions_string,
         hub_alias_substitution_string,
-        unique_link_combis_substitutions_string,
+        unique_link_combinations_substitutions_string,
         sat_substitutions_string,
     )
     staging_model = staging_template.substitute(substitutions)
@@ -69,9 +68,9 @@ def hashkey_substitution(metadata, hub):
 
 
 def get_sat_substitutions_string(metadata, topics):
-    sats_substitutions = []
-    for hub_name in topics:
-        sats_substitutions.append(get_sat_substitution_from_topic(metadata, hub_name))
+    sats_substitutions = [
+        get_sat_substitution_from_topic(metadata, hub_name) for hub_name in topics
+    ]
     if sats_substitutions:
         return create_substitutions_string(sats_substitutions)
 
@@ -103,15 +102,16 @@ def get_sat_subs(sat_hashdiff_template, sat_name, payload):
         return sat_hashdiff_template.substitute(substitutions)
 
 
-def get_unique_link_combis_substitutions_string(name_dictionary_path, metadata, hubs):
-    unique_link_combis_substitutions = []
-
+def get_unique_link_combinations_substitutions_string(
+    metadata, hubs, naming_dictionary_path
+):
     if len(hubs) > 1:
-        naming_dictionary = load_metadata_file(name_dictionary_path)
+        unique_link_combinations_substitutions = []
+        naming_dictionary = load_metadata_file(naming_dictionary_path)
         for hub in hubs:
             if hub not in naming_dictionary:
                 raise Exception(
-                    "Hub name missing from name dictionary, check hub name convention and existance in file ./name_dictionary.json"
+                    f"Hub name missing from name dictionary, check hub name convention and existance in file {naming_dictionary_path}"
                 )
         link_combination_string = "_".join([naming_dictionary[hub] for hub in hubs])
         unit_of_work = metadata.get_unit_of_work()
@@ -119,10 +119,12 @@ def get_unique_link_combis_substitutions_string(name_dictionary_path, metadata, 
         combi_primary_keys = [metadata.get_hub_business_key(hub) for hub in hubs]
         link_keys = [f'- "{key}"' for key in combi_primary_keys]
         primarykeys_join = "\n   ".join(link_keys)
-        unique_link_combis_substitutions.append(
+        unique_link_combinations_substitutions.append(
             f"{link_name}_HK:\n   {primarykeys_join}"
         )
-    return create_substitutions_string(unique_link_combis_substitutions)
+        return create_substitutions_string(unique_link_combinations_substitutions)
+    else:
+        return ""
 
 
 def get_hub_alias_substitutions_string(topics):
@@ -138,7 +140,7 @@ def create_staging_subsitutions(
     metadata,
     hubs_substitution,
     hub_alias_substitution_string,
-    unique_link_combis_substitution,
+    unique_link_combinations_substitution,
     sat_substitution,
 ):
     database_name = metadata.get_target_database()
@@ -158,7 +160,7 @@ def create_staging_subsitutions(
         "derived_columns": formatted_derived_columns,
         "hashed_hubs_primary_key": hubs_substitution,
         "alias_columns": hub_alias_substitution_string,
-        "hashed_links": unique_link_combis_substitution,
+        "hashed_links": unique_link_combinations_substitution,
         "hashdiff": sat_substitution,
     }
     return substitutions

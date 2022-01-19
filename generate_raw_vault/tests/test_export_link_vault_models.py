@@ -20,7 +20,7 @@ def test_create_substitution_values_template():
 def test_get_metadata_map(metadata_file_dirs_fixture, sample_metadata):
     test_get_metadata_map = link_exporter.get_metadata_map(metadata_file_dirs_fixture)
     expected_output = {
-        "generate_raw_vault/tests/fixtures/metadata_testfile.json": sample_metadata
+        "generate_raw_vault/tests/fixtures/test_metadata/metadata_testfile.json": sample_metadata
     }
     assert expected_output == test_get_metadata_map
 

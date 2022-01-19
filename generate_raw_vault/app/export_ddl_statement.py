@@ -1,4 +1,7 @@
-from generate_raw_vault.app.find_metadata_files import load_metadata_file
+from generate_raw_vault.app.find_metadata_files import (
+    load_metadata_file,
+    find_json_metadata,
+)
 from generate_raw_vault.app.metadata_handler import Metadata
 from pathlib import Path
 

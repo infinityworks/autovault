@@ -7,7 +7,7 @@ class TestMetadata:
     def test_get_unit_of_work(self, sample_metadata):
         test_metadata = Metadata(sample_metadata)
         test_target_UOW = test_metadata.get_unit_of_work()
-        expected_target_UOW = "TEST_UOW"
+        expected_target_UOW = "TEST_UoW"
         assert test_target_UOW == expected_target_UOW
 
     @pytest.mark.usefixtures("sample_metadata")

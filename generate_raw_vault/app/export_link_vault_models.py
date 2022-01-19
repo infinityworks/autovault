@@ -4,8 +4,8 @@ from generate_raw_vault.app.find_metadata_files import (
     find_json_metadata,
 )
 from generate_raw_vault.app.model_creation import (
-    create_model_files,
     create_substitution_values_template,
+    write_model_files,
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
@@ -34,7 +34,7 @@ def export_all_link_files(metadata_file_dirs):
                     substitution_values
                 )
                 substitutions = create_link_substitutions(enriched_substitution_values)
-                create_model_files(
+                write_model_files(
                     substitutions,
                     model_template,
                     model_type="links",
