@@ -1,5 +1,5 @@
 {
-    "CUSTOMER":"CUST",
-    "PRODUCT":"PRDCT",
-    "TRANSACTION":"TRNSCTN"
- }
+  "CUSTOMER": "CUST",
+  "PRODUCT": "PRDCT",
+  "TRANSACTION": "TRNSCTN"
+}

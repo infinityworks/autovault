@@ -1,36 +1,36 @@
 {
-    "unit_of_work" : "ON-LINE",
-    "source_name":"TRANSACTIONS",
-    "version":"2",
-    "source_system":"ONLINE",
-    "destination_database" : "AUTOVAULT",
-    "destination_schema" : "PUBLIC",
-    "business_topics":{
-        "CUSTOMER" : {
-            "business_keys":{
-                "CUSTOMER_ID":"STRING"
-            },
-            "business_attributes":[
-                {
-                    "business_definition":"CUSTOMERS",
-                    "payload":{
-                        "null" : "null"
-                    }
-                }
-            ]
-        },
-        "PRODUCT" : {
-            "business_keys":{
-                "PRODUCT_ID":"STRING"
-            },
-            "business_attributes":[
-                {
-                    "business_definition":"PRODUCTS",
-                    "payload":{
-                        "PRICE":"NUMBER"
-                    }
-                }
-            ]
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "source_name": "TRANSACTIONS",
+  "source_system": "ONLINE",
+  "unit_of_work": "ON-LINE",
+  "version": "2",
+  "business_topics": {
+    "CUSTOMER": {
+      "business_attributes": [
+        {
+          "business_definition": "CUSTOMERS",
+          "payload": {
+            "null": "null"
+          }
         }
+      ],
+      "business_keys": {
+        "CUSTOMER_ID": "STRING"
+      }
+    },
+    "PRODUCT": {
+      "business_attributes": [
+        {
+          "business_definition": "PRODUCTS",
+          "payload": {
+            "PRICE": "NUMBER"
+          }
+        }
+      ],
+      "business_keys": {
+        "PRODUCT_ID": "STRING"
+      }
     }
+  }
 }
