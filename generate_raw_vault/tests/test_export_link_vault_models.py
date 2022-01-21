@@ -44,7 +44,7 @@ def test_create_link_source_map(sample_metadata_map):
     }
 
 
-def test_create_link_source_map(sample_metadata_map):
+def test_create_link_source_map():
 
     link = "HUB1_HUB2_TEST_UoW"
     metadata_dict = {
