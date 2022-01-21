@@ -5,7 +5,7 @@ from generate_raw_vault.app.export_staging_vault_models import export_all_stagin
 from generate_raw_vault.app.export_hub_vault_models import export_all_hub_files
 from generate_raw_vault.app.export_satellite_vault_models import export_all_sat_files
 from generate_raw_vault.app.export_link_vault_models import export_all_link_files
-from create_model_directories import create_directory_and_git_keep
+from create_model_directories import create_directory_and_gitkeep
 
 
 def main():
@@ -18,7 +18,7 @@ def main():
         "./models/raw_vault/stages",
     ]
     for directory in model_directories:
-        create_directory_and_git_keep(directory)
+        create_directory_and_gitkeep(directory)
     metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
 
     export_all_ddl_statments(metadata_file_dirs)

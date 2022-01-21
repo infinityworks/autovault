@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def create_directory_and_git_keep(directory):
+def create_directory_and_gitkeep(directory):
     path = Path(directory)
     create_model_directories(path)
     create_gitkeep_file(path)
@@ -26,4 +26,4 @@ if __name__ == "__main__":
         "./models/raw_vault/stages",
     ]
     for directory in model_directories:
-        create_directory_and_git_keep(directory)
+        create_directory_and_gitkeep(directory)
