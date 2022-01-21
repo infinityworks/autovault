@@ -13,7 +13,7 @@ from generate_raw_vault.app.export_staging_vault_models import (
     get_sat_subs,
     get_sat_substitution_from_topic,
     get_hub_substitutions_string,
-    get_unique_link_combis_substitutions_string,
+    get_unique_link_combinations_substitutions_string,
     get_hub_alias_substitutions_string,
     get_sat_substitutions_string,
 )
@@ -73,21 +73,17 @@ def test_get_hub_substitutions_string(sample_metadata, test_get_hub_subs_string_
 
 
 @pytest.mark.usefixtures(
-    "sample_metadata",
-    "test_get_hub_subs_string_param",
-    "test_get_unique_link_combi_string_dict_param",
+    "sample_metadata", "test_get_hub_subs_string_param", "test_naming_dictionary_path",
 )
-def test_get_unique_link_combis_substitutions_string(
-    test_get_unique_link_combi_string_dict_param,
-    sample_metadata,
-    test_get_hub_subs_string_param,
+def test_get_unique_link_combinations_substitutions_string(
+    sample_metadata, test_get_hub_subs_string_param, test_naming_dictionary_path,
 ):
-    test_link_substitutions_string = get_unique_link_combis_substitutions_string(
-        test_get_unique_link_combi_string_dict_param,
+    test_link_substitutions_string = get_unique_link_combinations_substitutions_string(
         Metadata(sample_metadata),
         test_get_hub_subs_string_param,
+        test_naming_dictionary_path,
     )
-    expected_link_substitutions_string = 'H1_H2_TEST_UOW_HK:\n   - "pk1"\n   - "pk2"'
+    expected_link_substitutions_string = 'H1_H2_TEST_UoW_HK:\n   - "pk1"\n   - "pk2"'
     assert test_link_substitutions_string == expected_link_substitutions_string
 
 

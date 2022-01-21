@@ -10,8 +10,8 @@ derived_columns:
   $derived_columns
   $alias_columns
 hashed_columns:
-  $hashed_hubs_primary_key
   $hashed_links
+  $hashed_hubs_primary_key
   $hashdiff
 {%- endset -%}
 

@@ -1,24 +1,24 @@
 {
-    "unit_of_work" : "CUST_VSTS",
-    "source_name":"CUSTOMER_VISITS",
-    "version":"1",
-    "source_system":"CSV",
-    "destination_database" : "AUTOVAULT",
-    "destination_schema" : "PUBLIC",
-    "business_topics":{
-        "CUSTOMER":{
-            "business_keys":{
-                "CUST_ID":"STRING"
-            },
-            "alias":"CUSTOMER_ID",
-            "business_attributes":[
-                {
-                    "business_definition":"CUSTOMER_VISITS",
-                    "payload":{
-                        "TOTAL_VISITS":"STRING"
-                    }
-                }
-            ]
+  "unit_of_work": "CUST_VSTS",
+  "source_name": "CUSTOMER_VISITS",
+  "version": "1",
+  "source_system": "CSV",
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "business_topics": {
+    "CUSTOMER": {
+      "business_keys": {
+        "CUST_ID": "STRING"
+      },
+      "alias": "CUSTOMER_ID",
+      "business_attributes": [
+        {
+          "business_definition": "CUSTOMER_VISITS",
+          "payload": {
+            "TOTAL_VISITS": "STRING"
+          }
         }
+      ]
     }
+  }
 }

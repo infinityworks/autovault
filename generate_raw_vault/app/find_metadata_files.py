@@ -4,9 +4,10 @@ from pathlib import Path
 from string import Template
 
 
-def find_json_metadata(parent_dir):
+def find_json_metadata(metadata_directory):
     metadata_files = [
-        Path(file) for file in glob.iglob(f"./{parent_dir}/**/*.json", recursive=True)
+        Path(file)
+        for file in glob.iglob(f"./{metadata_directory}/**/*.json", recursive=True)
     ]
     return metadata_files
 

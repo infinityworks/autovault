@@ -1,17 +1,27 @@
 from json import load, dumps
+from generate_raw_vault.app.metadata_handler import Metadata
 import pytest
 from pathlib import Path
 from generate_raw_vault.app.metadata_handler import Metadata
 
-METADATA_TESTFILE_PATH = Path(__file__).parent / "fixtures/metadata_testfile.json"
+METADATA_TESTFILE_PATH = (
+    Path(__file__).parent / "fixtures/test_metadata/metadata_testfile.json"
+)
+
 SAT_HASHDIFF_TESTTEMPLATE = "generate_raw_vault/app/templates/sat_hashdiff.sql"
 NAME_DICTIONARY = "generate_raw_vault/name_dictionary.json"
+TEST_NAME_DICTIONARY = "./generate_raw_vault/tests/fixtures/test_name_dictionary.json"
 
 
 @pytest.fixture(scope="function")
 def sample_metadata():
     test_metadata = read_file(METADATA_TESTFILE_PATH)
     return test_metadata
+
+
+@pytest.fixture(scope="function")
+def sample_metadata_class():
+    return Metadata(sample_metadata())
 
 
 def read_file(path, mode="r"):
@@ -96,8 +106,8 @@ def test_get_hubs_from_file_param():
 
 
 @pytest.fixture(scope="function")
-def test_get_unique_link_combi_string_dict_param():
-    return "./test_name_dictionary.json"
+def test_naming_dictionary_path():
+    return TEST_NAME_DICTIONARY
 
 
 @pytest.fixture(scope="function")
@@ -199,3 +209,19 @@ def test_get_business_topics_param():
             ],
         },
     }
+
+
+@pytest.fixture(scope="function")
+def metadata_file_dirs_fixture():
+    return [
+        Path("generate_raw_vault/tests/fixtures/test_metadata/metadata_testfile.json")
+    ]
+
+
+@pytest.fixture(scope="function")
+def sample_metadata_map():
+    test_metadata = read_file(METADATA_TESTFILE_PATH)
+    sample_metadata_map = {
+        "generate_raw_vault/tests/fixtures/metadata_testfile.json": test_metadata
+    }
+    return sample_metadata_map

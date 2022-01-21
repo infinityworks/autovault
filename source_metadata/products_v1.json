@@ -1,24 +1,24 @@
 {
-    "unit_of_work" : "CATALOGUE",
-    "source_name":"PRODUCTS",
-    "version":"1",
-    "source_system":"CSV",
-    "destination_database" : "AUTOVAULT",
-    "destination_schema" : "PUBLIC",
-    "business_topics":{
-        "PRODUCT":{
-            "business_keys": {
-                "PRODUCT_ID": "STRING"
-                },
-            "business_attributes":[
-                {
-                    "business_definition":"PRODUCTS",
-                    "payload":{
-                        "MODEL":"STRING",
-                        "MAKE":"STRING"
-                    }
-                }
-            ]
+  "unit_of_work": "CATALOGUE",
+  "source_name": "PRODUCTS",
+  "version": "1",
+  "source_system": "CSV",
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "business_topics": {
+    "PRODUCT": {
+      "business_attributes": [
+        {
+          "business_definition": "PRODUCTS",
+          "payload": {
+            "MAKE": "STRING",
+            "MODEL": "STRING"
+          }
         }
+      ],
+      "business_keys": {
+        "PRODUCT_ID": "STRING"
+      }
     }
+  }
 }

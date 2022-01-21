@@ -6,8 +6,7 @@ from generate_raw_vault.app.metadata_handler import Metadata
 from pathlib import Path
 
 
-def export_all_ddl_statments():
-    metadata_file_dirs = find_json_metadata("source_metadata")
+def export_all_ddl_statments(metadata_file_dirs):
     for metadata_file_path in metadata_file_dirs:
         ddl_exporter(metadata_file_path)
 
@@ -18,7 +17,7 @@ def ddl_exporter(metadata_file_path):
     ddl = create_source_table_ddl(metadata)
     formatted_source_name = metadata.get_versioned_source_name().lower()
     with open(
-        Path(f"./source_tables/DDL/{formatted_source_name}.sql"), "w"
+        Path(f"./source_tables/ddl/{formatted_source_name}.sql"), "w"
     ) as sql_export:
         sql_export.write(ddl)
 
@@ -71,4 +70,5 @@ def format_column_and_dtype(columns_and_types):
 
 
 if __name__ == "__main__":
-    export_all_ddl_statments()
+    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    export_all_ddl_statments(metadata_file_dirs)

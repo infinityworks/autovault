@@ -12,8 +12,8 @@ derived_columns:
   END_DATE: "TO_DATE('9999-12-31')"
   CUSTOMER_ID: "CUST_ID"
 hashed_columns:
-  CUSTOMER_HK: "CUSTOMER_ID"
 
+  CUSTOMER_HK: "CUSTOMER_ID"
   CUSTOMER_VISITS_HASHDIFF:
     is_hashdiff: true
     columns:

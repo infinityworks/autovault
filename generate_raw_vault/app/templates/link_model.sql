@@ -1,6 +1,7 @@
 {{ config(
   materialized='incremental',
-  schema = "LINKS"
+  schema = "LINKS",
+  alias = "$alias"
   ) }}
 
 {%- set source_model = [$source_model]     -%}

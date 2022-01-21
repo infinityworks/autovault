@@ -1,6 +1,7 @@
 {{ config(
   materialized='incremental',
-  schema = "LINKS"
+  schema = "LINKS",
+  alias = "CUST_PRDCT_TRNSCTN_STORE_TILLS"
   ) }}
 
 {%- set source_model = ["stg_transactions_v1"]     -%}
