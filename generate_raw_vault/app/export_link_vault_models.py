@@ -34,12 +34,12 @@ def export_all_link_files(metadata_file_dirs):
                     substitution_values
                 )
                 substitutions = create_link_substitutions(enriched_substitution_values)
-                write_model_files(
-                    substitutions,
-                    model_template,
-                    model_type="links",
-                    filename=enriched_substitution_values["filename"],
-                )
+        write_model_files(
+            substitutions,
+            model_template,
+            model_type="links",
+            filename=enriched_substitution_values["filename"],
+        )
 
 
 def create_link_substitutions(enriched_substitution_values):
