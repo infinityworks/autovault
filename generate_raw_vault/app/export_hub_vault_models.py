@@ -7,22 +7,18 @@ from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
 import itertools
 from typing import Set, Any
+from generate_raw_vault.app.model_creation import write_model_files
 
 HUB_TEMPLATE = "generate_raw_vault/app/templates/hub_model.sql"
 
 
 def export_all_hub_files(metadata_file_dirs):
-    aggregated_hubs = aggregate_hubs(metadata_file_dirs)
-    for hub, substitutions in aggregated_hubs.items():
-        template = load_template_file(HUB_TEMPLATE)
-        create_hub_from_template(template, hub, substitutions)
-
-
-def create_hub_from_template(template, hub, substitutions):
+    aggregated_hub_substitutions = aggregate_hubs(metadata_file_dirs)
+    template = load_template_file(HUB_TEMPLATE)
     hub_template = Template(template)
-    hub_model = hub_template.substitute(substitutions)
-    with open(f"./models/raw_vault/hubs/{hub.lower()}_hub.sql", "w") as sql_export:
-        sql_export.write(hub_model)
+    for hub, substitutions in aggregated_hub_substitutions.items():
+        hub_name = f"{hub.lower()}_hub"
+        write_model_files(substitutions, hub_template, "hubs", hub_name)
 
 
 def aggregate_hubs(metadata_file_dirs):
