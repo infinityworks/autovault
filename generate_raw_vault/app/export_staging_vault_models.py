@@ -60,9 +60,6 @@ def create_substitutions_string(substitutions):
 
 def hashkey_substitution(metadata, hub):
     primary_key = metadata.get_hub_business_key(hub)
-    topic = metadata.get_business_topics()
-    if topic.get("alias"):
-        primary_key = topic.get("alias")
     hashkey_substitution = f'{hub}_HK: "{primary_key}"'
     return hashkey_substitution
 

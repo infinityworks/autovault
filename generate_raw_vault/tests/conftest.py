@@ -225,3 +225,18 @@ def sample_metadata_map():
         "generate_raw_vault/tests/fixtures/metadata_testfile.json": test_metadata
     }
     return sample_metadata_map
+
+
+@pytest.fixture(scope="function")
+def test_substitution_values():
+    return {
+        "filename": None,
+        "hash_key": None,
+        "hubs": None,
+        "hub_name": None,
+        "link_name": None,
+        "natural_key": None,
+        "record_load_datetime": "LOAD_DATETIME",
+        "record_source": "RECORD_SOURCE",
+        "source_list": [],
+    }

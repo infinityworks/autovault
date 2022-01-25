@@ -74,7 +74,7 @@ class Metadata:
 
     def get_hub_business_key(self, hub_name):
         business_keys = self.get_business_keys().get(hub_name)
-        if business_keys.get("alias") is not None:
+        if business_keys.get("alias"):
             primary_key = business_keys.get("alias")
         else:
             primary_key = list(business_keys.get("natural_keys").keys())[0]

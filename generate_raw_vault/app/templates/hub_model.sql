@@ -4,7 +4,7 @@
   alias = "$hub_name"
   ) }}
 
-{%- set source_model = [$source_model] -%}
+{%- set source_model = [$source_list] -%}
 {%- set src_pk = "$src_pk" -%}
 {%- set src_nk = "$src_nk" -%}
 {%- set src_ldts = "$src_ldts" -%}
