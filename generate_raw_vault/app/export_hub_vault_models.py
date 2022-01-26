@@ -11,59 +11,69 @@ from generate_raw_vault.app.model_creation import (
     create_substitution_values_template,
     write_model_files,
 )
-import json
 
 HUB_TEMPLATE = "generate_raw_vault/app/templates/hub_model.sql"
 
 
 def export_all_hub_files(metadata_file_dirs):
-    aggregated_hub_substitutions = aggregate_hubs(metadata_file_dirs)
     template = load_template_file(HUB_TEMPLATE)
     hub_template = Template(template)
-    for hub, substitutions in aggregated_hub_substitutions.items():
-        hub_name = f"{hub.lower()}_hub"
-        write_model_files(substitutions, hub_template, "hubs", hub_name)
-
-
-def aggregate_hubs(metadata_file_dirs):
-    hubs = [get_hubs_from_file(file) for file in metadata_file_dirs]
-    unique_hubs = get_unique_hubs(hubs)
     all_metadata = {
         str(metadata_file_path): Metadata(load_metadata_file(metadata_file_path))
         for metadata_file_path in metadata_file_dirs
     }
+    list_of_hub_lists_per_metadata_file = get_list_of_hub_lists(all_metadata)
+    unique_hubs = get_unique_hubs(list_of_hub_lists_per_metadata_file)
     substitution_values = create_substitution_values_template()
+    hub_substitutions = create_hub_substitution_template(substitution_values)
     for hub_name in unique_hubs:
-        aggregated_hubs = get_aggregated_hubs(substitution_values, unique_hubs)
-        for metadata in all_metadata.values():
-            if hub_name in list(metadata.get_business_topics().keys()):
-                hub_natural_key = metadata.get_hub_business_key(hub_name)
-                aggregated_hubs[hub_name]["src_nk"] = hub_natural_key
-                source_name = f'"stg_{metadata.get_versioned_source_name().lower()}"'
-                # print(hub_name, source_name)
-                # print(aggregated_hubs[hub_name]["source_list"])
-                aggregated_hubs[hub_name]["source_list"].append(source_name)
-        format_aggregated_hub_sources(aggregated_hubs, hub_name)
-    # print(json.dumps(aggregated_hubs, indent=2))
-    # print(aggregated_hubs)
-    return aggregated_hubs
+        substitutions = populate_hub_substitutions(
+            hub_name, hub_substitutions, all_metadata
+        )
+        formatted_hub_name = format_hub_name(hub_name)
+        write_model_files(substitutions, hub_template, "hubs", formatted_hub_name)
 
 
-def get_hubs_from_file(metadata_file_path):
-    metadata_file = load_metadata_file(metadata_file_path)
-    metadata = Metadata(metadata_file)
-    hubs = metadata.get_hubs_from_business_topics()
-    return hubs
+def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
+    natural_key_list = []
+    source_list = []
+    for metadata in all_metadata.values():
+        hub_list = list(metadata.get_business_topics().keys())
+        if hub_name in hub_list:
+            hub_natural_key = metadata.get_hub_business_key(hub_name)
+            natural_key_list.append(hub_natural_key)
+            natural_key_set = set(natural_key_list)
+            if len(natural_key_set) > 1:
+                raise Exception(
+                    f"Multiple natural keys found for hub {hub_name}, check metadata files that they are standardised or correctly aliased."
+                )
+            source_name = format_source_name(metadata)
+            source_list.append(source_name)
+    hub_substitutions["src_nk"] = list(natural_key_set)[0]
+    hub_substitutions["source_list"] = format_sources_list(source_list)
+    hub_substitutions["src_pk"] = f"{hub_name}_HK"
+    hub_substitutions["hub_name"] = hub_name
+    return hub_substitutions
 
 
-def create_hub_substitution(substitution_values, hub_name):
-    substitution_values["hash_key"] = f"{hub_name}_HK"
+def format_hub_name(hub_name):
+    return f"{hub_name.lower()}_hub"
 
+
+def format_sources_list(source_list):
+    return f",\n{chr(32)*24}".join(sorted(source_list))
+
+
+def format_source_name(metadata):
+    return f'"stg_{metadata.get_versioned_source_name().lower()}"'
+
+
+def create_hub_substitution_template(substitution_values):
     substitutions = {
         "source_list": substitution_values["source_list"],
-        "hub_name": hub_name,
+        "hub_name": substitution_values["hub_name"],
         "src_pk": substitution_values["hash_key"],
-        "src_nk": "",
+        "src_nk": substitution_values["natural_key"],
         "src_ldts": substitution_values["record_load_datetime"],
         "src_source": substitution_values["record_source"],
     }
@@ -74,18 +84,10 @@ def get_unique_hubs(hubs) -> Set[str]:
     return sorted(set(list(itertools.chain(*hubs))))
 
 
-def get_aggregated_hubs(substitution_values, unique_hubs: Set[str]):
-    return {
-        hub_name: create_hub_substitution(substitution_values, hub_name)
-        for hub_name in unique_hubs
-    }
-
-
-def format_aggregated_hub_sources(aggregated_hubs, hub_name):
-    aggregated_hubs[hub_name]["source_list"] = f",\n{chr(32)*24}".join(
-        sorted(aggregated_hubs[hub_name]["source_list"])
-    )
-    return aggregated_hubs
+def get_list_of_hub_lists(all_metadata):
+    return [
+        metadata.get_hubs_from_business_topics() for metadata in all_metadata.values()
+    ]
 
 
 if __name__ == "__main__":

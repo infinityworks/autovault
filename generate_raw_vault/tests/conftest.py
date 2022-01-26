@@ -21,7 +21,8 @@ def sample_metadata():
 
 @pytest.fixture(scope="function")
 def sample_metadata_class():
-    return Metadata(sample_metadata())
+    test_metadata = read_file(METADATA_TESTFILE_PATH)
+    return Metadata(test_metadata)
 
 
 def read_file(path, mode="r"):
@@ -72,12 +73,6 @@ def create_ddl_statement_targetddl():
 @pytest.fixture(scope="function")
 def test_hashkey_substitution_hub_param():
     return "HUB1"
-
-
-@pytest.fixture(scope="function")
-def sample_metadata_class():
-    test_metadata_class = Metadata(sample_metadata())
-    return test_metadata_class
 
 
 @pytest.fixture(scope="function")
