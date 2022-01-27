@@ -35,6 +35,7 @@ def export_all_hub_files(metadata_file_dirs):
 
 
 def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
+    print(hub_substitutions)
     natural_key_list = []
     source_list = []
     for metadata in all_metadata.values():
@@ -49,11 +50,15 @@ def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
                 )
             source_name = format_source_name(metadata)
             source_list.append(source_name)
-    hub_substitutions["src_nk"] = list(natural_key_set)[0]
-    hub_substitutions["source_list"] = format_sources_list(source_list)
-    hub_substitutions["src_pk"] = f"{hub_name}_HK"
-    hub_substitutions["hub_name"] = hub_name
-    return hub_substitutions
+    substitutions = {
+        "hub_name": hub_name,
+        "source_list": format_sources_list(source_list),
+        "src_nk": list(natural_key_set)[0],
+        "src_pk": f"{hub_name}_HK",
+        "src_ldts": hub_substitutions["src_ldts"],
+        "src_source": hub_substitutions["src_source"],
+    }
+    return substitutions
 
 
 def format_hub_name(hub_name):
@@ -68,6 +73,16 @@ def format_source_name(metadata):
     return f'"stg_{metadata.get_versioned_source_name().lower()}"'
 
 
+def get_unique_hubs(hubs) -> Set[str]:
+    return set(list(itertools.chain(*hubs)))
+
+
+def get_list_of_hub_lists(all_metadata):
+    return [
+        metadata.get_hubs_from_business_topics() for metadata in all_metadata.values()
+    ]
+
+
 def create_hub_substitution_template(substitution_values):
     substitutions = {
         "source_list": substitution_values["source_list"],
@@ -78,16 +93,6 @@ def create_hub_substitution_template(substitution_values):
         "src_source": substitution_values["record_source"],
     }
     return substitutions
-
-
-def get_unique_hubs(hubs) -> Set[str]:
-    return sorted(set(list(itertools.chain(*hubs))))
-
-
-def get_list_of_hub_lists(all_metadata):
-    return [
-        metadata.get_hubs_from_business_topics() for metadata in all_metadata.values()
-    ]
 
 
 if __name__ == "__main__":
