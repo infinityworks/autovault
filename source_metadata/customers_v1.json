@@ -8,11 +8,27 @@
   "business_topics": {
     "CUSTOMER": {
       "business_keys": {
-        "CUSTOMER_ID": "STRING"
+        "CUSTOMER_ID": {
+          "alias": "CUSTOMER_ID",
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        },
+        "CUSTOMER_SEQ": {
+          "alias": "CUSTOMER_SEQ",
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
       },
       "business_attributes": [
         {
-          "business_definition": "CUSTOMERS",
+          "business_definition": "CUSTOMER_VISITS",
+          "satellite_type": "standard_satellite",
           "payload": {
             "AVG_MONTHLY_VISITS": "STRING"
           }

@@ -5,7 +5,6 @@ from generate_raw_vault.app.find_metadata_files import (
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
-from itertools import chain
 
 SATELLITE_TEMPLATE = "generate_raw_vault/app/templates/sat_model.sql"
 

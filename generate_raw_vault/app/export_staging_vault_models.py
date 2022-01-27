@@ -4,6 +4,7 @@ from generate_raw_vault.app.find_metadata_files import (
     find_json_metadata,
 )
 from generate_raw_vault.app.metadata_handler import Metadata
+from generate_raw_vault.app.model_creation import create_set_from_list_of_lists
 from string import Template
 
 STAGING_TEMPLATE = "generate_raw_vault/app/templates/staging_model.sql"
@@ -44,26 +45,33 @@ def create_staging_file(metadata_file_path):
         sql_export.write(staging_model)
 
 
-def format_derived_columns(column_list):
-    return "\n  ".join(column_list)
-
-
 def get_hub_substitutions_string(metadata, hubs):
     hubs_substitutions = [hashkey_substitution(metadata, hub) for hub in hubs]
-    return create_substitutions_string(hubs_substitutions)
+    return format_list_to_new_line_string(hubs_substitutions)
 
 
-def create_substitutions_string(substitutions):
-    substitutions_string = "\n  ".join(substitutions)
-    return substitutions_string
+def format_list_to_new_line_string(input_list):
+    return "\n".join(input_list)
+
+
+def format_output_string(key, number_of_white_space):
+    return f'{chr(32)*number_of_white_space}- "{key}"'
+
+
+def format_hashkey_name(key, number_of_white_space):
+    return f"{chr(32)*number_of_white_space}{key}"
 
 
 def hashkey_substitution(metadata, hub):
-    primary_key = metadata.get_hub_business_key(hub)
-    topic = metadata.get_business_topics()
-    if topic.get("alias"):
-        primary_key = topic.get("alias")
-    hashkey_substitution = f'{hub}_HK: "{primary_key}"'
+    primary_keys = metadata.get_hub_business_key(hub)
+    hub_hk = f"{hub}_HK:\n"
+    format_hub_hk = format_hashkey_name(hub_hk, number_of_white_space=2)
+    key_list = list(primary_keys.values())
+    formatted_key_list = [
+        format_output_string(key, number_of_white_space=4) for key in key_list
+    ]
+    primary_keys_list = format_list_to_new_line_string(formatted_key_list)
+    hashkey_substitution = format_hub_hk + primary_keys_list
     return hashkey_substitution
 
 
@@ -72,7 +80,7 @@ def get_sat_substitutions_string(metadata, topics):
         get_sat_substitution_from_topic(metadata, hub_name) for hub_name in topics
     ]
     if sats_substitutions:
-        return create_substitutions_string(sats_substitutions)
+        return format_list_to_new_line_string(sats_substitutions)
 
 
 def get_sat_substitution_from_topic(metadata, hub_name):
@@ -106,7 +114,6 @@ def get_unique_link_combinations_substitutions_string(
     metadata, hubs, naming_dictionary_path
 ):
     if len(hubs) > 1:
-        unique_link_combinations_substitutions = []
         naming_dictionary = load_metadata_file(naming_dictionary_path)
         for hub in hubs:
             if hub not in naming_dictionary:
@@ -116,13 +123,16 @@ def get_unique_link_combinations_substitutions_string(
         link_combination_string = "_".join([naming_dictionary[hub] for hub in hubs])
         unit_of_work = metadata.get_unit_of_work()
         link_name = f"{link_combination_string}_{unit_of_work}"
-        combi_primary_keys = [metadata.get_hub_business_key(hub) for hub in hubs]
-        link_keys = [f'- "{key}"' for key in combi_primary_keys]
-        primarykeys_join = "\n   ".join(link_keys)
-        unique_link_combinations_substitutions.append(
-            f"{link_name}_HK:\n   {primarykeys_join}"
-        )
-        return create_substitutions_string(unique_link_combinations_substitutions)
+        combi_primary_keys = [
+            list(metadata.get_hub_business_key(hub).values()) for hub in hubs
+        ]
+        unique_business_keys = create_set_from_list_of_lists(combi_primary_keys)
+        link_keys = [
+            format_output_string(business_key, number_of_white_space=4)
+            for business_key in unique_business_keys
+        ]
+        formatted_primary_keys = format_list_to_new_line_string(link_keys)
+        return f"  {link_name}_HK:\n{formatted_primary_keys}"
     else:
         return ""
 
@@ -133,7 +143,7 @@ def get_hub_alias_substitutions_string(topics):
         for topic_value in list(topics.values())
         if topic_value.get("alias") is not None
     ]
-    return create_substitutions_string(hubs_alias_substitutions)
+    return format_list_to_new_line_string(hubs_alias_substitutions)
 
 
 def create_staging_subsitutions(
@@ -153,7 +163,7 @@ def create_staging_subsitutions(
         'START_DATE: "LOAD_DATETIME"',
         '''END_DATE: "TO_DATE('9999-12-31')"''',
     ]
-    formatted_derived_columns = format_derived_columns(derived_columns)
+    formatted_derived_columns = format_list_to_new_line_string(derived_columns)
 
     substitutions = {
         "source": f'{source_name}: "{table_name}"',

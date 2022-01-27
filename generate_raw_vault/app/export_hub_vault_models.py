@@ -4,8 +4,8 @@ from generate_raw_vault.app.find_metadata_files import (
     find_json_metadata,
 )
 from generate_raw_vault.app.metadata_handler import Metadata
+from generate_raw_vault.app.model_creation import create_set_from_list_of_lists
 from string import Template
-import itertools
 from typing import Set, Any
 
 HUB_TEMPLATE = "generate_raw_vault/app/templates/hub_model.sql"
@@ -27,7 +27,7 @@ def create_hub_from_template(template, hub, substitutions):
 
 def aggregate_hubs(metadata_file_dirs):
     hubs = [get_hubs_from_file(file) for file in metadata_file_dirs]
-    unique_hubs = get_unique_hubs(hubs)
+    unique_hubs = create_set_from_list_of_lists(hubs)
     all_metadata = [
         Metadata(load_metadata_file(metadata_file_path))
         for metadata_file_path in metadata_file_dirs
@@ -66,10 +66,6 @@ def substitution_template(hub_name):
         "src_source": record_source,
     }
     return substitutions
-
-
-def get_unique_hubs(hubs) -> Set[str]:
-    return set(list(itertools.chain(*hubs)))
 
 
 def get_aggregated_hubs(unique_hubs: Set[str]):

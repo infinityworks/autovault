@@ -8,9 +8,23 @@
   "business_topics": {
     "CUSTOMER": {
       "business_keys": {
-        "CUST_ID": "STRING"
+        "CUST_ID": {
+          "alias": "CUSTOMER_ID",
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        },
+        "CUST_SEQ": {
+          "alias": "CUSTOMER_SEQ",
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
       },
-      "alias": "CUSTOMER_ID",
       "business_attributes": [
         {
           "business_definition": "CUSTOMER_VISITS",

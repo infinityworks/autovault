@@ -5,14 +5,14 @@
 
 {%- set yaml_metadata -%}
 source_model:
-  $source
+$source
 derived_columns:
-  $derived_columns
-  $alias_columns
+$derived_columns
+$alias_columns
 hashed_columns:
-  $hashed_links
-  $hashed_hubs_primary_key
-  $hashdiff
+$hashed_hubs_primary_key
+$hashed_links
+$hashdiff
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

@@ -5,16 +5,17 @@
 
 {%- set yaml_metadata -%}
 source_model:
-  AUTOVAULT_PUBLIC: "PRODUCTS_V1"
+AUTOVAULT_PUBLIC: "PRODUCTS_V1"
 derived_columns:
-  EFFECTIVE_FROM: "LOAD_DATETIME"
-  START_DATE: "LOAD_DATETIME"
-  END_DATE: "TO_DATE('9999-12-31')"
+EFFECTIVE_FROM: "LOAD_DATETIME"
+START_DATE: "LOAD_DATETIME"
+END_DATE: "TO_DATE('9999-12-31')"
 
 hashed_columns:
+  PRODUCT_HK:
+    - "PRODUCT_ID"
 
-  PRODUCT_HK: "PRODUCT_ID"
-  PRODUCTS_HASHDIFF:
+PRODUCTS_HASHDIFF:
     is_hashdiff: true
     columns:
       - "MAKE"

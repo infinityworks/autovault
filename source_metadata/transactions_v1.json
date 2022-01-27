@@ -8,7 +8,21 @@
   "business_topics": {
     "CUSTOMER": {
       "business_keys": {
-        "CUSTOMER_ID": "STRING"
+        "CUSTOMER_ID": {
+          "alias": "CUSTOMER_ID",
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        },
+        "CUSTOMER_SEQ": {
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
       },
       "business_attributes": [
         {
@@ -21,7 +35,14 @@
     },
     "PRODUCT": {
       "business_keys": {
-        "PRODUCT_ID": "STRING"
+        "PRODUCT_ID": {
+          "alias": "PRODUCT_ID",
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
       },
       "business_attributes": [
         {
@@ -34,7 +55,14 @@
     },
     "TRANSACTION": {
       "business_keys": {
-        "DATE_OF_SESSION": "TIMESTAMP_TZ(9)"
+        "DATE_OF_SESSION": {
+          "alias": "DATE_OF_SESSION",
+          "type": "TIMESTAMP_TZ(9)",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
       },
       "business_attributes": [
         {
