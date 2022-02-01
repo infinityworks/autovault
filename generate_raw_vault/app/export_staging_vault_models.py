@@ -30,8 +30,8 @@ def create_staging_file(metadata_file_path):
     unique_link_combinations_substitutions_string = get_unique_link_combinations_substitutions_string(
         metadata, hubs, NAME_DICTIONARY
     )
-    hub_alias_substitution_string = get_hub_alias_substitutions_string(topics)
-
+    # hub_alias_substitution_string = get_hub_alias_substitutions_string(topics)
+    hub_alias_substitution_string = get_hub_alias_substitutions_string(metadata)
     substitutions = create_staging_subsitutions(
         metadata,
         hub_substitutions_string,
@@ -137,13 +137,19 @@ def get_unique_link_combinations_substitutions_string(
         return ""
 
 
-def get_hub_alias_substitutions_string(topics):
-    hubs_alias_substitutions = [
-        f'{topic_value.get("alias")}: "{"".join(list(topic_value.get("business_keys").keys()))}"'
-        for topic_value in list(topics.values())
-        if topic_value.get("alias") is not None
-    ]
-    return format_list_to_new_line_string(hubs_alias_substitutions)
+def get_hub_alias_substitutions_string(metadata):
+    hub_names_list = metadata.get_hubs_from_business_topics()
+    alias_primary_key_association_list = []
+    for hub_name in hub_names_list:
+        alias_primarykey_map = metadata.get_alias_primarykey_map(
+            metadata.get_hub_business_key(hub_name)
+        )
+        alias_primary_key_association_list = [
+            f'{alias}:{chr(32)}"{primary_key}"'
+            for alias, primary_key in alias_primarykey_map.items()
+            if alias != primary_key
+        ]
+    return format_list_to_new_line_string(alias_primary_key_association_list)
 
 
 def create_staging_subsitutions(

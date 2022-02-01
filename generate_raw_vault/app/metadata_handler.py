@@ -81,6 +81,13 @@ class Metadata:
                 primarykey_alias_map[primary_key] = primary_key
         return primarykey_alias_map
 
+    def get_alias_primarykey_map(self, primarykey_alias_map):
+        alias_primarykey_map = {}
+        alias_primarykey_map = dict(
+            (alias, primary_key) for primary_key, alias in primarykey_alias_map.items()
+        )
+        return alias_primarykey_map
+
     def get_hub_business_key(self, hub_name):
         hub_business_keys = self.get_business_keys().get(hub_name)
         return self.get_primarykey_alias_map(hub_business_keys)
