@@ -1,5 +1,6 @@
 from generate_raw_vault.app.metadata_handler import Metadata
 import pytest
+from dataclasses import asdict
 
 
 class TestMetadata:
@@ -34,7 +35,7 @@ class TestMetadata:
     @pytest.mark.usefixtures("sample_metadata")
     def test_get_source_business_topics(self, sample_metadata):
         test_metadata = Metadata(sample_metadata)
-        test_target_source_business_topics = test_metadata.get_source_business_topics()
+        test_target_source_business_topics = list(map(asdict, test_metadata.get_source_business_topics()))
         expected_target_source_business_topics = [
             {
                 "business_keys": {"pk1": "STRING"},
@@ -45,12 +46,14 @@ class TestMetadata:
                     },
                     {"business_definition": "SAT2", "payload": {"sat2_col1": "STRING"}},
                 ],
+                "alias": None,
             },
             {
                 "business_keys": {"pk2": "STRING"},
                 "business_attributes": [
                     {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}}
                 ],
+                "alias": None,
             },
         ]
         assert (
@@ -64,7 +67,6 @@ class TestMetadata:
         expected_target_hubs = ["HUB1", "HUB2"]
         assert test_target_hubs == expected_target_hubs
 
-    @pytest.mark.usefixtures("sample_metadata")
     def test_get_sat_from_hub(self, sample_metadata):
         test_metadata = Metadata(sample_metadata)
         test_target_sat = test_metadata.get_sat_from_hub("HUB1")
@@ -90,7 +92,7 @@ class TestMetadata:
     @pytest.mark.usefixtures("sample_metadata")
     def test_flatten_business_attributes(self, sample_metadata):
         test_metadata = Metadata(sample_metadata)
-        test_target_flattened_attributes = test_metadata.flatten_business_attributes()
+        test_target_flattened_attributes = list(map(asdict, test_metadata.flatten_business_attributes()))
         expected_target_flattened_attributes = [
             {
                 "business_definition": "SAT1",
@@ -121,7 +123,7 @@ class TestMetadata:
     @pytest.mark.usefixtures("sample_metadata")
     def test_get_business_topics(self, sample_metadata):
         test_metadata = Metadata(sample_metadata)
-        test_target_business_topics = test_metadata.get_business_topics()
+        test_target_business_topics = { k : asdict(v) for (k,v) in test_metadata.get_business_topics().items() }
         expected_target_business_topics = {
             "HUB1": {
                 "business_keys": {"pk1": "STRING"},
@@ -132,12 +134,14 @@ class TestMetadata:
                     },
                     {"business_definition": "SAT2", "payload": {"sat2_col1": "STRING"}},
                 ],
+                "alias": None,
             },
             "HUB2": {
                 "business_keys": {"pk2": "STRING"},
                 "business_attributes": [
                     {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}}
                 ],
+                "alias": None,
             },
         }
         assert test_target_business_topics == expected_target_business_topics

@@ -1,4 +1,5 @@
 from json import load, dumps
+from generate_raw_vault.app.metadata_classes import BusinessAttribute
 from generate_raw_vault.app.metadata_handler import Metadata
 import pytest
 from pathlib import Path
@@ -30,11 +31,15 @@ def read_file(path, mode="r"):
 
 
 @pytest.fixture(scope="function")
-def get_attrs_param():
-    return {
-        "business_definition": "SAT1",
-        "payload": {"sat1_col1": "STRING", "sat1_col2": "STRING"},
-    }
+def get_attrs_param() -> BusinessAttribute:
+    return BusinessAttribute(
+        business_definition="SAT1",
+        payload = {"sat1_col1": "STRING", "sat1_col2": "STRING"},
+    )
+    # return {
+        # "business_definition": "SAT1",
+        # "payload": {"sat1_col1": "STRING", "sat1_col2": "STRING"},
+    # }
 
 
 @pytest.fixture(scope="function")
