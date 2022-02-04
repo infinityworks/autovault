@@ -235,3 +235,15 @@ def test_substitution_values():
         "record_source": "RECORD_SOURCE",
         "source_list": [],
     }
+
+
+@pytest.fixture(scope="function")
+def test_hub_substitutions():
+    return {
+        "source_list": [],
+        "hub_name": None,
+        "src_pk": None,
+        "src_nk": None,
+        "src_ldts": "LOAD_DATETIME",
+        "src_source": "RECORD_SOURCE",
+    }

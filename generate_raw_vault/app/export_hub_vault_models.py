@@ -35,30 +35,41 @@ def export_all_hub_files(metadata_file_dirs):
 
 
 def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
-    print(hub_substitutions)
     natural_key_list = []
     source_list = []
     for metadata in all_metadata.values():
-        hub_list = list(metadata.get_business_topics().keys())
-        if hub_name in hub_list:
-            hub_natural_key = metadata.get_hub_business_key(hub_name)
-            natural_key_list.append(hub_natural_key)
-            natural_key_set = set(natural_key_list)
-            if len(natural_key_set) > 1:
-                raise Exception(
-                    f"Multiple natural keys found for hub {hub_name}, check metadata files that they are standardised or correctly aliased."
-                )
-            source_name = format_source_name(metadata)
-            source_list.append(source_name)
+        if hub_name in metadata.get_business_topics():
+            natural_key_list = populate_hub_natural_key(
+                natural_key_list, metadata, hub_name
+            )
+            source_list = get_hub_source_list(metadata, source_list)
+
     substitutions = {
         "hub_name": hub_name,
         "source_list": format_sources_list(source_list),
-        "src_nk": list(natural_key_set)[0],
+        "src_nk": natural_key_list[0],
         "src_pk": f"{hub_name}_HK",
         "src_ldts": hub_substitutions["src_ldts"],
         "src_source": hub_substitutions["src_source"],
     }
     return substitutions
+
+
+def populate_hub_natural_key(natural_key_list, metadata, hub_name):
+    hub_natural_key = metadata.get_hub_business_key(hub_name)
+    natural_key_list.append(hub_natural_key)
+    natural_key_set = set(natural_key_list)
+    if len(natural_key_set) > 1:
+        raise Exception(
+            f"Multiple natural keys found for hub {hub_name}, check metadata files that they are standardised or correctly aliased."
+        )
+    return natural_key_list
+
+
+def get_hub_source_list(metadata, source_list):
+    source_name = get_formatted_source_name(metadata)
+    source_list.append(source_name)
+    return source_list
 
 
 def format_hub_name(hub_name):
@@ -69,7 +80,7 @@ def format_sources_list(source_list):
     return f",\n{chr(32)*24}".join(sorted(source_list))
 
 
-def format_source_name(metadata):
+def get_formatted_source_name(metadata):
     return f'"stg_{metadata.get_versioned_source_name().lower()}"'
 
 
