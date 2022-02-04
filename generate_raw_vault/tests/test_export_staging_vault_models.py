@@ -3,7 +3,7 @@ from generate_raw_vault.tests.conftest import (
     hub_alias_subs_string_topics_with_alias_param,
     hub_alias_subs_string_topics,
 )
-from unittest.mock import patch, MagicMock, Mock
+from unittest.mock import MagicMock
 from generate_raw_vault.app.metadata_handler import Metadata
 from generate_raw_vault.app.export_staging_vault_models import (
     create_staging_file,

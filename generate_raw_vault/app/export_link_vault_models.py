@@ -30,16 +30,16 @@ def export_all_link_files(metadata_file_dirs):
                 link, metadata_dict, substitution_values_template, naming_dictionary
             )
             if substitution_values:
-                enriched_substitution_values = enrich_substitution_values(
+                enriched_substitution_values = enrich_link_substitution_values(
                     substitution_values
                 )
                 substitutions = create_link_substitutions(enriched_substitution_values)
-                write_model_files(
-                    substitutions,
-                    model_template,
-                    model_type="links",
-                    filename=enriched_substitution_values["filename"],
-                )
+        write_model_files(
+            substitutions,
+            model_template,
+            model_type="links",
+            filename=enriched_substitution_values["filename"],
+        )
 
 
 def create_link_substitutions(enriched_substitution_values):
@@ -61,7 +61,7 @@ def create_link_substitutions(enriched_substitution_values):
     return substitutions
 
 
-def enrich_substitution_values(substitution_values):
+def enrich_link_substitution_values(substitution_values):
     source_list = substitution_values["source_list"]
     link_keys = substitution_values["hubs"]
     link_name = substitution_values["link_name"]

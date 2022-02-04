@@ -2,24 +2,14 @@ import pytest
 from unittest.mock import patch, MagicMock, Mock
 from generate_raw_vault.app.metadata_handler import Metadata
 from generate_raw_vault.app.export_hub_vault_models import (
-    get_hubs_from_file,
+    create_hub_substitution_template,
+    format_hub_name,
+    format_sources_list,
+    get_formatted_source_name,
     get_unique_hubs,
-    substitution_template,
-    get_aggregated_hubs,
-    format_aggregated_hub_sources,
+    get_list_of_hub_lists,
+    populate_hub_substitutions,
 )
-from typing import Set, Any
-
-
-@pytest.mark.usefixtures(
-    "test_get_metadata_testfile_path_param", "test_get_hub_subs_string_param"
-)
-def test_get_hubs_from_file(
-    test_get_metadata_testfile_path_param, test_get_hub_subs_string_param
-):
-    test_hubs_from_file = get_hubs_from_file(test_get_metadata_testfile_path_param)
-    expected_hubs_from_file = test_get_hub_subs_string_param
-    assert test_hubs_from_file == expected_hubs_from_file
 
 
 @pytest.mark.usefixtures("test_get_hubs_from_file_param")
@@ -29,40 +19,55 @@ def test_get_unique_hubs(test_get_hubs_from_file_param):
     assert test_unique_hubs == expected_unique_hubs
 
 
-@pytest.mark.usefixtures("test_hashkey_substitution_hub_param")
-def test_substitution_template(test_hashkey_substitution_hub_param):
-    test_substitution_template = substitution_template(
-        test_hashkey_substitution_hub_param
-    )
-    expected_substitution_template = {
-        "source_model": [],
-        "hub_name": "HUB1",
-        "src_pk": "HUB1_HK",
-        "src_nk": "",
-        "src_ldts": "LOAD_DATETIME",
-        "src_source": "RECORD_SOURCE",
-    }
-    assert test_substitution_template == expected_substitution_template
+def test_format_hub_name():
+    test_format_hub_name = format_hub_name("HUB1")
+    assert test_format_hub_name == "hub1_hub"
 
 
-def test_format_aggregated_hub_sources():
-    aggregated_hubs: dict[str, dict[str, Any]] = {
-        "hub_1": {"source_model": ["s_1", "s_2"]}
-    }
-    hub_name: str = "hub_1"
-    formated_aggregated_hub_sources = format_aggregated_hub_sources(
-        aggregated_hubs, hub_name
-    )
-    assert formated_aggregated_hub_sources == {
-        "hub_1": {"source_model": f"s_1,\n{chr(32)*24}s_2"}
-    }
+@pytest.mark.usefixtures("sample_metadata_class")
+def test_get_formatted_source_name(sample_metadata_class):
+    test_formatted_source_name = get_formatted_source_name(sample_metadata_class)
+    assert test_formatted_source_name == '"stg_test_v1"'
 
 
 @patch(
-    "generate_raw_vault.app.export_hub_vault_models.substitution_template",
-    return_value="test_data",
+    "generate_raw_vault.app.metadata_handler.Metadata.get_hubs_from_business_topics",
 )
-def test_get_aggregate_hubs(substitute_mock):
-    test_data = set(["HUB1", "HUB2"])
-    aggregated_hubs = get_aggregated_hubs(test_data)
-    assert aggregated_hubs == {"HUB1": "test_data", "HUB2": "test_data"}
+def test_get_list_of_hub_lists(substitute_mock):
+    substitute_mock.values = Mock(
+        return_value=[
+            Mock(
+                spec=Metadata,
+                get_hubs_from_business_topics=MagicMock(return_value=["HUB1"]),
+            ),
+            Mock(
+                spec=Metadata,
+                get_hubs_from_business_topics=MagicMock(return_value=["HUB2", "HUB3"]),
+            ),
+        ]
+    )
+
+    test_hub_lists = get_list_of_hub_lists(substitute_mock)
+    assert test_hub_lists == [["HUB1"], ["HUB2", "HUB3"]]
+
+
+@pytest.mark.usefixtures("test_substitution_values")
+def test_create_hub_substitution_template(test_substitution_values):
+    test_create_link_substitution = create_hub_substitution_template(
+        test_substitution_values
+    )
+    expected_create_link_substitution = {
+        "source_list": [],
+        "hub_name": None,
+        "src_pk": None,
+        "src_nk": None,
+        "src_ldts": "LOAD_DATETIME",
+        "src_source": "RECORD_SOURCE",
+    }
+    assert test_create_link_substitution == expected_create_link_substitution
+
+
+def test_format_sources_list():
+    sources_list = ["hub_1", "hub_2"]
+    formated_sources_list = format_sources_list(sources_list)
+    assert formated_sources_list == f"hub_1,\n{chr(32)*24}hub_2"

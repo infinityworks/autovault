@@ -21,7 +21,8 @@ def sample_metadata():
 
 @pytest.fixture(scope="function")
 def sample_metadata_class():
-    return Metadata(sample_metadata())
+    test_metadata = read_file(METADATA_TESTFILE_PATH)
+    return Metadata(test_metadata)
 
 
 def read_file(path, mode="r"):
@@ -72,12 +73,6 @@ def create_ddl_statement_targetddl():
 @pytest.fixture(scope="function")
 def test_hashkey_substitution_hub_param():
     return "HUB1"
-
-
-@pytest.fixture(scope="function")
-def sample_metadata_class():
-    test_metadata_class = Metadata(sample_metadata())
-    return test_metadata_class
 
 
 @pytest.fixture(scope="function")
@@ -225,3 +220,30 @@ def sample_metadata_map():
         "generate_raw_vault/tests/fixtures/metadata_testfile.json": test_metadata
     }
     return sample_metadata_map
+
+
+@pytest.fixture(scope="function")
+def test_substitution_values():
+    return {
+        "filename": None,
+        "hash_key": None,
+        "hubs": None,
+        "hub_name": None,
+        "link_name": None,
+        "natural_key": None,
+        "record_load_datetime": "LOAD_DATETIME",
+        "record_source": "RECORD_SOURCE",
+        "source_list": [],
+    }
+
+
+@pytest.fixture(scope="function")
+def test_hub_substitutions():
+    return {
+        "source_list": [],
+        "hub_name": None,
+        "src_pk": None,
+        "src_nk": None,
+        "src_ldts": "LOAD_DATETIME",
+        "src_source": "RECORD_SOURCE",
+    }

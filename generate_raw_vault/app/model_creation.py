@@ -10,12 +10,15 @@ def write_model_files(substitutions, model_template, model_type, filename):
 
 def create_substitution_values_template():
     return {
-        "hubs": "",
-        "filename": "",
-        "link_name": "",
-        "source_list": [],
+        "filename": None,
+        "hash_key": None,
+        "hubs": None,
+        "hub_name": None,
+        "link_name": None,
+        "natural_key": None,
         "record_load_datetime": "LOAD_DATETIME",
         "record_source": "RECORD_SOURCE",
+        "source_list": [],
     }
 
 

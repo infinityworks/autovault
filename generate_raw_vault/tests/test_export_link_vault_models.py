@@ -3,19 +3,6 @@ import generate_raw_vault.app.export_link_vault_models as link_exporter
 from generate_raw_vault.app.model_creation import create_substitution_values_template
 
 
-def test_create_substitution_values_template():
-    substitution_values_template = create_substitution_values_template()
-    test_substitution_values_template = {
-        "hubs": "",
-        "filename": "",
-        "link_name": "",
-        "record_load_datetime": "LOAD_DATETIME",
-        "record_source": "RECORD_SOURCE",
-        "source_list": [],
-    }
-    assert substitution_values_template == test_substitution_values_template
-
-
 @pytest.mark.usefixtures("metadata_file_dirs_fixture", "sample_metadata")
 def test_get_metadata_map(metadata_file_dirs_fixture, sample_metadata):
     test_get_metadata_map = link_exporter.get_metadata_map(metadata_file_dirs_fixture)
