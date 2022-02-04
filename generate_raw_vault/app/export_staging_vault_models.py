@@ -30,11 +30,11 @@ def create_staging_file(metadata_file_path):
     unique_link_combinations_substitutions_string = get_unique_link_combinations_substitutions_string(
         metadata, hubs, NAME_DICTIONARY
     )
-    hub_alias_substitution_string = get_hub_alias_substitutions_string(metadata)
+    hub_alias_substitutions_string = get_hub_alias_substitutions_string(metadata)
     substitutions = create_staging_subsitutions(
         metadata,
         hub_substitutions_string,
-        hub_alias_substitution_string,
+        hub_alias_substitutions_string,
         unique_link_combinations_substitutions_string,
         sat_substitutions_string,
     )
@@ -78,8 +78,12 @@ def get_sat_substitutions_string(metadata, topics):
     sats_substitutions = [
         get_sat_substitution_from_topic(metadata, hub_name) for hub_name in topics
     ]
+    while "" in sats_substitutions:
+        sats_substitutions.remove("")
     if sats_substitutions:
         return format_list_to_new_line_string(sats_substitutions)
+    else:
+        return ""
 
 
 def get_sat_substitution_from_topic(metadata, hub_name):
@@ -99,14 +103,20 @@ def get_sat_substitution_from_topic(metadata, hub_name):
 def get_sat_subs(sat_hashdiff_template, sat_name, payload):
     hashdiff = f"{sat_name}_HASHDIFF"
     sorted_payload_keys = sorted(payload.keys())
-    formatted_sat_column_list = [f'- "{column}"' for column in sorted_payload_keys]
-    formatted_sat_column_list_string = f"\n{chr(32)*6}".join(formatted_sat_column_list)
-    substitutions = {
-        "hashdiff_name": hashdiff,
-        "columns": formatted_sat_column_list_string,
-    }
-    if "null" not in formatted_sat_column_list_string:
-        return sat_hashdiff_template.substitute(substitutions)
+    if "null" not in sorted_payload_keys:
+        formatted_sat_column_list = [f'- "{column}"' for column in sorted_payload_keys]
+        formatted_sat_column_list_string = f"\n{chr(32)*6}".join(
+            formatted_sat_column_list
+        )
+        substitutions = {
+            "hashdiff_name": hashdiff,
+            "columns": formatted_sat_column_list_string,
+        }
+
+        hashdiff_string = format_hashkey_name(
+            sat_hashdiff_template.substitute(substitutions), number_of_white_space=2
+        )
+        return hashdiff_string
 
 
 def get_unique_link_combinations_substitutions_string(
@@ -148,13 +158,17 @@ def get_hub_alias_substitutions_string(metadata):
                 alias_primary_key_association_list.append(
                     f'{alias}:{chr(32)}"{primary_key}"'
                 )
-    return format_list_to_new_line_string(alias_primary_key_association_list)
+    formatted_alias_primary_key_association_list = [
+        format_hashkey_name(key_pair, number_of_white_space=2)
+        for key_pair in alias_primary_key_association_list
+    ]
+    return format_list_to_new_line_string(formatted_alias_primary_key_association_list)
 
 
 def create_staging_subsitutions(
     metadata,
     hubs_substitution,
-    hub_alias_substitution_string,
+    hub_alias_substitutions_string,
     unique_link_combinations_substitution,
     sat_substitution,
 ):
@@ -168,13 +182,20 @@ def create_staging_subsitutions(
         'START_DATE: "LOAD_DATETIME"',
         '''END_DATE: "TO_DATE('9999-12-31')"''',
     ]
-    formatted_derived_columns = format_list_to_new_line_string(derived_columns)
+    formatted_derived_columns = format_list_to_new_line_string(
+        [
+            format_hashkey_name(column, number_of_white_space=2)
+            for column in derived_columns
+        ]
+    )
 
     substitutions = {
-        "source": f'{source_name}: "{table_name}"',
+        "source": format_hashkey_name(
+            f'{source_name}: "{table_name}"', number_of_white_space=2
+        ),
         "derived_columns": formatted_derived_columns,
         "hashed_hubs_primary_key": hubs_substitution,
-        "alias_columns": hub_alias_substitution_string,
+        "alias_columns": hub_alias_substitutions_string,
         "hashed_links": unique_link_combinations_substitution,
         "hashdiff": sat_substitution,
     }

@@ -1,7 +1,7 @@
 {
-  "unit_of_work": "STORE-TILLS",
+  "unit_of_work": "STORE-TILLS-TRANSACTIONAL",
   "source_name": "TRANSACTIONS",
-  "version": "1",
+  "version": "2",
   "source_system": "ONLINE",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
@@ -69,6 +69,23 @@
           }
         }
       ]
+    }
+  },
+  "transactional_payload": {
+    "Trans_seq": {
+      "alias": "CUSTOMER_ID",
+      "type": "STRING",
+      "tests": {
+        "uniqueness": true,
+        "nullable": true
+      }
+    },
+    "Trans_type": {
+      "type": "STRING",
+      "tests": {
+        "uniqueness": true,
+        "nullable": true
+      }
     }
   }
 }

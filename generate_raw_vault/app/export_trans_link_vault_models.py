@@ -9,16 +9,20 @@ from generate_raw_vault.app.model_creation import (
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
+import itertools
 
 LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/link_model.sql"
+TRANS_LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/trans_link_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
 
 
 def export_all_link_files(metadata_file_dirs):
     template = load_template_file(LINK_TEMPLATE_PATH)
+    translink_template = load_template_file(TRANS_LINK_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
-    model_template = Template(template)
-
+    translink_template = Template(translink_template)
+    link_template = Template(template)
+    templates = {"link": link_template, "trans_link": translink_template}
     metadata_map = get_metadata_map(metadata_file_dirs)
     link_source_map = create_link_source_map(metadata_map)
     link_combinations = set(link_source_map.values())
@@ -26,21 +30,24 @@ def export_all_link_files(metadata_file_dirs):
     for link in link_combinations:
         substitution_values_template = create_substitution_values_template()
         for metadata_dict in metadata_map.values():
-            # print(metadata_dict)
+            if metadata_dict.get("transaction_payload"):
+                model_template = templates.get("trans_link")
+            else:
+                model_template = templates.get("link")
             substitution_values = populate_substitution_values(
                 link, metadata_dict, substitution_values_template, naming_dictionary
             )
             if substitution_values:
-                enriched_substitution_values = enrich_link_substitution_values(
+                enriched_substitution_values = enrich_substitution_values(
                     substitution_values
                 )
                 substitutions = create_link_substitutions(enriched_substitution_values)
-        write_model_files(
-            substitutions,
-            model_template,
-            model_type="links",
-            filename=enriched_substitution_values["filename"],
-        )
+                write_model_files(
+                    substitutions,
+                    model_template,
+                    model_type="links",
+                    filename=enriched_substitution_values["filename"],
+                )
 
 
 def create_link_substitutions(enriched_substitution_values):
@@ -50,23 +57,23 @@ def create_link_substitutions(enriched_substitution_values):
     foreign_keys = enriched_substitution_values["foreign_keys"]
     record_source = enriched_substitution_values["record_source"]
     record_load_datetime = enriched_substitution_values["record_load_datetime"]
-
+    payload = enriched_substitution_values["payload"]
     substitutions = {
         "alias": link_name,
         "source_model": source_tables,
         "src_pk": hash_key,
         "src_fk": foreign_keys,
+        "payload": payload,
         "src_ldts": record_load_datetime,
         "src_source": record_source,
     }
     return substitutions
 
 
-def enrich_link_substitution_values(substitution_values):
+def enrich_substitution_values(substitution_values):
     source_list = substitution_values["source_list"]
     link_keys = substitution_values["hubs"]
     link_name = substitution_values["link_name"]
-
     substitution_values["source_tables"] = f",\n{chr(32)*24}".join(
         sorted([f'"stg_{source.lower()}"' for source in source_list])
     )
@@ -95,12 +102,22 @@ def populate_substitution_values(
             )
             link_name = f"{short_name}_{unit_of_work}"
             versioned_source_name = metadata.get_versioned_source_name()
+            trans_payload_list = [
+                list(transaction_payload.keys())
+                for transaction_payload in metadata_dict.get("transaction_payload")
+            ]
+            trans_payload_columns_list = list(itertools.chain(*trans_payload_list))
+            print(trans_payload_columns_list)
+            # print(list(transaction_payload.keys()))
             filename = f'{"_".join(hub_list)}_{unit_of_work}'.lower()
             substitution_values["hubs"] = hub_list
             substitution_values["filename"] = filename
             substitution_values["link_name"] = link_name
             substitution_values["source_list"].append(versioned_source_name)
+            substitution_values["payload"] = trans_payload_columns_list
             return substitution_values
+        else:
+            print("No")
 
 
 def create_link_source_map(metadata_map):

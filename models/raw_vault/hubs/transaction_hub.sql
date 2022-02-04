@@ -4,9 +4,10 @@
   alias = "TRANSACTION"
   ) }}
 
-{%- set source_model = ["stg_transactions_v1"] -%}
+{%- set source_model = ["stg_transactions_v1",
+                        "stg_transactions_v2"] -%}
 {%- set src_pk = "TRANSACTION_HK" -%}
-{%- set src_nk = "DATE_OF_SESSION" -%}
+{%- set src_nk = ["DATE_OF_SESSION"] -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
 

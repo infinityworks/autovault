@@ -82,10 +82,9 @@ class Metadata:
         return primarykey_alias_map
 
     def get_alias_primarykey_map(self, primarykey_alias_map):
-        alias_primarykey_map = {}
-        alias_primarykey_map = dict(
-            (alias, primary_key) for primary_key, alias in primarykey_alias_map.items()
-        )
+        alias_primarykey_map = {
+            alias: primary_key for primary_key, alias in primarykey_alias_map.items()
+        }
         return alias_primarykey_map
 
     def get_hub_business_key(self, hub_name):

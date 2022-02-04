@@ -18,7 +18,6 @@
       ],
       "business_keys": {
         "PRODUCT_ID": {
-          "alias": "PRODUCT_ID",
           "type": "STRING",
           "tests": {
             "uniqueness": true,

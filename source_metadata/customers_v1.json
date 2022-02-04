@@ -9,7 +9,6 @@
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
-          "alias": "CUSTOMER_ID",
           "type": "STRING",
           "tests": {
             "uniqueness": true,
@@ -17,7 +16,6 @@
           }
         },
         "CUSTOMER_SEQ": {
-          "alias": "CUSTOMER_SEQ",
           "type": "STRING",
           "tests": {
             "uniqueness": true,

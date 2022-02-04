@@ -9,3 +9,4 @@ sources:
       - name: CUSTOMER_VISITS_V1
       - name: PRODUCTS_V1
       - name: TRANSACTIONS_V1
+      - name: TRANSACTIONS_V2
