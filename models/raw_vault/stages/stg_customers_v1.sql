@@ -14,7 +14,6 @@ derived_columns:
 hashed_columns:
   CUSTOMER_HK:
     - "CUSTOMER_ID"
-    - "CUSTOMER_SEQ"
 
   CUSTOMER_VISITS_HASHDIFF:
     is_hashdiff: true

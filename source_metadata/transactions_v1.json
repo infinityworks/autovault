@@ -53,8 +53,14 @@
     "TRANSACTION": {
       "business_keys": {
         "DATE_OF_SESSION": {
-          "alias": "DATE_OF_SESSION",
           "type": "TIMESTAMP_TZ(9)",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        },
+        "PRODUCT_ID": {
+          "type": "STRING",
           "tests": {
             "uniqueness": true,
             "nullable": true

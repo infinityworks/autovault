@@ -115,6 +115,4 @@ class Metadata:
 
 if __name__ == "__main__":
     metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
-    metadata = Metadata(metadata_file).get_versioned_source_name()
-    hubs = Metadata(metadata_file).get_hubs_from_business_topics()
-    business_keys = Metadata(metadata_file).get_business_keys()
+    metadata = Metadata(metadata_file).get_hub_business_key("TRANSACTION")

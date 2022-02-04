@@ -11,11 +11,9 @@ derived_columns:
   START_DATE: "LOAD_DATETIME"
   END_DATE: "TO_DATE('9999-12-31')"
   CUSTOMER_ID: "CUST_ID"
-  CUSTOMER_SEQ: "CUST_SEQ"
 hashed_columns:
   CUSTOMER_HK:
     - "CUSTOMER_ID"
-    - "CUSTOMER_SEQ"
 
   CUSTOMER_VISITS_HASHDIFF:
     is_hashdiff: true

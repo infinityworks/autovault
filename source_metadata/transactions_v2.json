@@ -49,39 +49,11 @@
           }
         }
       ]
-    },
-    "TRANSACTION": {
-      "business_keys": {
-        "DATE_OF_SESSION": {
-          "alias": "DATE_OF_SESSION",
-          "type": "TIMESTAMP_TZ(9)",
-          "tests": {
-            "uniqueness": true,
-            "nullable": true
-          }
-        }
-      },
-      "business_attributes": [
-        {
-          "business_definition": "TRANSACTIONS",
-          "payload": {
-            "null": "null"
-          }
-        }
-      ]
     }
   },
   "transactional_payload": {
-    "Trans_seq": {
-      "alias": "CUSTOMER_ID",
-      "type": "STRING",
-      "tests": {
-        "uniqueness": true,
-        "nullable": true
-      }
-    },
-    "Trans_type": {
-      "type": "STRING",
+    "DATE_OF_SESSION": {
+      "type": "TIMESTAMP_TZ(9)",
       "tests": {
         "uniqueness": true,
         "nullable": true

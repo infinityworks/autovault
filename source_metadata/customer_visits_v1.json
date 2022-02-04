@@ -15,14 +15,6 @@
             "uniqueness": true,
             "nullable": true
           }
-        },
-        "CUST_SEQ": {
-          "alias": "CUSTOMER_SEQ",
-          "type": "STRING",
-          "tests": {
-            "uniqueness": true,
-            "nullable": true
-          }
         }
       },
       "business_attributes": [

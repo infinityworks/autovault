@@ -9,8 +9,7 @@
                         "stg_transactions_v1",
                         "stg_transactions_v2"] -%}
 {%- set src_pk = "CUSTOMER_HK" -%}
-{%- set src_nk = ["CUSTOMER_ID,
-                  CUSTOMER_SEQ"] -%}
+{%- set src_nk = ["CUSTOMER_ID"] -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
 

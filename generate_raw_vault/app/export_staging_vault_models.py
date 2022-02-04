@@ -135,7 +135,7 @@ def get_unique_link_combinations_substitutions_string(
         combi_primary_keys = [
             list(metadata.get_hub_business_key(hub).values()) for hub in hubs
         ]
-        unique_business_keys = create_set_from_list_of_lists(combi_primary_keys)
+        unique_business_keys = sorted(create_set_from_list_of_lists(combi_primary_keys))
         link_keys = [
             format_output_string(business_key, number_of_white_space=4)
             for business_key in unique_business_keys
