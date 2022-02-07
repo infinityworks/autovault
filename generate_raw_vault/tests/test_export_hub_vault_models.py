@@ -58,7 +58,8 @@ def test_create_hub_substitution_template(test_substitution_values):
     }
     assert test_create_link_substitution == expected_create_link_substitution
 
-    def test_format_list_ouput_with_newlines():
-        sources_list = ["hub_1", "hub_2"]
-        formated_sources_list = format_list_ouput_with_newlines(sources_list)
-        assert formated_sources_list == f"hub_1,\n{chr(32)*24}hub_2"
+
+def test_format_list_ouput_with_newlines():
+    sources_list = ["hub_1", "hub_2"]
+    formated_sources_list = format_list_ouput_with_newlines(sources_list)
+    assert formated_sources_list == f"hub_1,\n{chr(32)*24}hub_2"

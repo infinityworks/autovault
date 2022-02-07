@@ -7,7 +7,6 @@ from generate_raw_vault.tests.conftest import (
 from unittest.mock import MagicMock
 from generate_raw_vault.app.metadata_handler import Metadata
 from generate_raw_vault.app.export_staging_vault_models import (
-    create_staging_file,
     get_sat_substitutions_string,
     hashkey_substitution,
     get_sat_subs,
@@ -16,7 +15,6 @@ from generate_raw_vault.app.export_staging_vault_models import (
     get_unique_link_combinations_substitutions_string,
     get_hub_alias_substitutions_string,
     get_sat_substitutions_string,
-    format_hashkey_name,
 )
 
 
@@ -25,7 +23,6 @@ def test_hashkey_substitution(sample_metadata, test_hashkey_substitution_hub_par
     test_hashkey_substitution = hashkey_substitution(
         Metadata(sample_metadata), test_hashkey_substitution_hub_param
     )
-    # expected_hashkey_substitution = 'HUB1_HK: "pk1"'
     expected_hashkey_substitution = '  HUB1_HK:\n    - "pk1"'
     assert test_hashkey_substitution == expected_hashkey_substitution
 
