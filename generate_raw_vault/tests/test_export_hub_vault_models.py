@@ -7,7 +7,6 @@ from generate_raw_vault.app.export_hub_vault_models import (
     format_list_ouput_with_newlines,
     get_formatted_source_name,
     get_list_of_hub_lists,
-    populate_hub_substitutions,
 )
 
 
