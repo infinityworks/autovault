@@ -37,7 +37,7 @@ class TestMetadata:
         test_target_source_business_topics = test_metadata.get_source_business_topics()
         expected_target_source_business_topics = [
             {
-                "business_keys": {"pk1": "STRING"},
+                "business_keys": {"pk1": {"alias": "pk1", "type": "STRING"}},
                 "business_attributes": [
                     {
                         "business_definition": "SAT1",
@@ -47,7 +47,7 @@ class TestMetadata:
                 ],
             },
             {
-                "business_keys": {"pk2": "STRING"},
+                "business_keys": {"pk2": {"type": "STRING"}},
                 "business_attributes": [
                     {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}}
                 ],
@@ -113,8 +113,8 @@ class TestMetadata:
         test_metadata = Metadata(sample_metadata)
         test_target_business_keys = test_metadata.get_business_keys()
         expected_target_business_keys = {
-            "HUB1": {"alias": None, "natural_keys": {"pk1": "STRING"}},
-            "HUB2": {"alias": None, "natural_keys": {"pk2": "STRING"}},
+            "HUB1": {"natural_keys": {"pk1": {"alias": "pk1", "type": "STRING"}}},
+            "HUB2": {"natural_keys": {"pk2": {"type": "STRING"}}},
         }
         assert test_target_business_keys == expected_target_business_keys
 
@@ -124,7 +124,7 @@ class TestMetadata:
         test_target_business_topics = test_metadata.get_business_topics()
         expected_target_business_topics = {
             "HUB1": {
-                "business_keys": {"pk1": "STRING"},
+                "business_keys": {"pk1": {"alias": "pk1", "type": "STRING"}},
                 "business_attributes": [
                     {
                         "business_definition": "SAT1",
@@ -134,7 +134,7 @@ class TestMetadata:
                 ],
             },
             "HUB2": {
-                "business_keys": {"pk2": "STRING"},
+                "business_keys": {"pk2": {"type": "STRING"}},
                 "business_attributes": [
                     {"business_definition": "SAT3", "payload": {"sat3_col1": "STRING"}}
                 ],

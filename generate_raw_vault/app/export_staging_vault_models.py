@@ -95,7 +95,7 @@ def get_sat_substitution_from_topic(metadata, hub_name):
         for sat_name, payload in satellites.items()
     ]
     if sats[0]:
-        return "\n  ".join(sats)
+        return "\n".join(sats)
     else:
         return ""
 
@@ -112,7 +112,6 @@ def get_sat_subs(sat_hashdiff_template, sat_name, payload):
             "hashdiff_name": hashdiff,
             "columns": formatted_sat_column_list_string,
         }
-
         hashdiff_string = format_hashkey_name(
             sat_hashdiff_template.substitute(substitutions), number_of_white_space=2
         )

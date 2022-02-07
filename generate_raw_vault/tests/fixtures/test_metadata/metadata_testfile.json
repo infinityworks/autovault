@@ -23,7 +23,10 @@
         }
       ],
       "business_keys": {
-        "pk1": "STRING"
+        "pk1": {
+          "alias": "pk1",
+          "type": "STRING"
+        }
       }
     },
     "HUB2": {
@@ -36,7 +39,9 @@
         }
       ],
       "business_keys": {
-        "pk2": "STRING"
+        "pk2": {
+          "type": "STRING"
+        }
       }
     }
   }

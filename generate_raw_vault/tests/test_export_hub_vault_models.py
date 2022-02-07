@@ -4,19 +4,11 @@ from generate_raw_vault.app.metadata_handler import Metadata
 from generate_raw_vault.app.export_hub_vault_models import (
     create_hub_substitution_template,
     format_hub_name,
-    format_sources_list,
+    format_list_ouput_with_newlines,
     get_formatted_source_name,
-    get_unique_hubs,
     get_list_of_hub_lists,
     populate_hub_substitutions,
 )
-
-
-@pytest.mark.usefixtures("test_get_hubs_from_file_param")
-def test_get_unique_hubs(test_get_hubs_from_file_param):
-    test_unique_hubs = get_unique_hubs(test_get_hubs_from_file_param)
-    expected_unique_hubs = {"HUB1", "HUB2"}
-    assert test_unique_hubs == expected_unique_hubs
 
 
 def test_format_hub_name():
@@ -66,8 +58,7 @@ def test_create_hub_substitution_template(test_substitution_values):
     }
     assert test_create_link_substitution == expected_create_link_substitution
 
-
-def test_format_sources_list():
-    sources_list = ["hub_1", "hub_2"]
-    formated_sources_list = format_sources_list(sources_list)
-    assert formated_sources_list == f"hub_1,\n{chr(32)*24}hub_2"
+    def test_format_list_ouput_with_newlines():
+        sources_list = ["hub_1", "hub_2"]
+        formated_sources_list = format_list_ouput_with_newlines(sources_list)
+        assert formated_sources_list == f"hub_1,\n{chr(32)*24}hub_2"
