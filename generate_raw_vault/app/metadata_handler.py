@@ -87,6 +87,19 @@ class Metadata:
         }
         return alias_primarykey_map
 
+    def get_primarykey_datatype_map(self, hub_business_keys):
+        primarykey_datatype_map = {}
+        for primary_key, primary_key_attributes in hub_business_keys.get(
+            "natural_keys"
+        ).items():
+            if primary_key_attributes.get("type"):
+                primarykey_datatype_map[primary_key] = primary_key_attributes.get(
+                    "type"
+                )
+            else:
+                raise Exception(f"{primary_key}, data type missing")
+        return primarykey_datatype_map
+
     def get_hub_business_key(self, hub_name):
         hub_business_keys = self.get_business_keys().get(hub_name)
         return self.get_primarykey_alias_map(hub_business_keys)
@@ -112,7 +125,28 @@ class Metadata:
         flatten_business_attributes = list(itertools.chain(*business_attributes))
         return flatten_business_attributes
 
+    def get_transactional_payloads(self):
+        transaction_payloads = self.metadata.get("transactional_payload")
+        return transaction_payloads
+
+    def get_transactional_payload_datatype_map(self, transactional_payloads):
+        transactional_payload_datatype_map = {}
+        for transactional_payload, payload_attributes in transactional_payloads.items():
+            if payload_attributes.get("type"):
+                transactional_payload_datatype_map[
+                    transactional_payload
+                ] = payload_attributes.get("type")
+            else:
+                raise Exception(f"{transactional_payload}, data type missing")
+        return transactional_payload_datatype_map
+
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
-    metadata = Metadata(metadata_file).get_hub_business_key("TRANSACTION")
+    metadata_file = load_metadata_file("source_metadata/transactions_v2.json")
+    # metadata = Metadata(metadata_file).get_hub_business_key("TRANSACTION")
+    print(Metadata(metadata_file).get_transactional_payloads())
+    print(
+        Metadata(metadata_file).get_transactional_payload_datatype_map(
+            Metadata(metadata_file).get_transactional_payloads()
+        )
+    )

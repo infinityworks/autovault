@@ -40,7 +40,7 @@ def get_attrs_param():
 
 @pytest.fixture(scope="function")
 def format_column_and_dtype_param():
-    return [{"CUSTOMER_ID": "STRING"}, {"PRODUCT_ID": "STRING"}]
+    return {"CUSTOMER_ID": "STRING", "PRODUCT_ID": "STRING"}
 
 
 @pytest.fixture(scope="function")
