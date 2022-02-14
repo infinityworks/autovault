@@ -66,7 +66,6 @@ def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
 def populate_hub_natural_key(natural_key_list, metadata, hub_name):
     hub_natural_key = metadata.get_hub_business_key(hub_name)
     natural_key_list.append(list(hub_natural_key.values()))
-    #     raise Exception(
     #         f"Multiple natural keys found for hub {hub_name}, check metadata files that they are standardised or correctly aliased."
     #     )
     return natural_key_list
