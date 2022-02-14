@@ -26,7 +26,6 @@ def export_all_link_files(metadata_file_dirs):
     for link in link_combinations:
         substitution_values_template = create_substitution_values_template()
         for metadata_dict in metadata_map.values():
-            # print(metadata_dict)
             substitution_values = populate_substitution_values(
                 link, metadata_dict, substitution_values_template, naming_dictionary
             )
