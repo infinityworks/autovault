@@ -6,9 +6,10 @@
 
 {%- set source_model = ["stg_customer_visits_v1",
                         "stg_customers_v1",
-                        "stg_transactions_v1"] -%}
+                        "stg_transactions_v1",
+                        "stg_transactions_v2"] -%}
 {%- set src_pk = "CUSTOMER_HK" -%}
-{%- set src_nk = "CUSTOMER_ID" -%}
+{%- set src_nk = ["CUSTOMER_ID"] -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
 

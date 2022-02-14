@@ -1,7 +1,7 @@
 {
-  "unit_of_work": "STORE-TILLS",
+  "unit_of_work": "STORE-TILLS-TRANSACTIONAL",
   "source_name": "TRANSACTIONS",
-  "version": "1",
+  "version": "2",
   "source_system": "ONLINE",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
@@ -49,32 +49,15 @@
           }
         }
       ]
-    },
-    "TRANSACTION": {
-      "business_keys": {
-        "DATE_OF_SESSION": {
-          "type": "TIMESTAMP_TZ(9)",
-          "tests": {
-            "uniqueness": true,
-            "nullable": true
-          }
-        },
-        "PRODUCT_ID": {
-          "type": "STRING",
-          "tests": {
-            "uniqueness": true,
-            "nullable": true
-          }
-        }
-      },
-      "business_attributes": [
-        {
-          "business_definition": "TRANSACTIONS",
-          "payload": {
-            "null": "null"
-          }
-        }
-      ]
+    }
+  },
+  "transactional_payload": {
+    "DATE_OF_SESSION": {
+      "type": "TIMESTAMP_TZ(9)",
+      "tests": {
+        "uniqueness": true,
+        "nullable": true
+      }
     }
   }
 }

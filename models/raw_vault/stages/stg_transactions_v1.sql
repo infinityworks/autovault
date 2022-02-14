@@ -12,19 +12,21 @@ derived_columns:
   END_DATE: "TO_DATE('9999-12-31')"
 
 hashed_columns:
+  CUSTOMER_HK:
+    - "CUSTOMER_ID"
+  PRODUCT_HK:
+    - "PRODUCT_ID"
+  TRANSACTION_HK:
+    - "DATE_OF_SESSION"
+    - "PRODUCT_ID"
   CUST_PRDCT_TRNSCTN_STORE_TILLS_HK:
-   - "CUSTOMER_ID"
-   - "PRODUCT_ID"
-   - "DATE_OF_SESSION"
-  CUSTOMER_HK: "CUSTOMER_ID"
-  PRODUCT_HK: "PRODUCT_ID"
-  TRANSACTION_HK: "DATE_OF_SESSION"
-
+    - "CUSTOMER_ID"
+    - "DATE_OF_SESSION"
+    - "PRODUCT_ID"
   PRODUCTS_HASHDIFF:
     is_hashdiff: true
     columns:
       - "PRICE"
-
 
 {%- endset -%}
 

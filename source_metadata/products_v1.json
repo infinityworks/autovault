@@ -17,7 +17,13 @@
         }
       ],
       "business_keys": {
-        "PRODUCT_ID": "STRING"
+        "PRODUCT_ID": {
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
       }
     }
   }

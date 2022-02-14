@@ -1,6 +1,8 @@
 CREATE TABLE "AUTOVAULT"."PUBLIC"."CUSTOMERS_V1" (
-    "CUSTOMER_ID" STRING,
+    "CUSTOMER_ID" {'type': 'STRING', 'tests': {'uniqueness': True, 'nullable': True}},
     "AVG_MONTHLY_VISITS" STRING,
+    "DOB" STRING,
+    "NAME" STRING,
     "RECORD_SOURCE" STRING,
     "LOAD_DATETIME" TIMESTAMP_TZ
     );

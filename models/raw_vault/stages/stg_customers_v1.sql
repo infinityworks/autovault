@@ -12,12 +12,19 @@ derived_columns:
   END_DATE: "TO_DATE('9999-12-31')"
 
 hashed_columns:
+  CUSTOMER_HK:
+    - "CUSTOMER_ID"
 
-  CUSTOMER_HK: "CUSTOMER_ID"
-  CUSTOMERS_HASHDIFF:
+  CUSTOMER_VISITS_HASHDIFF:
     is_hashdiff: true
     columns:
       - "AVG_MONTHLY_VISITS"
+
+  CUSTOMER_DETAILS_HASHDIFF:
+    is_hashdiff: true
+    columns:
+      - "DOB"
+      - "NAME"
 
 {%- endset -%}
 

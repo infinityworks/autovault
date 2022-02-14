@@ -12,8 +12,9 @@ derived_columns:
   END_DATE: "TO_DATE('9999-12-31')"
 
 hashed_columns:
+  PRODUCT_HK:
+    - "PRODUCT_ID"
 
-  PRODUCT_HK: "PRODUCT_ID"
   PRODUCTS_HASHDIFF:
     is_hashdiff: true
     columns:

@@ -5,14 +5,25 @@
 
 {%- set yaml_metadata -%}
 source_model:
-$source
+  AUTOVAULT_PUBLIC: "TRANSACTIONS_V2"
 derived_columns:
-$derived_columns
-$alias_columns
+  EFFECTIVE_FROM: "LOAD_DATETIME"
+  START_DATE: "LOAD_DATETIME"
+  END_DATE: "TO_DATE('9999-12-31')"
+
 hashed_columns:
-$hashed_hubs_primary_key
-$hashed_links
-$hashdiff
+  CUSTOMER_HK:
+    - "CUSTOMER_ID"
+  PRODUCT_HK:
+    - "PRODUCT_ID"
+  CUST_PRDCT_STORE_TILLS_TRANSACTIONAL_HK:
+    - "CUSTOMER_ID"
+    - "PRODUCT_ID"
+  PRODUCTS_HASHDIFF:
+    is_hashdiff: true
+    columns:
+      - "PRICE"
+
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

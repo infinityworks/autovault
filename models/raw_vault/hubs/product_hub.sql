@@ -5,9 +5,10 @@
   ) }}
 
 {%- set source_model = ["stg_products_v1",
-                        "stg_transactions_v1"] -%}
+                        "stg_transactions_v1",
+                        "stg_transactions_v2"] -%}
 {%- set src_pk = "PRODUCT_HK" -%}
-{%- set src_nk = "PRODUCT_ID" -%}
+{%- set src_nk = ["PRODUCT_ID"] -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
 

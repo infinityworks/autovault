@@ -67,18 +67,29 @@ class Metadata:
         return business_keys
 
     def get_topic_key(self, topic, business_topics):
-        return {
-            "natural_keys": business_topics.get(topic).get("business_keys"),
-            "alias": business_topics.get(topic).get("alias"),
+        topic_key = {"natural_keys": business_topics.get(topic).get("business_keys")}
+        return topic_key
+
+    def get_primarykey_alias_map(self, hub_business_keys):
+        primarykey_alias_map = {}
+        for primary_key, primary_key_attributes in hub_business_keys.get(
+            "natural_keys"
+        ).items():
+            if primary_key_attributes.get("alias"):
+                primarykey_alias_map[primary_key] = primary_key_attributes.get("alias")
+            else:
+                primarykey_alias_map[primary_key] = primary_key
+        return primarykey_alias_map
+
+    def get_alias_primarykey_map(self, primarykey_alias_map):
+        alias_primarykey_map = {
+            alias: primary_key for primary_key, alias in primarykey_alias_map.items()
         }
+        return alias_primarykey_map
 
     def get_hub_business_key(self, hub_name):
-        business_keys = self.get_business_keys().get(hub_name)
-        if business_keys.get("alias"):
-            primary_key = business_keys.get("alias")
-        else:
-            primary_key = list(business_keys.get("natural_keys").keys())[0]
-        return primary_key
+        hub_business_keys = self.get_business_keys().get(hub_name)
+        return self.get_primarykey_alias_map(hub_business_keys)
 
     def get_source_attributes(self):
         topics = self.get_source_business_topics()
@@ -104,4 +115,4 @@ class Metadata:
 
 if __name__ == "__main__":
     metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
-    metadata = Metadata(metadata_file).get_versioned_source_name()
+    metadata = Metadata(metadata_file).get_hub_business_key("TRANSACTION")
