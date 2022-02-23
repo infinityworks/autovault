@@ -21,15 +21,13 @@
           "business_definition": "CUSTOMER_VISITS",
           "satellite_type": "standard_satellite",
           "payload": {
-            "AVG_MONTHLY_VISITS": "STRING"
-          }
-        },
-        {
-          "business_definition": "CUSTOMER_DETAILS",
-          "satellite_type": "standard_satellite",
-          "payload": {
-            "NAME": "STRING",
-            "DOB": "STRING"
+            "AVG_MONTHLY_VISITS": {
+              "type": "STRING",
+              "tests": {
+                "uniqueness": true,
+                "nullable": true
+              }
+            }
           }
         }
       ]

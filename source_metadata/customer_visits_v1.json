@@ -21,7 +21,13 @@
         {
           "business_definition": "CUSTOMER_VISITS",
           "payload": {
-            "TOTAL_VISITS": "STRING"
+            "TOTAL_VISITS": {
+              "type": "STRING",
+              "tests": {
+                "uniqueness": true,
+                "nullable": true
+              }
+            }
           }
         }
       ]

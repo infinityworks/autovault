@@ -11,8 +11,20 @@
         {
           "business_definition": "PRODUCTS",
           "payload": {
-            "MAKE": "STRING",
-            "MODEL": "STRING"
+            "MAKE": {
+              "type": "STRING",
+              "tests": {
+                "uniqueness": true,
+                "nullable": true
+              }
+            },
+            "MODEL": {
+              "type": "STRING",
+              "tests": {
+                "uniqueness": true,
+                "nullable": true
+              }
+            }
           }
         }
       ],

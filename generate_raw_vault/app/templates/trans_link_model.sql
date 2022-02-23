@@ -8,7 +8,7 @@
 source_model: [$source_model]
 src_pk: '$src_pk'
 src_fk:
-[$src_fk]
+$src_fk
 src_payload:
 $payload
 src_eff: 'EFFECTIVE_FROM'

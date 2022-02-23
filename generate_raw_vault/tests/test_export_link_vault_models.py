@@ -75,6 +75,7 @@ def test_create_link_source_map():
         "hubs": ["HUB1", "HUB2"],
         "filename": "hub1_hub2_test_uow",
         "link_name": "HUB1_HUB2_TEST_UoW",
+        "payload": None,
         "source_list": ["TEST_V1"],
     }
     test_substitution_values = link_exporter.populate_substitution_values(
@@ -92,6 +93,7 @@ def test_create_link_substitutions():
         "source_tables": '"stg_test_v1"',
         "hash_key": "HUB1_HUB2_TEST_UOW_HK",
         "foreign_keys": f'"HUB1_HK",\n{chr(32)*18}"HUB2_HK"',
+        "payload": None,
         "record_source": "RECORD_SOURCE",
         "record_load_datetime": "LOAD_DATETIME",
     }
@@ -100,6 +102,7 @@ def test_create_link_substitutions():
     )
     expected_output = {
         "alias": "HUB1_HUB2_TEST_UoW",
+        "payload": None,
         "source_model": '"stg_test_v1"',
         "src_pk": "HUB1_HUB2_TEST_UOW_HK",
         "src_fk": '"HUB1_HK",\n                  "HUB2_HK"',

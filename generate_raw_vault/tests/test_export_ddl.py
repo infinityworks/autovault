@@ -1,6 +1,8 @@
 import pytest
 from generate_raw_vault.app.export_ddl_statement import format_column_and_dtype
-from generate_raw_vault.app.export_ddl_statement import create_ddl_statement
+from generate_raw_vault.app.export_ddl_statement import (
+    create_ddl_without_transaction_payload_statement,
+)
 
 
 @pytest.mark.usefixtures("format_column_and_dtype_param")
@@ -16,7 +18,7 @@ def test_format_column_and_dtype(format_column_and_dtype_param):
 def test_create_ddl_statement(
     create_ddl_statement_params, create_ddl_statement_targetddl
 ):
-    test_target_ddl = create_ddl_statement(
+    test_target_ddl = create_ddl_without_transaction_payload_statement(
         create_ddl_statement_params[0],
         create_ddl_statement_params[1],
         create_ddl_statement_params[2],

@@ -1,5 +1,5 @@
 CREATE TABLE "AUTOVAULT"."PUBLIC"."PRODUCTS_V1" (
-    "PRODUCT_ID" {'type': 'STRING', 'tests': {'uniqueness': True, 'nullable': True}},
+    "PRODUCT_ID" STRING,
     "MAKE" STRING,
     "MODEL" STRING,
     "RECORD_SOURCE" STRING,
