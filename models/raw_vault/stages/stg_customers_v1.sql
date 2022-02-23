@@ -20,12 +20,6 @@ hashed_columns:
     columns:
       - "AVG_MONTHLY_VISITS"
 
-  CUSTOMER_DETAILS_HASHDIFF:
-    is_hashdiff: true
-    columns:
-      - "DOB"
-      - "NAME"
-
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}
