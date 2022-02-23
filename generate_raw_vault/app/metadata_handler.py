@@ -142,11 +142,5 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file("source_metadata/transactions_v2.json")
-    # metadata = Metadata(metadata_file).get_hub_business_key("TRANSACTION")
-    print(Metadata(metadata_file).get_transactional_payloads())
-    print(
-        Metadata(metadata_file).get_transactional_payload_datatype_map(
-            Metadata(metadata_file).get_transactional_payloads()
-        )
-    )
+    metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
+    metadata = Metadata(metadata_file).get_hub_business_key("TRANSACTION")

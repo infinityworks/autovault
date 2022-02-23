@@ -66,8 +66,7 @@ def create_ddl_statement_targetddl():
     "sat3_col2" STRING,
     "RECORD_SOURCE" STRING,
     "LOAD_DATETIME" TIMESTAMP_TZ
-    );
-    """
+    );"""
 
 
 @pytest.fixture(scope="function")

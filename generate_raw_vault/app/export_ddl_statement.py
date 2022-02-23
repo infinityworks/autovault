@@ -60,7 +60,7 @@ def create_source_table_ddl(metadata):
             versioned_source_name,
         )
     else:
-        ddl_statement = create_ddl_wo_transaction_payload_statement(
+        ddl_statement = create_ddl_without_transaction_payload_statement(
             keys_and_types_str,
             payload_columns_and_types_str,
             target_database,
@@ -89,7 +89,7 @@ def create_ddl_with_transaction_payload_statement(
     return ddl
 
 
-def create_ddl_wo_transaction_payload_statement(
+def create_ddl_without_transaction_payload_statement(
     keys_and_types_str,
     column_and_types_str,
     target_database,
@@ -101,8 +101,7 @@ def create_ddl_wo_transaction_payload_statement(
     {column_and_types_str},
     "RECORD_SOURCE" STRING,
     "LOAD_DATETIME" TIMESTAMP_TZ
-    );
-    """
+    );"""
     return ddl
 
 

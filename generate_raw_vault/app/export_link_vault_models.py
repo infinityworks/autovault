@@ -58,25 +58,15 @@ def create_link_substitutions(enriched_substitution_values):
     record_source = enriched_substitution_values["record_source"]
     record_load_datetime = enriched_substitution_values["record_load_datetime"]
     payload = enriched_substitution_values["payload"]
-    if payload is None:
-        substitutions = {
-            "alias": link_name,
-            "source_model": source_tables,
-            "src_pk": hash_key,
-            "src_fk": foreign_keys,
-            "src_ldts": record_load_datetime,
-            "src_source": record_source,
-        }
-    else:
-        substitutions = {
-            "alias": link_name,
-            "source_model": source_tables,
-            "src_pk": hash_key,
-            "src_fk": foreign_keys,
-            "payload": payload,
-            "src_ldts": record_load_datetime,
-            "src_source": record_source,
-        }
+    substitutions = {
+        "alias": link_name,
+        "source_model": source_tables,
+        "src_pk": hash_key,
+        "src_fk": foreign_keys,
+        "payload": payload,
+        "src_ldts": record_load_datetime,
+        "src_source": record_source,
+    }
     return substitutions
 
 

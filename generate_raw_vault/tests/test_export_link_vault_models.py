@@ -102,6 +102,7 @@ def test_create_link_substitutions():
     )
     expected_output = {
         "alias": "HUB1_HUB2_TEST_UoW",
+        "payload": None,
         "source_model": '"stg_test_v1"',
         "src_pk": "HUB1_HUB2_TEST_UOW_HK",
         "src_fk": '"HUB1_HK",\n                  "HUB2_HK"',
