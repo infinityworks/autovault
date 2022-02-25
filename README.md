@@ -14,8 +14,8 @@ The data vault entities produced are:
 ## Tools
 The project relies on the following tools:
 - Python 3.8
-- dbt 0.20.2
-- dbtvault 0.7.8
+- dbt 1.0.3
+- dbtvault 0.8.1
 - pre-commit 2.15.0
 
 Optional:
@@ -103,7 +103,7 @@ Activate the environment
 
 Install dbt
 
-    pip3 install dbt
+    pip3 install --requirement requirements.txt
 
 # Configure dbt connection to snowflake
 If you do not have a dbt profiles.yml, you must create one:
