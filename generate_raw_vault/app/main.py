@@ -5,6 +5,7 @@ from generate_raw_vault.app.export_staging_vault_models import export_all_stagin
 from generate_raw_vault.app.export_hub_vault_models import export_all_hub_files
 from generate_raw_vault.app.export_satellite_vault_models import export_all_sat_files
 from generate_raw_vault.app.export_link_vault_models import export_all_link_files
+from generate_raw_vault.app.export_effsat_vault_models import export_all_effsat_files
 from create_model_directories import create_directory_and_gitkeep
 
 
@@ -26,6 +27,7 @@ def main():
     export_all_link_files(metadata_file_dirs)
     export_model_schema(metadata_file_dirs)
     export_all_sat_files(metadata_file_dirs)
+    export_all_effsat_files()
     export_all_staging_files(metadata_file_dirs)
 
 

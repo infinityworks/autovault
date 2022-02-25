@@ -11,7 +11,7 @@ LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/effect_sat_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
 
 
-def export_all_link_files():
+def export_all_effsat_files():
     template = load_template_file(LINK_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
     link_template = Template(template)
@@ -34,19 +34,19 @@ def export_all_link_files():
                     name = f"{short_name}_{unit_of_work}"
                     substitution_values = {"hubs": hub_list, "file_name": name.lower()}
         substitution_values.update({"source_list": sorted(source_list)})
-        substitutions = create_link_substitutions(substitution_values)
-        create_link_model_files(
+        substitutions = create_effsat_substitutions(substitution_values)
+        create_effsat_model_files(
             substitutions, link_template, substitution_values["file_name"]
         )
 
 
-def create_link_model_files(substitutions, link_template, file_name):
+def create_effsat_model_files(substitutions, link_template, file_name):
     link_model = link_template.substitute(substitutions)
     with open(f"./models/raw_vault/sats/eff_sat_{file_name}.sql", "w") as sql_export:
         sql_export.write(link_model)
 
 
-def create_link_substitutions(substitution_values):
+def create_effsat_substitutions(substitution_values):
     source_list = substitution_values["source_list"]
     link_keys = substitution_values["hubs"]
     short_name = substitution_values["file_name"]
@@ -107,4 +107,4 @@ def get_map_of_source_and_hubs(metadata):
 
 
 if __name__ == "__main__":
-    export_all_link_files()
+    export_all_effsat_files()
