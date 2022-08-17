@@ -39,8 +39,10 @@ quoting:
   identifier: false
 models:
   +transient: false
-  autovault:
-    materialized: table
+  raw_vault:
+      stages:
+        materialized: view
+
 seeds:
   +enabled: true
   +database: AUTOVAULT

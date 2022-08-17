@@ -27,8 +27,10 @@ def create_staging_file(metadata_file_path):
     topics = metadata.get_business_topics()
     hub_substitutions_string = get_hub_substitutions_string(metadata, hubs)
     sat_substitutions_string = get_sat_substitutions_string(metadata, topics)
-    unique_link_combinations_substitutions_string = get_unique_link_combinations_substitutions_string(
-        metadata, hubs, NAME_DICTIONARY
+    unique_link_combinations_substitutions_string = (
+        get_unique_link_combinations_substitutions_string(
+            metadata, hubs, NAME_DICTIONARY
+        )
     )
     hub_alias_substitutions_string = get_hub_alias_substitutions_string(metadata)
     substitutions = create_staging_subsitutions(

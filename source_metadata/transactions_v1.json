@@ -76,5 +76,22 @@
         }
       ]
     }
+  },
+  "transactional_payload": {
+    "Trans_seq": {
+      "alias": "CUSTOMER_ID",
+      "type": "STRING",
+      "tests": {
+        "uniqueness": true,
+        "nullable": true
+      }
+    },
+    "Trans_type": {
+      "type": "STRING",
+      "tests": {
+        "uniqueness": true,
+        "nullable": true
+      }
+    }
   }
 }
