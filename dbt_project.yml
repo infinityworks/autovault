@@ -39,14 +39,19 @@ quoting:
   identifier: false
 models:
   +transient: false
-  autovault:
-    materialized: table
+  raw_vault:
+      stages:
+        materialized: view
+
 seeds:
   +enabled: true
   +database: AUTOVAULT
   +schema: PUBLIC
   autovault:
     customers_v1:
+      +column_types:
+        LOAD_DATETIME: TIMESTAMP_TZ(9)
+    customers_v2:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)
     products_v1:

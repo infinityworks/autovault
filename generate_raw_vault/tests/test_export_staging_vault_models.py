@@ -81,10 +81,14 @@ def test_get_hub_substitutions_string(sample_metadata, test_get_hub_subs_string_
 
 
 @pytest.mark.usefixtures(
-    "sample_metadata", "test_get_hub_subs_string_param", "test_naming_dictionary_path",
+    "sample_metadata",
+    "test_get_hub_subs_string_param",
+    "test_naming_dictionary_path",
 )
 def test_get_unique_link_combinations_substitutions_string(
-    sample_metadata, test_get_hub_subs_string_param, test_naming_dictionary_path,
+    sample_metadata,
+    test_get_hub_subs_string_param,
+    test_naming_dictionary_path,
 ):
     test_link_substitutions_string = get_unique_link_combinations_substitutions_string(
         Metadata(sample_metadata),

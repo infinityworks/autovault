@@ -6,6 +6,7 @@ sources:
     schema: PUBLIC
     tables:
       - name: CUSTOMERS_V1
+      - name: CUSTOMERS_V2
       - name: CUSTOMER_VISITS_V1
       - name: PRODUCTS_V1
       - name: TRANSACTIONS_V1

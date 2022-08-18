@@ -1,0 +1,97 @@
+{
+  "unit_of_work": "STORE-TILLS",
+  "source_name": "TRANSACTIONS",
+  "version": "1",
+  "source_system": "ONLINE",
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "business_topics": {
+    "CUSTOMER": {
+      "business_keys": {
+        "CUSTOMER_ID": {
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
+      },
+      "business_attributes": [
+        {
+          "business_definition": "CUSTOMERS",
+          "payload": {
+            "null": "null"
+          }
+        }
+      ]
+    },
+    "PRODUCT": {
+      "business_keys": {
+        "PRODUCT_ID": {
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
+      },
+      "business_attributes": [
+        {
+          "business_definition": "PRODUCTS",
+          "payload": {
+            "PRICE": {
+              "type": "NUMBER",
+              "tests": {
+                "uniqueness": true,
+                "nullable": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TRANSACTION": {
+      "business_keys": {
+        "DATE_OF_SESSION": {
+          "type": "TIMESTAMP_TZ(9)",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        },
+        "PRODUCT_ID": {
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
+      },
+      "business_attributes": [
+        {
+          "business_definition": "TRANSACTIONS",
+          "payload": {
+            "null": "null"
+          }
+        }
+      ]
+    }
+  },
+  "transactional_payload": {
+    "Trans_seq": {
+      "alias": "CUSTOMER_ID",
+      "type": "STRING",
+      "tests": {
+        "uniqueness": true,
+        "nullable": true
+      }
+    },
+    "Trans_type": {
+      "type": "STRING",
+      "tests": {
+        "uniqueness": true,
+        "nullable": true
+      }
+    }
+  }
+}
