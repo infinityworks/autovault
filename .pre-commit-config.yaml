@@ -12,6 +12,7 @@ repos:
       - id: check-merge-conflict
       - id: detect-private-key
       - id: end-of-file-fixer
+        exclude: ^generate_raw_vault/app/templates
   - repo: https://github.com/ambv/black
     rev: 22.6.0
     hooks:
