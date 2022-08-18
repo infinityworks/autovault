@@ -51,6 +51,9 @@ seeds:
     customers_v1:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)
+    customers_v2:
+      +column_types:
+        LOAD_DATETIME: TIMESTAMP_TZ(9)
     products_v1:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)

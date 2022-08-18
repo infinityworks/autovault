@@ -1,0 +1,36 @@
+{
+  "unit_of_work": "CUST_STATS",
+  "source_name": "CUSTOMERS",
+  "version": "2",
+  "source_system": "CSV",
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "business_topics": {
+    "CUSTOMER": {
+      "business_keys": {
+        "CUSTOMER_ID": {
+          "type": "STRING",
+          "tests": {
+            "uniqueness": true,
+            "nullable": true
+          }
+        }
+      },
+      "business_attributes": [
+        {
+          "business_definition": "CUSTOMER_VISITS",
+          "satellite_type": "standard_satellite",
+          "payload": {
+            "AVG_MONTHLY_VISITS": {
+              "type": "STRING",
+              "tests": {
+                "uniqueness": true,
+                "nullable": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
