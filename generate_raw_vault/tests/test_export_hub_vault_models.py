@@ -3,16 +3,10 @@ from unittest.mock import patch, MagicMock, Mock
 from generate_raw_vault.app.metadata_handler import Metadata
 from generate_raw_vault.app.export_hub_vault_models import (
     create_hub_substitution_template,
-    format_hub_name,
     format_list_ouput_with_newlines,
     get_formatted_source_name,
     get_list_of_hub_lists,
 )
-
-
-def test_format_hub_name():
-    test_format_hub_name = format_hub_name("HUB1")
-    assert test_format_hub_name == "hub1_hub"
 
 
 @pytest.mark.usefixtures("sample_metadata_class")

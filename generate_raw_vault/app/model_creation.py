@@ -4,7 +4,9 @@ import itertools
 
 def write_model_files(substitutions, model_template, model_type, filename):
     model = model_template.substitute(substitutions)
-    with open(f"./models/raw_vault/{model_type}/{filename}.sql", "w") as dbt_sql_export:
+    with open(
+        f"./models/raw_vault/{model_type}s/{model_type}_{filename}.sql", "w"
+    ) as dbt_sql_export:
         dbt_sql_export.write(model)
 
 

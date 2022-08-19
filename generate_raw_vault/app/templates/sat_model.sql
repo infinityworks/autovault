@@ -1,6 +1,7 @@
 {{ config(
   materialized='incremental',
-  schema = "SATS"
+  schema = "SATS",
+  alias = "$sat_name"
   ) }}
 
 {%- set yaml_metadata -%}
