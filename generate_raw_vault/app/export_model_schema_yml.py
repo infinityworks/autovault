@@ -34,6 +34,7 @@ def export_model_schema(metadata_file_dirs: list):
     source_string_map = generate_source_substitutions(
         source_template=source_template, aggregated_sources=aggregated_sources
     )
+    # print(source_string_map)
     model_template = load_template(MODEL_SCHEMA_TEMPLATE)
     schema_yml = model_template.substitute(source_string_map)
 
@@ -52,13 +53,43 @@ def create_schema_subsitutions(metadata) -> dict:
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
     source_name = f"{database_name}_{schema_name}"
-    table_name = f"- name: {metadata.get_versioned_source_name()}"
-
+    # table_name = f"- name: {metadata.get_versioned_source_name()}"
+    hub_names_list = metadata.get_hubs_from_business_topics()
+    # business_keys = f"- name: {metadata.get_primarykey_description_map()}"
+    primary_keys = []
+    descriptions = []
+    for hub_name in hub_names_list:
+        primarykey_datatype_map = metadata.get_primarykey_datatype_map(
+            metadata.get_business_keys().get(hub_name)
+        )
+        # print("HERE")
+        # for primarykey, datatype in primarykey_datatype_map.items():
+        #     primary_key_datatype_association[primarykey] = datatype
+        for primarykey in primarykey_datatype_map.keys():
+            primary_keys.append(f"{10*chr(32)}- name: {primarykey}")
+            # print(metadata.get_business_keys().get(hub_name))
+            primarykey_description_map = metadata.get_primarykey_description_map(
+                metadata.get_business_keys().get(hub_name)
+            )
+            primarykey_test_map = metadata.get_primary_key_tests_map(
+                metadata.get_business_keys().get(hub_name)
+            )
+            # print(primarykey_test_map.items())
+            for description in primarykey_description_map.values():
+                primary_keys.append(
+                    f'{12*chr(32)}description:{chr(32)} "{description}" \n{12*chr(32)}tests:'
+                )
+            for test, test_type in primarykey_test_map.items():
+                primary_keys.append(f"{12*chr(32)}{chr(32)} - {test}")
+    keys_str = "\n".join(primary_keys)
+    # table_name = f"- name: {metadata.get_versioned_source_name()}_{metadata.table_business_keys_attrs_str}"
+    table_name = f"- name: {metadata.get_versioned_source_name()}\n{8*chr(32)}columns:\n{keys_str}"
     substitutions = {
         "source_name": source_name,
         "database": database_name,
         "schema": schema_name,
         "table": table_name,
+        # "business_keys": business_keys
     }
     return substitutions
 
@@ -69,6 +100,7 @@ def create_sources_map(source: dict) -> dict:
         "tables": [],
         "database": source.get("database"),
         "schema": source.get("schema"),
+        "business_keys": source.get("business_keys"),
     }
     return source
 

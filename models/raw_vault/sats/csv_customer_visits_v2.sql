@@ -4,7 +4,7 @@
   ) }}
 
 {%- set yaml_metadata -%}
-source_model: "stg_customers_v2"
+source_model: "stg_customers_v1"
 src_pk: "CUSTOMER_HK"
 src_hashdiff:
   source_column: "CUSTOMER_VISITS_HASHDIFF"
@@ -18,6 +18,7 @@ src_source: "RECORD_SOURCE"
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}
 
+with sat1 as (
 {{ dbtvault.sat(src_pk=metadata_dict["src_pk"],
                 src_hashdiff=metadata_dict["src_hashdiff"],
                 src_payload=metadata_dict["src_payload"],
@@ -25,3 +26,16 @@ src_source: "RECORD_SOURCE"
                 src_ldts=metadata_dict["src_ldts"],
                 src_source=metadata_dict["src_source"],
                 source_model=metadata_dict["source_model"])   }}
+),
+
+sat2 as (
+{{ dbtvault.sat(src_pk=metadata_dict["src_pk"],
+                src_hashdiff=metadata_dict["src_hashdiff"],
+                src_payload=metadata_dict["src_payload"],
+                src_eff=metadata_dict["src_eff"],
+                src_ldts=metadata_dict["src_ldts"],
+                src_source=metadata_dict["src_source"],
+                source_model="stg_customers_v2")   }}
+)
+select * from sat1
+union all select * from sat2

@@ -9,6 +9,7 @@
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
+          "description": "Business key",
           "type": "STRING",
           "tests": {
             "uniqueness": true,
@@ -22,6 +23,7 @@
           "satellite_type": "standard_satellite",
           "payload": {
             "AVG_MONTHLY_VISITS": {
+              "description": "Number of average monthly visits to website",
               "type": "STRING",
               "tests": {
                 "uniqueness": true,
