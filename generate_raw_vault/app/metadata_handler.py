@@ -26,7 +26,6 @@ class Metadata:
         return self.metadata.get("version")
 
     def get_business_topics(self):
-        # if (business_topics := self.metadata.get("business_topics"))
         business_topics = self.metadata.get("business_topics")
         return business_topics
 
@@ -52,12 +51,18 @@ class Metadata:
 
     def get_sat_from_hub(self, hub):
         business_topics = self.get_business_topics()
-        topics = business_topics.get(hub)
-        sats = {
-            topic.get("business_definition"): topic.get("payload")
-            for topic in topics.get("business_attributes")
+        hub_topics = business_topics.get(hub)
+        topics = {
+            business_key: business_attributes
+            for business_key, business_attributes in hub_topics.items()
+            if hub_topics.get("business_attributes") is not None
         }
-        return sats
+        if topics:
+            sats = {
+                topic.get("business_definition"): topic.get("payload")
+                for topic in topics.get("business_attributes")
+            }
+            return sats
 
     def get_business_keys(self):
         business_topics = self.get_business_topics()
@@ -119,7 +124,6 @@ class Metadata:
         return self.get_primarykey_alias_map(hub_business_keys)
 
     def get_source_attributes(self):
-        topics = self.get_source_business_topics()
         flattened_business_attributes = self.flatten_business_attributes()
         source_attributes = [
             column_descriptors
@@ -138,7 +142,11 @@ class Metadata:
 
     def flatten_business_attributes(self):
         topics = self.get_source_business_topics()
-        business_attributes = [topic.get("business_attributes") for topic in topics]
+        business_attributes = [
+            business_attribute
+            for topic in topics
+            if (business_attribute := topic.get("business_attributes"))
+        ]
         flatten_business_attributes = list(itertools.chain(*business_attributes))
         return flatten_business_attributes
 
@@ -176,5 +184,5 @@ class Metadata:
 
 
 if __name__ == "__main__":
-    metadata_file = load_metadata_file("source_metadata/encounter_1_0_0.json")
+    metadata_file = load_metadata_file("source_metadata/transactions_v1.json")
     metadata = Metadata(metadata_file).get_versioned_source_name()

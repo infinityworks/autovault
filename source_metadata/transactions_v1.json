@@ -9,23 +9,18 @@
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
-          "description": "Business key",
+          "description": "Customer IDs are concatinations of their region code and registration number",
           "type": "STRING",
           "tests": {
             "unique": true
           }
         }
-      },
-      "business_attributes": [
-        {
-          "business_definition": "CUSTOMERS"
-        }
-      ]
+      }
     },
     "PRODUCT": {
       "business_keys": {
         "PRODUCT_ID": {
-          "description": "Business key",
+          "description": "Each product has a 12 digit UIID",
           "type": "STRING",
           "tests": {
             "not_null": true
@@ -50,7 +45,7 @@
     "TRANSACTION": {
       "business_keys": {
         "DATE_OF_SESSION": {
-          "description": "Business key",
+          "description": "The datetime at which the order was made",
           "type": "TIMESTAMP_TZ(9)",
           "tests": {
             "unique": true,
@@ -58,18 +53,13 @@
           }
         },
         "CUSTOMER_ID": {
-          "description": "Business key",
+          "description": "444444",
           "type": "STRING",
           "tests": {
             "not_null": true
           }
         }
-      },
-      "business_attributes": [
-        {
-          "business_definition": "TRANSACTIONS"
-        }
-      ]
+      }
     }
   }
 }

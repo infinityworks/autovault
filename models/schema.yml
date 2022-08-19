@@ -8,50 +8,50 @@ sources:
       - name: CUSTOMERS_V1
         columns:
           - name: CUSTOMER_ID
-            description:  "Business key"
+            description: "CUSTOMERS_V1 Business key 11111"
             tests:
               - unique
               - not_null
       - name: CUSTOMERS_V2
         columns:
           - name: CUSTOMER_ID
-            description:  "Business key"
+            description: "CUSTOMERS_V2 Business key 22222"
             tests:
               - unique
               - not_null
       - name: CUSTOMER_VISITS_V1
         columns:
           - name: CUST_ID
-            description:  "Business key"
+            description: "CUSTOMER_VISITS_V1 Business key 1111"
             tests:
               - unique
               - not_null
       - name: PRODUCTS_V1
         columns:
           - name: PRODUCT_ID
-            description:  "Business key"
+            description: "PRODUCT_V1 Business key 11111"
             tests:
               - unique
               - not_null
       - name: TRANSACTIONS_V1
         columns:
           - name: CUSTOMER_ID
-            description:  "Business key"
+            description: "Customer IDs are concatinations of their region code and registration number"
             tests:
               - unique
           - name: PRODUCT_ID
-            description:  "Business key"
+            description: "Each product has a 12 digit UIID"
             tests:
               - not_null
           - name: DATE_OF_SESSION
-            description:  "Business key"
+            description: "The datetime at which the order was made"
             tests:
-            description:  "Business key"
+            description: "444444"
             tests:
               - not_null
           - name: CUSTOMER_ID
-            description:  "Business key"
+            description: "The datetime at which the order was made"
             tests:
-            description:  "Business key"
+            description: "444444"
             tests:
               - not_null

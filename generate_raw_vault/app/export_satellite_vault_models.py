@@ -27,10 +27,14 @@ def create_sat_file(metadata_file_path):
     source_system = metadata.get_source_system().lower()
     source_version = metadata.get_source_version().lower()
     for hub_name in hubs:
-        satellites_details = metadata.get_sat_from_hub(hub_name)
-        satellites = {k: v for k, v in satellites_details.items() if v is not None}
-        for satellite in satellites:
-            if not satellites.get("satellite"):
+        satellites_details_in_hub = metadata.get_sat_from_hub(hub_name)
+        if satellites_details_in_hub:
+            satellites = {
+                business_definition: payload
+                for business_definition, payload in satellites_details_in_hub.items()
+                if payload is not None
+            }
+            for satellite in satellites:
                 file_name = f"{source_system}_{satellite.lower()}_v{source_version}.sql"
                 substitutions = create_sat_substitutions(
                     source_name, satellite, satellites, hub_name

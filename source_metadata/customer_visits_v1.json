@@ -9,7 +9,7 @@
     "CUSTOMER": {
       "business_keys": {
         "CUST_ID": {
-          "description": "Business key",
+          "description": "CUSTOMER_VISITS_V1 Business key 1111",
           "alias": "CUSTOMER_ID",
           "type": "STRING",
           "tests": {

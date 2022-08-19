@@ -9,7 +9,7 @@
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
-          "description": "Business key",
+          "description": "CUSTOMERS_V1 Business key 11111",
           "type": "STRING",
           "tests": {
             "unique": true,

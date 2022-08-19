@@ -32,4 +32,5 @@ def main(metadata_file_dirs):
 
 if __name__ == "__main__":
     metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    # from pathlib import PosixPath; metadata_file_dirs = [PosixPath("/Users/adam.dewberry/Documents/autovault/source_metadata/transactions_v1.json")]
     main(metadata_file_dirs)
