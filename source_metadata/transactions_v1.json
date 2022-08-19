@@ -57,7 +57,8 @@
           "description": "Business key",
           "type": "TIMESTAMP_TZ(9)",
           "tests": {
-            "unique": true
+            "unique": true,
+            "not_null": true
           }
         },
         "PRODUCT_ID": {

@@ -11,11 +11,10 @@ LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/effect_sat_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
 
 
-def export_all_effsat_files():
+def export_all_effsat_files(metadata_file_dirs):
     template = load_template_file(LINK_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
     link_template = Template(template)
-    metadata_file_dirs = find_json_metadata("source_metadata")
     file_map = get_file_map(metadata_file_dirs)
     link_source_map = create_link_source_map(file_map)
     link_combinations = set(link_source_map.values())

@@ -39,6 +39,7 @@ def create_source_table_ddl(metadata):
             primary_key_datatype_association[primarykey] = datatype
     keys_and_types_str = format_column_and_dtype(primary_key_datatype_association)
     payload_columns = metadata.get_source_attributes()
+    print(payload_columns)
     payload_columns_and_types = {
         list(column_and_type.keys())[0]: list(column_and_type.values())[0].get("type")
         for column_and_type in payload_columns
