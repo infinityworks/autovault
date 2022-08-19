@@ -34,7 +34,6 @@ def export_model_schema(metadata_file_dirs: list):
     source_string_map = generate_source_substitutions(
         source_template=source_template, aggregated_sources=aggregated_sources
     )
-    # print(source_string_map)
     model_template = load_template(MODEL_SCHEMA_TEMPLATE)
     schema_yml = model_template.substitute(source_string_map)
 
@@ -62,7 +61,6 @@ def create_schema_subsitutions(metadata) -> dict:
         primarykey_datatype_map = metadata.get_primarykey_datatype_map(
             metadata.get_business_keys().get(hub_name)
         )
-        # print("HERE")
         # for primarykey, datatype in primarykey_datatype_map.items():
         #     primary_key_datatype_association[primarykey] = datatype
         for primarykey in primarykey_datatype_map.keys():

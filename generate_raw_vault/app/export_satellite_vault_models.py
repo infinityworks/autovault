@@ -27,21 +27,20 @@ def create_sat_file(metadata_file_path):
     source_system = metadata.get_source_system().lower()
     source_version = metadata.get_source_version().lower()
     for hub_name in hubs:
-        satellites = metadata.get_sat_from_hub(hub_name)
+        satellites_details = metadata.get_sat_from_hub(hub_name)
+        satellites = {k: v for k, v in satellites_details.items() if v is not None}
         for satellite in satellites:
-            if "null" not in satellites[satellite].keys():
+            if not satellites.get("satellite"):
+                file_name = f"{source_system}_{satellite.lower()}_v{source_version}.sql"
                 substitutions = create_sat_substitutions(
                     source_name, satellite, satellites, hub_name
                 )
                 sat_model = sat_template.substitute(substitutions)
-                file_name = f"{source_system}_{satellite.lower()}_v{source_version}.sql"
                 with open(f"./models/raw_vault/sats/{file_name}", "w") as sql_export:
                     sql_export.write(sat_model)
 
 
 def format_columns(column_list):
-    if "null" in column_list:
-        column_list.remove("null")
     formatted_list = [f'"{column}"' for column in column_list]
     return f"\n{chr(32)*2}- ".join(formatted_list)
 

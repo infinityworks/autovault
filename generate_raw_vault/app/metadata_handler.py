@@ -26,6 +26,7 @@ class Metadata:
         return self.metadata.get("version")
 
     def get_business_topics(self):
+        # if (business_topics := self.metadata.get("business_topics"))
         business_topics = self.metadata.get("business_topics")
         return business_topics
 

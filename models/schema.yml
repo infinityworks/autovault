@@ -5,13 +5,40 @@ sources:
     database: AUTOVAULT
     schema: PUBLIC
     tables:
-      - name: TRANSACTIONS_V1
+      - name: CUSTOMERS_V1
         columns:
           - name: CUSTOMER_ID
             description:  "Business key"
             tests:
               - unique
               - not_null
+      - name: CUSTOMERS_V2
+        columns:
+          - name: CUSTOMER_ID
+            description:  "Business key"
+            tests:
+              - unique
+              - not_null
+      - name: CUSTOMER_VISITS_V1
+        columns:
+          - name: CUST_ID
+            description:  "Business key"
+            tests:
+              - unique
+              - not_null
+      - name: PRODUCTS_V1
+        columns:
+          - name: PRODUCT_ID
+            description:  "Business key"
+            tests:
+              - unique
+              - not_null
+      - name: TRANSACTIONS_V1
+        columns:
+          - name: CUSTOMER_ID
+            description:  "Business key"
+            tests:
+              - unique
           - name: PRODUCT_ID
             description:  "Business key"
             tests:
@@ -21,10 +48,10 @@ sources:
             tests:
             description:  "Business key"
             tests:
-              - unique
-          - name: PRODUCT_ID
+              - not_null
+          - name: CUSTOMER_ID
             description:  "Business key"
             tests:
             description:  "Business key"
             tests:
-              - unique
+              - not_null

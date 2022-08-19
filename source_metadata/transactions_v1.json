@@ -12,8 +12,7 @@
           "description": "Business key",
           "type": "STRING",
           "tests": {
-            "unique": true,
-            "not_null": true
+            "unique": true
           }
         }
       },
@@ -58,11 +57,11 @@
             "not_null": true
           }
         },
-        "PRODUCT_ID": {
+        "CUSTOMER_ID": {
           "description": "Business key",
           "type": "STRING",
           "tests": {
-            "unique": true
+            "not_null": true
           }
         }
       },

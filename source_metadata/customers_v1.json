@@ -19,11 +19,11 @@
       },
       "business_attributes": [
         {
-          "business_definition": "CUSTOMER_VISITS",
+          "business_definition": "CUSTOMER_DETAILS",
           "satellite_type": "standard_satellite",
           "payload": {
-            "AVG_MONTHLY_VISITS": {
-              "description": "Number of average monthly visits to website",
+            "AGE": {
+              "description": "Customer age",
               "type": "STRING",
               "tests": {
                 "unique": true,

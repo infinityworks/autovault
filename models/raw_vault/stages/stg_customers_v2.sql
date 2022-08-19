@@ -15,10 +15,10 @@ hashed_columns:
   CUSTOMER_HK:
     - "CUSTOMER_ID"
 
-  CUSTOMER_VISITS_HASHDIFF:
+  CUSTOMER_DETAILS_HASHDIFF:
     is_hashdiff: true
     columns:
-      - "AVG_MONTHLY_VISITS"
+      - "AGE"
 
 {%- endset -%}
 

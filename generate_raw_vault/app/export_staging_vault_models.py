@@ -104,8 +104,8 @@ def get_sat_substitution_from_topic(metadata, hub_name):
 
 def get_sat_subs(sat_hashdiff_template, sat_name, payload):
     hashdiff = f"{sat_name}_HASHDIFF"
-    sorted_payload_keys = sorted(payload.keys())
-    if "null" not in sorted_payload_keys:
+    if payload:
+        sorted_payload_keys = sorted(payload.keys())
         formatted_sat_column_list = [f'- "{column}"' for column in sorted_payload_keys]
         formatted_sat_column_list_string = f"\n{chr(32)*6}".join(
             formatted_sat_column_list
