@@ -120,20 +120,20 @@ class Metadata:
     def get_source_attributes(self):
         topics = self.get_source_business_topics()
         flattened_business_attributes = self.flatten_business_attributes()
-        print(flattened_business_attributes)
         source_attributes = [
-            self.get_attributes(attr) for attr in flattened_business_attributes
+            column_descriptors
+            for attr in flattened_business_attributes
+            if (column_descriptors := self.get_attributes(attr))
         ]
         flatten_source_attributes = list(itertools.chain(*source_attributes))
         return flatten_source_attributes
 
     def get_attributes(self, attr):
-        # print(attr.get("payload").keys())
-        if "null" in attr.get("payload").keys():
-            del attr["payload"]["null"]
-        source_attributes = [{key: value} for key, value in attr.get("payload").items()]
-        print(source_attributes)
-        return source_attributes
+        if attr.get("payload"):
+            source_attributes = [
+                {key: value} for key, value in attr.get("payload").items()
+            ]
+            return source_attributes
 
     def flatten_business_attributes(self):
         topics = self.get_source_business_topics()
