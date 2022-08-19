@@ -45,8 +45,8 @@ def create_source_table_ddl(metadata):
     }
     payload_columns_and_types_str = format_column_and_dtype(payload_columns_and_types)
     if transactional_payloads:
-        transactional_payload_datatype_map = metadata.get_transactional_payload_datatype_map(
-            transactional_payloads
+        transactional_payload_datatype_map = (
+            metadata.get_transactional_payload_datatype_map(transactional_payloads)
         )
         transactional_payload_columns_and_types_str = format_column_and_dtype(
             transactional_payload_datatype_map
@@ -84,8 +84,7 @@ def create_ddl_with_transaction_payload_statement(
     {transactional_payload_columns_and_types_str},
     "RECORD_SOURCE" STRING,
     "LOAD_DATETIME" TIMESTAMP_TZ
-    );
-    """
+    );\n"""
     return ddl
 
 
@@ -101,7 +100,7 @@ def create_ddl_without_transaction_payload_statement(
     {column_and_types_str},
     "RECORD_SOURCE" STRING,
     "LOAD_DATETIME" TIMESTAMP_TZ
-    );"""
+    );\n"""
     return ddl
 
 

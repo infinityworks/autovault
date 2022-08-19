@@ -1,3 +1,2 @@
 packages:
-  - package: Datavault-UK/dbtvault
-    version: 0.8.3
+  - local: /Users/adam.dewberry/Documents/dbtvault/
