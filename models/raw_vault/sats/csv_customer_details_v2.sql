@@ -7,10 +7,10 @@
 source_model: "stg_customers_v2"
 src_pk: "CUSTOMER_HK"
 src_hashdiff:
-  source_column: "CUSTOMER_VISITS_HASHDIFF"
+  source_column: "CUSTOMER_DETAILS_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:
-  - "AVG_MONTHLY_VISITS"
+  - "AGE"
 src_eff: "EFFECTIVE_FROM"
 src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"

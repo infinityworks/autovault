@@ -78,34 +78,30 @@ def hashkey_substitution(metadata, hub):
 
 def get_sat_substitutions_string(metadata, topics):
     sats_substitutions = [
-        get_sat_substitution_from_topic(metadata, hub_name) for hub_name in topics
+        substitution
+        for hub_name in topics
+        if (substitution := get_sat_substitution_from_topic(metadata, hub_name))
+        is not None
     ]
-    while "" in sats_substitutions:
-        sats_substitutions.remove("")
-    if sats_substitutions:
-        return format_list_to_new_line_string(sats_substitutions)
-    else:
-        return ""
+    return format_list_to_new_line_string(sats_substitutions)
 
 
 def get_sat_substitution_from_topic(metadata, hub_name):
     template = load_template_file(SAT_HASHDIFF_TEMPLATE)
     sat_hashdiff_template = Template(template)
     satellites = metadata.get_sat_from_hub(hub_name)
-    sats = [
-        get_sat_subs(sat_hashdiff_template, sat_name, payload)
-        for sat_name, payload in satellites.items()
-    ]
-    if sats[0]:
+    if satellites:
+        sats = [
+            get_sat_subs(sat_hashdiff_template, sat_name, payload)
+            for sat_name, payload in satellites.items()
+        ]
         return "\n".join(sats)
-    else:
-        return ""
 
 
 def get_sat_subs(sat_hashdiff_template, sat_name, payload):
     hashdiff = f"{sat_name}_HASHDIFF"
-    sorted_payload_keys = sorted(payload.keys())
-    if "null" not in sorted_payload_keys:
+    if payload:
+        sorted_payload_keys = sorted(payload.keys())
         formatted_sat_column_list = [f'- "{column}"' for column in sorted_payload_keys]
         formatted_sat_column_list_string = f"\n{chr(32)*6}".join(
             formatted_sat_column_list

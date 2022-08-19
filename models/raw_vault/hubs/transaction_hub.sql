@@ -6,8 +6,8 @@
 
 {%- set source_model = ["stg_transactions_v1"] -%}
 {%- set src_pk = "TRANSACTION_HK" -%}
-{%- set src_nk = ["DATE_OF_SESSION",
-                  "PRODUCT_ID"] -%}
+{%- set src_nk = ["CUSTOMER_ID",
+                  "DATE_OF_SESSION"] -%}
 {%- set src_ldts = "LOAD_DATETIME" -%}
 {%- set src_source = "RECORD_SOURCE" -%}
 

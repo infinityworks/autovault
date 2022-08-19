@@ -25,7 +25,7 @@ def ddl_exporter(metadata_file_path):
 def create_source_table_ddl(metadata):
     target_database = metadata.get_target_database()
     target_schema = metadata.get_target_schema()
-    versioned_source_name = metadata.get_versioned_source_name()
+    versioned_source_name = metadata.get_versioned_source_name().upper()
     transactional_payloads = metadata.get_transactional_payloads()
     hub_names_list = metadata.get_hubs_from_business_topics()
     primary_key_datatype_association = {}

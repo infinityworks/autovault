@@ -9,8 +9,8 @@ from generate_raw_vault.app.export_effsat_vault_models import export_all_effsat_
 from create_model_directories import create_directory_and_gitkeep
 
 
-def main():
-    model_directories = [
+def main(metadata_file_dirs):
+    directories_to_create = [
         "./source_metadata",
         "./source_tables/ddl",
         "./models/raw_vault/hubs",
@@ -18,18 +18,19 @@ def main():
         "./models/raw_vault/sats",
         "./models/raw_vault/stages",
     ]
-    for directory in model_directories:
+    for directory in directories_to_create:
         create_directory_and_gitkeep(directory)
-    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
 
     export_all_ddl_statments(metadata_file_dirs)
-    export_all_hub_files(metadata_file_dirs)
-    export_all_link_files(metadata_file_dirs)
     export_model_schema(metadata_file_dirs)
-    export_all_sat_files(metadata_file_dirs)
-    export_all_effsat_files()
     export_all_staging_files(metadata_file_dirs)
+    export_all_hub_files(metadata_file_dirs)
+    export_all_sat_files(metadata_file_dirs)
+    export_all_effsat_files(metadata_file_dirs)
+    export_all_link_files(metadata_file_dirs)
 
 
 if __name__ == "__main__":
-    main()
+    metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
+    # from pathlib import PosixPath; metadata_file_dirs = [PosixPath("/Users/adam.dewberry/Documents/autovault/source_metadata/transactions_v1.json")]
+    main(metadata_file_dirs)

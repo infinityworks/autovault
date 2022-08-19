@@ -9,29 +9,21 @@
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
+          "description": "Customer IDs are concatinations of their region code and registration number",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true
           }
         }
-      },
-      "business_attributes": [
-        {
-          "business_definition": "CUSTOMERS",
-          "payload": {
-            "null": "null"
-          }
-        }
-      ]
+      }
     },
     "PRODUCT": {
       "business_keys": {
         "PRODUCT_ID": {
+          "description": "Each product has a 12 digit UIID",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "not_null": true
           }
         }
       },
@@ -42,8 +34,8 @@
             "PRICE": {
               "type": "NUMBER",
               "tests": {
-                "uniqueness": true,
-                "nullable": true
+                "unique": true,
+                "not_null": true
               }
             }
           }
@@ -53,28 +45,21 @@
     "TRANSACTION": {
       "business_keys": {
         "DATE_OF_SESSION": {
+          "description": "The datetime at which the order was made",
           "type": "TIMESTAMP_TZ(9)",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true,
+            "not_null": true
           }
         },
-        "PRODUCT_ID": {
+        "CUSTOMER_ID": {
+          "description": "444444",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "not_null": true
           }
         }
-      },
-      "business_attributes": [
-        {
-          "business_definition": "TRANSACTIONS",
-          "payload": {
-            "null": "null"
-          }
-        }
-      ]
+      }
     }
   }
 }

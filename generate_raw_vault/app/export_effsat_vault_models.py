@@ -11,33 +11,32 @@ LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/effect_sat_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
 
 
-def export_all_effsat_files():
+def export_all_effsat_files(metadata_file_dirs):
     template = load_template_file(LINK_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
     link_template = Template(template)
-    metadata_file_dirs = find_json_metadata("source_metadata")
-
     file_map = get_file_map(metadata_file_dirs)
     link_source_map = create_link_source_map(file_map)
     link_combinations = set(link_source_map.values())
+
     for link in link_combinations:
-        source_list = []
-        for file_path, metadata_dict in file_map.items():
+        for metadata_dict in file_map.values():
             metadata = Metadata(metadata_dict)
             hub_list = metadata.get_hubs_from_business_topics()
-            if len(hub_list) > 1:
-                linked_hubs = "_".join(hub_list)
-                unit_of_work = metadata.get_unit_of_work()
-                if f"{linked_hubs}_{unit_of_work}" == link:
-                    source_list.append(metadata.get_versioned_source_name())
-                    short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
-                    name = f"{short_name}_{unit_of_work}"
-                    substitution_values = {"hubs": hub_list, "file_name": name.lower()}
-        substitution_values.update({"source_list": sorted(source_list)})
-        substitutions = create_effsat_substitutions(substitution_values)
-        create_effsat_model_files(
-            substitutions, link_template, substitution_values["file_name"]
-        )
+            linked_hubs = "_".join(hub_list)
+            unit_of_work = metadata.get_unit_of_work()
+            if f"{linked_hubs}_{unit_of_work}" == link:
+                source = metadata.get_versioned_source_name()
+                short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
+                name = f"{short_name}_{unit_of_work}_{metadata.get_source_version()}"
+                link_key = f"{short_name}_{unit_of_work}"
+                substitution_values = {"hubs": hub_list, "file_name": name.lower()}
+                substitution_values.update({"source": source})
+                substitution_values.update({"link_key": link_key})
+                substitutions = create_effsat_substitutions(substitution_values)
+                create_effsat_model_files(
+                    substitutions, link_template, substitution_values["file_name"]
+                )
 
 
 def create_effsat_model_files(substitutions, link_template, file_name):
@@ -47,13 +46,10 @@ def create_effsat_model_files(substitutions, link_template, file_name):
 
 
 def create_effsat_substitutions(substitution_values):
-    source_list = substitution_values["source_list"]
+    source = substitution_values["source"]
     link_keys = substitution_values["hubs"]
-    short_name = substitution_values["file_name"]
-
-    table_name = f",\n{chr(32)*24}".join(
-        [f'"stg_{source.lower()}"' for source in source_list]
-    )
+    short_name = substitution_values["link_key"]
+    table_name = f'"stg_{source.lower()}"'
     hash_key = (short_name + "_HK").upper()
 
     src_dfk = f"{link_keys[0]}_HK"

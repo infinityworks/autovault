@@ -9,23 +9,25 @@
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
+          "description": "CUSTOMERS_V2 Business key 22222",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true,
+            "not_null": true
           }
         }
       },
       "business_attributes": [
         {
-          "business_definition": "CUSTOMER_VISITS",
+          "business_definition": "CUSTOMER_DETAILS",
           "satellite_type": "standard_satellite",
           "payload": {
-            "AVG_MONTHLY_VISITS": {
+            "AGE": {
+              "description": "Customer age",
               "type": "STRING",
               "tests": {
-                "uniqueness": true,
-                "nullable": true
+                "unique": true,
+                "not_null": true
               }
             }
           }

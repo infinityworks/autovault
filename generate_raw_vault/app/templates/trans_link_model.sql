@@ -5,7 +5,7 @@
   ) }}
 
 {%- set yaml_metadata -%}
-source_model: [$source_model]
+source_model: $source_model
 src_pk: '$src_pk'
 src_fk:
 $src_fk

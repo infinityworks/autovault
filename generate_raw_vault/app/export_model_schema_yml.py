@@ -52,8 +52,28 @@ def create_schema_subsitutions(metadata) -> dict:
     database_name = metadata.get_target_database()
     schema_name = metadata.get_target_schema()
     source_name = f"{database_name}_{schema_name}"
-    table_name = f"- name: {metadata.get_versioned_source_name()}"
-
+    hub_names_list = metadata.get_hubs_from_business_topics()
+    primary_keys = []
+    for hub_name in hub_names_list:
+        primarykey_datatype_map = metadata.get_primarykey_datatype_map(
+            metadata.get_business_keys().get(hub_name)
+        )
+        for primarykey in primarykey_datatype_map.keys():
+            primary_keys.append(f"{10*chr(32)}- name: {primarykey}")
+            primarykey_description_map = metadata.get_primarykey_description_map(
+                metadata.get_business_keys().get(hub_name)
+            )
+            primarykey_test_map = metadata.get_primary_key_tests_map(
+                metadata.get_business_keys().get(hub_name)
+            )
+            for description in primarykey_description_map.values():
+                primary_keys.append(
+                    f'{12*chr(32)}description: "{description}"\n{12*chr(32)}tests:'
+                )
+            for test, test_type in primarykey_test_map.items():
+                primary_keys.append(f"{12*chr(32)}{chr(32)} - {test}")
+    keys_str = "\n".join(primary_keys)
+    table_name = f"- name: {metadata.get_versioned_source_name()}\n{8*chr(32)}columns:\n{keys_str}"
     substitutions = {
         "source_name": source_name,
         "database": database_name,
@@ -69,6 +89,7 @@ def create_sources_map(source: dict) -> dict:
         "tables": [],
         "database": source.get("database"),
         "schema": source.get("schema"),
+        "business_keys": source.get("business_keys"),
     }
     return source
 

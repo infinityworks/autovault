@@ -7,6 +7,16 @@
   "destination_schema": "PUBLIC",
   "business_topics": {
     "PRODUCT": {
+      "business_keys": {
+        "PRODUCT_ID": {
+          "description": "PRODUCT_V1 Business key 11111",
+          "type": "STRING",
+          "tests": {
+            "unique": true,
+            "not_null": true
+          }
+        }
+      },
       "business_attributes": [
         {
           "business_definition": "PRODUCTS",
@@ -14,29 +24,20 @@
             "MAKE": {
               "type": "STRING",
               "tests": {
-                "uniqueness": true,
-                "nullable": true
+                "unique": true,
+                "not_null": true
               }
             },
             "MODEL": {
               "type": "STRING",
               "tests": {
-                "uniqueness": true,
-                "nullable": true
+                "unique": true,
+                "not_null": true
               }
             }
           }
         }
-      ],
-      "business_keys": {
-        "PRODUCT_ID": {
-          "type": "STRING",
-          "tests": {
-            "uniqueness": true,
-            "nullable": true
-          }
-        }
-      }
+      ]
     }
   }
 }

@@ -18,7 +18,7 @@ hashed_columns:
     - "PRODUCT_ID"
   TRANSACTION_HK:
     - "DATE_OF_SESSION"
-    - "PRODUCT_ID"
+    - "CUSTOMER_ID"
   CUST_PRDCT_TRNSCTN_STORE_TILLS_HK:
     - "CUSTOMER_ID"
     - "DATE_OF_SESSION"
