@@ -1,16 +1,15 @@
 {
-  "unit_of_work": "CUST_VSTS",
-  "source_name": "CUSTOMER_VISITS",
-  "version": "1",
-  "source_system": "CSV",
+  "unit_of_work": "CATALOGUE",
+  "source_name": "PRODUCTS",
+  "version": "0_1_0",
+  "source_system": "PRODUCT_DB",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
   "business_topics": {
-    "CUSTOMER": {
+    "PRODUCT": {
       "business_keys": {
-        "CUST_ID": {
-          "description": "CUSTOMER_VISITS_V1 Business key 1111",
-          "alias": "CUSTOMER_ID",
+        "PRODUCT_ID": {
+          "description": "PRODUCT_V1 Business key 11111",
           "type": "STRING",
           "tests": {
             "unique": true,
@@ -20,9 +19,16 @@
       },
       "business_attributes": [
         {
-          "business_definition": "CUSTOMER_VISITS",
+          "business_definition": "PRODUCTS",
           "payload": {
-            "TOTAL_VISITS": {
+            "MAKE": {
+              "type": "STRING",
+              "tests": {
+                "unique": true,
+                "not_null": true
+              }
+            },
+            "MODEL": {
               "type": "STRING",
               "tests": {
                 "unique": true,

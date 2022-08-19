@@ -4,7 +4,7 @@
   ) }}
 
 {%- set yaml_metadata -%}
-source_model: "stg_products_v1"
+source_model: "stg_products_v0_1_0"
 src_pk: "PRODUCT_HK"
 src_hashdiff:
   source_column: "PRODUCTS_HASHDIFF"

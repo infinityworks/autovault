@@ -5,7 +5,7 @@
 
 {%- set yaml_metadata -%}
 source_model:
-  AUTOVAULT_PUBLIC: "CUSTOMERS_V1"
+  AUTOVAULT_PUBLIC: "TRANSACTIONS_V0_1_0"
 derived_columns:
   EFFECTIVE_FROM: "LOAD_DATETIME"
   START_DATE: "LOAD_DATETIME"
@@ -14,11 +14,19 @@ derived_columns:
 hashed_columns:
   CUSTOMER_HK:
     - "CUSTOMER_ID"
-
-  CUSTOMER_DETAILS_HASHDIFF:
+  PRODUCT_HK:
+    - "PRODUCT_ID"
+  TRANSACTION_HK:
+    - "DATE_OF_SESSION"
+    - "CUSTOMER_ID"
+  CUST_PRDCT_TRNSCTN_CUST_CHECKOUT_HK:
+    - "CUSTOMER_ID"
+    - "DATE_OF_SESSION"
+    - "PRODUCT_ID"
+  PRODUCTS_HASHDIFF:
     is_hashdiff: true
     columns:
-      - "AGE"
+      - "PRICE"
 
 {%- endset -%}
 

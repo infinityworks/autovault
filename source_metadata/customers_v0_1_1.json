@@ -1,15 +1,15 @@
 {
   "unit_of_work": "CUST_STATS",
   "source_name": "CUSTOMERS",
-  "version": "1",
-  "source_system": "CSV",
+  "version": "0_1_1",
+  "source_system": "CRM_SYSTEM",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
   "business_topics": {
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
-          "description": "CUSTOMERS_V1 Business key 11111",
+          "description": "CUSTOMERS_V2 Business key 22222",
           "type": "STRING",
           "tests": {
             "unique": true,

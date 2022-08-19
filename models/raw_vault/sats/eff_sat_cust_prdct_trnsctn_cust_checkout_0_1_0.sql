@@ -3,8 +3,8 @@
   schema = "SATS"
   ) }}
 
-{%- set source_model = "stg_transactions_v1"  -%}
-{%- set src_pk = "CUST_PRDCT_TRNSCTN_STORE_TILLS_HK"  -%}
+{%- set source_model = "stg_transactions_v0_1_0"  -%}
+{%- set src_pk = "CUST_PRDCT_TRNSCTN_CUST_CHECKOUT_HK"  -%}
 {%- set src_dfk = "CUSTOMER_HK"        -%}
 {%- set src_sfk = ["PRODUCT_HK",
                    "TRANSACTION_HK"]          -%}

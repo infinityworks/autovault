@@ -48,19 +48,19 @@ seeds:
   +database: AUTOVAULT
   +schema: PUBLIC
   autovault:
-    customers_v1:
+    customers_v0_1_0:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)
-    customers_v2:
+    customers_v0_1_1:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)
-    products_v1:
+    products_v0_1_0:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)
-    transactions_v1:
+    transactions_v0_1_0:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)
         DATE_OF_SESSION: TIMESTAMP_TZ(9)
-    customer_visits_v1:
+    customer_visits_v0_1_0:
       +column_types:
         LOAD_DATETIME: TIMESTAMP_TZ(9)
