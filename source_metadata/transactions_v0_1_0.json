@@ -1,8 +1,8 @@
 {
-  "unit_of_work": "STORE-TILLS",
+  "unit_of_work": "CUST_CHECKOUT",
   "source_name": "TRANSACTIONS",
-  "version": "1",
-  "source_system": "ONLINE",
+  "version": "0_1_0",
+  "source_system": "STORE-TILLS",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
   "business_topics": {

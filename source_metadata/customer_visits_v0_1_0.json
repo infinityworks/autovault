@@ -1,15 +1,16 @@
 {
-  "unit_of_work": "CUST_STATS",
-  "source_name": "CUSTOMERS",
-  "version": "2",
-  "source_system": "CSV",
+  "unit_of_work": "CUST_VSTS",
+  "source_name": "CUSTOMER_VISITS",
+  "version": "0_1_0",
+  "source_system": "STORE_IOT_DEVICE",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
   "business_topics": {
     "CUSTOMER": {
       "business_keys": {
-        "CUSTOMER_ID": {
-          "description": "CUSTOMERS_V2 Business key 22222",
+        "CUST_ID": {
+          "description": "CUSTOMER_VISITS_V1 Business key 1111",
+          "alias": "CUSTOMER_ID",
           "type": "STRING",
           "tests": {
             "unique": true,
@@ -19,11 +20,9 @@
       },
       "business_attributes": [
         {
-          "business_definition": "CUSTOMER_DETAILS",
-          "satellite_type": "standard_satellite",
+          "business_definition": "CUSTOMER_VISITS",
           "payload": {
-            "AGE": {
-              "description": "Customer age",
+            "TOTAL_VISITS": {
               "type": "STRING",
               "tests": {
                 "unique": true,

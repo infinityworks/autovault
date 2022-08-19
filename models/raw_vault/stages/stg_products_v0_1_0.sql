@@ -5,7 +5,7 @@
 
 {%- set yaml_metadata -%}
 source_model:
-  AUTOVAULT_PUBLIC: "PRODUCTS_V1"
+  AUTOVAULT_PUBLIC: "PRODUCTS_V0_1_0"
 derived_columns:
   EFFECTIVE_FROM: "LOAD_DATETIME"
   START_DATE: "LOAD_DATETIME"

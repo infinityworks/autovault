@@ -5,35 +5,35 @@ sources:
     database: AUTOVAULT
     schema: PUBLIC
     tables:
-      - name: CUSTOMERS_V1
+      - name: CUSTOMERS_V0_1_0
         columns:
           - name: CUSTOMER_ID
             description: "CUSTOMERS_V1 Business key 11111"
             tests:
               - unique
               - not_null
-      - name: CUSTOMERS_V2
+      - name: CUSTOMERS_V0_1_1
         columns:
           - name: CUSTOMER_ID
             description: "CUSTOMERS_V2 Business key 22222"
             tests:
               - unique
               - not_null
-      - name: CUSTOMER_VISITS_V1
+      - name: CUSTOMER_VISITS_V0_1_0
         columns:
           - name: CUST_ID
             description: "CUSTOMER_VISITS_V1 Business key 1111"
             tests:
               - unique
               - not_null
-      - name: PRODUCTS_V1
+      - name: PRODUCTS_V0_1_0
         columns:
           - name: PRODUCT_ID
             description: "PRODUCT_V1 Business key 11111"
             tests:
               - unique
               - not_null
-      - name: TRANSACTIONS_V1
+      - name: TRANSACTIONS_V0_1_0
         columns:
           - name: CUSTOMER_ID
             description: "Customer IDs are concatinations of their region code and registration number"

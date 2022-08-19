@@ -4,7 +4,7 @@
   alias = "TRANSACTION"
   ) }}
 
-{%- set source_model = ["stg_transactions_v1"] -%}
+{%- set source_model = ["stg_transactions_v0_1_0"] -%}
 {%- set src_pk = "TRANSACTION_HK" -%}
 {%- set src_nk = ["CUSTOMER_ID",
                   "DATE_OF_SESSION"] -%}
