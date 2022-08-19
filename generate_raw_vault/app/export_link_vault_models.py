@@ -45,7 +45,7 @@ def export_all_link_files(metadata_file_dirs):
                 write_model_files(
                     substitutions,
                     model_template,
-                    model_type="links",
+                    model_type="link",
                     filename=enriched_substitution_values["filename"],
                 )
 

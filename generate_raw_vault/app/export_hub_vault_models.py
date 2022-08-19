@@ -30,8 +30,8 @@ def export_all_hub_files(metadata_file_dirs):
         substitutions = populate_hub_substitutions(
             hub_name, hub_substitutions, all_metadata
         )
-        formatted_hub_name = format_hub_name(hub_name)
-        write_model_files(substitutions, hub_template, "hubs", formatted_hub_name)
+        formatted_hub_name = hub_name.lower()
+        write_model_files(substitutions, hub_template, "hub", formatted_hub_name)
 
 
 def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
@@ -73,10 +73,6 @@ def get_hub_source_list(metadata, source_list):
     source_name = get_formatted_source_name(metadata)
     source_list.append(source_name)
     return source_list
-
-
-def format_hub_name(hub_name):
-    return f"{hub_name.lower()}_hub"
 
 
 def format_string_list_with_double_quotes(input_list):

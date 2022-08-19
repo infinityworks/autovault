@@ -1,16 +1,18 @@
 {{ config(
   materialized='incremental',
-  schema = "SATS"
+  schema = "SATS",
+  alias = "product_db_products_v0_1_0"
   ) }}
 
 {%- set yaml_metadata -%}
-source_model: "stg_customers_v0_1_0"
-src_pk: "CUSTOMER_HK"
+source_model: "stg_products_v0_1_0"
+src_pk: "PRODUCT_HK"
 src_hashdiff:
-  source_column: "CUSTOMER_DETAILS_HASHDIFF"
+  source_column: "PRODUCTS_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:
-  - "AGE"
+  - "MAKE"
+  - "MODEL"
 src_eff: "EFFECTIVE_FROM"
 src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"

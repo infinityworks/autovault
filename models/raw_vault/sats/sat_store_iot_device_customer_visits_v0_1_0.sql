@@ -1,16 +1,17 @@
 {{ config(
   materialized='incremental',
-  schema = "SATS"
+  schema = "SATS",
+  alias = "store_iot_device_customer_visits_v0_1_0"
   ) }}
 
 {%- set yaml_metadata -%}
-source_model: "stg_transactions_v0_1_0"
-src_pk: "PRODUCT_HK"
+source_model: "stg_customer_visits_v0_1_0"
+src_pk: "CUSTOMER_HK"
 src_hashdiff:
-  source_column: "PRODUCTS_HASHDIFF"
+  source_column: "CUSTOMER_VISITS_HASHDIFF"
   alias: "HASHDIFF"
 src_payload:
-  - "PRICE"
+  - "TOTAL_VISITS"
 src_eff: "EFFECTIVE_FROM"
 src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"
