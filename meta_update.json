@@ -12,7 +12,7 @@
           "type": "STRING",
           "tests": {
             "uniqueness": true,
-            "nullable": true
+            "not_null": true
           }
         }
       },
@@ -31,7 +31,7 @@
           "type": "STRING",
           "tests": {
             "uniqueness": true,
-            "nullable": true
+            "not_null": true
           }
         }
       },
@@ -43,7 +43,7 @@
               "type": "NUMBER",
               "tests": {
                 "uniqueness": true,
-                "nullable": true
+                "not_null": true
               }
             }
           }
@@ -56,14 +56,14 @@
           "type": "TIMESTAMP_TZ(9)",
           "tests": {
             "uniqueness": true,
-            "nullable": true
+            "not_null": true
           }
         },
         "PRODUCT_ID": {
           "type": "STRING",
           "tests": {
             "uniqueness": true,
-            "nullable": true
+            "not_null": true
           }
         }
       },
@@ -83,14 +83,14 @@
       "type": "STRING",
       "tests": {
         "uniqueness": true,
-        "nullable": true
+        "not_null": true
       }
     },
     "Trans_type": {
       "type": "STRING",
       "tests": {
         "uniqueness": true,
-        "nullable": true
+        "not_null": true
       }
     }
   }

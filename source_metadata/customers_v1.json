@@ -12,8 +12,8 @@
           "description": "Business key",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true,
+            "not_null": true
           }
         }
       },
@@ -26,8 +26,8 @@
               "description": "Number of average monthly visits to website",
               "type": "STRING",
               "tests": {
-                "uniqueness": true,
-                "nullable": true
+                "unique": true,
+                "not_null": true
               }
             }
           }

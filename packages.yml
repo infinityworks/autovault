@@ -1,2 +1,6 @@
 packages:
-  - local: /Users/adam.dewberry/Documents/dbtvault/
+  - package: Datavault-UK/dbtvault
+    version: 0.8.3
+
+  - package: dbt-labs/dbt_utils
+    version: 0.8.6

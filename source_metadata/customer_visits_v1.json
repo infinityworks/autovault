@@ -9,11 +9,12 @@
     "CUSTOMER": {
       "business_keys": {
         "CUST_ID": {
+          "description": "Business key",
           "alias": "CUSTOMER_ID",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true,
+            "not_null": true
           }
         }
       },
@@ -24,8 +25,8 @@
             "TOTAL_VISITS": {
               "type": "STRING",
               "tests": {
-                "uniqueness": true,
-                "nullable": true
+                "unique": true,
+                "not_null": true
               }
             }
           }

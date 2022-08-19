@@ -9,10 +9,11 @@
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
+          "description": "Business key",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true,
+            "not_null": true
           }
         }
       },
@@ -28,10 +29,10 @@
     "PRODUCT": {
       "business_keys": {
         "PRODUCT_ID": {
+          "description": "Business key",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "not_null": true
           }
         }
       },
@@ -42,8 +43,8 @@
             "PRICE": {
               "type": "NUMBER",
               "tests": {
-                "uniqueness": true,
-                "nullable": true
+                "unique": true,
+                "not_null": true
               }
             }
           }
@@ -53,17 +54,17 @@
     "TRANSACTION": {
       "business_keys": {
         "DATE_OF_SESSION": {
+          "description": "Business key",
           "type": "TIMESTAMP_TZ(9)",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true
           }
         },
         "PRODUCT_ID": {
+          "description": "Business key",
           "type": "STRING",
           "tests": {
-            "uniqueness": true,
-            "nullable": true
+            "unique": true
           }
         }
       },
