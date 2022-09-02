@@ -7,3 +7,5 @@ logs/
 *__pycache__/
 archive/
 dbt_packages/
+models/
+source_tables/DDL/
