@@ -69,7 +69,7 @@ def create_effsat_substitutions(substitution_values):
         "src_dfk": src_dfk,
         "src_fk": src_fk,
         "src_start_date": src_start_date,
-        "src_start_date": src_end_date,
+        "src_end_date": src_end_date,
         "src_eff": src_eff,
         "src_ldts": load_datetime,
         "src_source": record_source,
