@@ -299,6 +299,17 @@ To generate dbt raw vault model files ensure you have create the metadata file `
 
     python3 ./generate_raw_vault/app/main.py
 
+Note: If you get a ModuleNotFoundError then the folder directory may need to be added to your PYTHONPATH environment variable with the appropriate command below. Alternatively, you can update this in your .zshrc file.
+
+**For UNIX (Linux, OSX, ...)**
+```python
+export PYTHONPATH=“${PYTHONPATH}:/path/to/your/project/”
+```
+**For Windows**
+```python
+set PYTHONPATH=%PYTHONPATH%;C:\path\to\your\project\
+```
+
 To deploy the model in snowflake run command:
 
     dbt run
