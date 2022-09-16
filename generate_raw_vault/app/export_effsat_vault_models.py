@@ -4,6 +4,7 @@ from generate_raw_vault.app.find_metadata_files import (
     find_json_metadata,
 )
 from generate_raw_vault.app.metadata_handler import Metadata
+from generate_raw_vault.app.model_creation import write_model_files
 from string import Template
 
 
@@ -34,8 +35,9 @@ def export_all_effsat_files(metadata_file_dirs):
                 substitution_values.update({"source": source})
                 substitution_values.update({"link_key": link_key})
                 substitutions = create_effsat_substitutions(substitution_values)
-                create_effsat_model_files(
-                    substitutions, link_template, substitution_values["file_name"]
+                formatted_effsat_name = substitution_values["file_name"].lower()
+                write_model_files(
+                    substitutions, link_template, "effsat", formatted_effsat_name
                 )
 
 

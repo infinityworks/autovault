@@ -16,6 +16,7 @@ def main(metadata_file_dirs):
         "./models/raw_vault/hubs",
         "./models/raw_vault/links",
         "./models/raw_vault/sats",
+        "./models/raw_vault/effsats",
         "./models/raw_vault/stages",
     ]
     for directory in directories_to_create:
