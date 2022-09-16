@@ -2,14 +2,20 @@
   "unit_of_work": "CUST_STATS",
   "source_name": "CUSTOMERS",
   "version": "0_1_0",
+  "table_description": " ",
   "source_system": "CRM_SYSTEM",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
+  "access_roles": [
+    "data_analyst",
+    "data_scientist"
+  ],
   "business_topics": {
     "CUSTOMER": {
       "business_keys": {
         "CUSTOMER_ID": {
-          "description": "CUSTOMERS_V1 Business key 11111",
+          "description": "CUSTOMERS_V1 Business key; Required",
+          "driving_key": true,
           "type": "STRING",
           "tests": {
             "unique": true,
@@ -21,6 +27,7 @@
         {
           "business_definition": "CUSTOMER_DETAILS",
           "satellite_type": "standard_satellite",
+          "satellite_description": "CUSTOMERS_V1 Business key; Required",
           "payload": {
             "AGE": {
               "description": "Customer age",
@@ -28,7 +35,9 @@
               "tests": {
                 "unique": true,
                 "not_null": true
-              }
+              },
+              "is_PII": true,
+              "masking_policy": "policy_x"
             }
           }
         }
