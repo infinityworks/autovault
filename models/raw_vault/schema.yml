@@ -6,9 +6,10 @@ sources:
     schema: PUBLIC
     tables:
       - name: CUSTOMERS_V0_1_0
+        description: '{{ doc("table_events") }}'
         columns:
           - name: CUSTOMER_ID
-            description: "This is the driving key, a unique identifier to represent a customer."
+            description: '{{ doc("table_event_col1s") }}'
             tests:
               - unique
               - not_null
