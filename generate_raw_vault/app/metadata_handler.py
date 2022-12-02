@@ -44,6 +44,14 @@ class Metadata:
         list_business_topics = list(business_topics.keys())
         return list_business_topics
 
+    def check_ignore_source_from_hub_model(self, hub_name):
+        business_topics = self.get_business_topics()
+        hub_descriptors = business_topics.get(hub_name)
+        discard_source_from_hub_model = hub_descriptors.get(
+            "ignore_persisting_source_to_hub_model"
+        )
+        return discard_source_from_hub_model
+
     def get_hub_alias(self, hub):
         topics = self.get_business_topics()
         hub_alias = topics.get(hub).get("alias")

@@ -36,7 +36,7 @@ sources:
       - name: TRANSACTIONS_V0_1_0
         columns:
           - name: CUSTOMER_ID
-            description: "Customer IDs are concatinations of their region code and registration number"
+            description: "Customer IDs are concatenations of their region code and registration number"
             tests:
               - unique
           - name: PRODUCT_ID
