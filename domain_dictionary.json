@@ -1,0 +1,8 @@
+{
+  "CUSTOMER": {
+    "short_name": "CUST",
+    "description": "this is the customer"
+  },
+  "PRODUCT": "PRDCT",
+  "TRANSACTION": "TRNSCTN"
+}
