@@ -30,8 +30,9 @@ def export_all_hub_files(metadata_file_dirs):
         substitutions = populate_hub_substitutions(
             hub_name, hub_substitutions, all_metadata
         )
-        formatted_hub_name = hub_name.lower()
-        write_model_files(substitutions, hub_template, "hub", formatted_hub_name)
+        if substitutions.get("source_list"):
+            formatted_hub_name = hub_name.lower()
+            write_model_files(substitutions, hub_template, "hub", formatted_hub_name)
 
 
 def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
@@ -42,6 +43,11 @@ def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):
             natural_key_list = populate_hub_natural_key(
                 natural_key_list, metadata, hub_name
             )
+            discard_source_from_source_list = (
+                metadata.check_ignore_source_from_hub_model(hub_name)
+            )
+            if discard_source_from_source_list:
+                continue
             source_list = get_hub_source_list(metadata, source_list)
 
     hub_natural_key_set = set(create_set_from_list_of_lists(natural_key_list))

@@ -36,9 +36,9 @@ This will prompt you for a password to encrypt the private key. Each time you co
 Create your public key using the private key with the following command:
 
     openssl rsa -in  ~/.ssh/snowsql/rsa_key.p8 -pubout -out ~/.ssh/snowsql/rsa_key.pub
-    
+
 Attach the public key to the user by executing the below statement in Snowflake UI:
-    
+
     alter user <firstname.surname@infinityworks.com> set rsa_public_key='<THE_CONTENT_OF_YOUR_RSA_KEY.PUB>';
 
 #### Testing the connection

@@ -7,9 +7,10 @@
   "destination_schema": "PUBLIC",
   "business_topics": {
     "CUSTOMER": {
+      "ignore_persisting_source_to_hub_model": false,
       "business_keys": {
         "CUSTOMER_ID": {
-          "description": "Customer IDs are concatinations of their region code and registration number",
+          "description": "Customer IDs are concatenations of their region code and registration number",
           "type": "STRING",
           "tests": {
             "unique": true
@@ -43,6 +44,7 @@
       ]
     },
     "TRANSACTION": {
+      "ignore_persisting_source_to_hub_model": false,
       "business_keys": {
         "DATE_OF_SESSION": {
           "description": "The datetime at which the order was made",
