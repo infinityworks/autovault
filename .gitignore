@@ -7,3 +7,4 @@ logs/
 *__pycache__/
 archive/
 dbt_packages/
+.DS_Store

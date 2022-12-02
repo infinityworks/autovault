@@ -1,8 +1,7 @@
 {{ config(
   materialized='incremental',
   schema = "HUBS",
-  alias = "TRANSACTION",
-  post_run_hook = "GRANT SELECT ON {{this}} TO ROLE DATA_ANALYST"
+  alias = "TRANSACTION"
   ) }}
 
 {%- set source_model = ["stg_transactions_v0_1_0"] -%}

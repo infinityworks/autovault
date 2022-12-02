@@ -1,0 +1,79 @@
+{
+  "unit_of_work": "CUST_CHECKOUT",
+  "source_name": "TRANSACTIONS",
+  "version": "0_1_0",
+  "table_description": " ",
+  "source_system": "STORE-TILLS",
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "access_roles": [
+    "data_analyst",
+    "data_scientist"
+  ],
+  "link_description": "",
+  "business_topics": {
+    "CUSTOMER": {
+      "hub_description": "",
+      "business_keys": {
+        "CUSTOMER_ID": {
+          "description": "Customer IDs are concatenations of their region code and registration number",
+          "type": "STRING",
+          "pii": {
+            "bool": "true (may drop flag and infer is PII from roles etc)",
+            "pii_roles": [
+              "data_scientist_pii"
+            ],
+            "masking_policy": "SHA256() // masking policy (function / UDF) must exist in snowflake"
+          },
+          "tests": {
+            "unique": true
+          }
+        }
+      }
+    },
+    "PRODUCT": {
+      "business_keys": {
+        "PRODUCT_ID": {
+          "description": "Each product has a 12 digit UIID",
+          "type": "STRING",
+          "tests": {
+            "not_null": true
+          }
+        }
+      },
+      "business_attributes": [
+        {
+          "business_definition": "PRODUCTS",
+          "payload": {
+            "PRICE": {
+              "type": "NUMBER",
+              "tests": {
+                "unique": true,
+                "not_null": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TRANSACTION": {
+      "business_keys": {
+        "DATE_OF_SESSION": {
+          "description": "The datetime at which the order was made",
+          "type": "TIMESTAMP_TZ(9)",
+          "tests": {
+            "unique": true,
+            "not_null": true
+          }
+        },
+        "CUSTOMER_ID": {
+          "description": "444444",
+          "type": "STRING",
+          "tests": {
+            "not_null": true
+          }
+        }
+      }
+    }
+  }
+}
