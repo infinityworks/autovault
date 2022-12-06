@@ -9,7 +9,7 @@ sources:
         description: '{{ doc("customers_v0_1_0_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
-            description: '{{ doc("table_event_col1s") }}'
+            description: '{{ doc("customers_v0_1_0_col_customer_id") }}'
             tests:
               - unique
               - not_null
