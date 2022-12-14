@@ -1,6 +1,8 @@
 # Introduction
 This project is a framework to automate the creation of a raw vault data model for a Snowflake datawarehouse that uses Data Vault 2.0 standards and rules.
 
+This is a sample line I'm adding to test external PR creation
+
 The project generates dbt files which build the vault model through defined metadata which describes the source data. Along with generating the dbt files, it also generates SQL DDL statements for creating the landing / staging layer.
 
 The data vault entities produced are:
