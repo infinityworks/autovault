@@ -38,6 +38,8 @@ quoting:
   schema: false
   identifier: false
 models:
+  vars:
+    hash: SHA
   +transient: false
   raw_vault:
       stages:

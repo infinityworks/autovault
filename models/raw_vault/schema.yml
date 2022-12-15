@@ -6,12 +6,15 @@ sources:
     schema: PUBLIC
     tables:
       - name: CUSTOMERS_V0_1_0
+        description: '{{ doc("customers_v0_1_0_desc") }}'
         columns:
           - name: CUSTOMER_ID
-            description: "CUSTOMERS_V1 Business key 11111"
+            description: '{{ doc("customers_v0_1_0_col_customer_id") }}'
             tests:
               - unique
               - not_null
+          - name: AGE
+            description: '{{ doc("customers_v0_1_0_col_age") }}'
       - name: CUSTOMERS_V0_1_1
         columns:
           - name: CUSTOMER_ID
