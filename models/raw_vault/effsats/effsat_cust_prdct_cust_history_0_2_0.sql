@@ -3,11 +3,10 @@
   schema = "SATS"
   ) }}
 
-{%- set source_model = "stg_transactions_v0_1_0"  -%}
-{%- set src_pk = "CUST_PRDCT_TRNSCTN_CUST_CHECKOUT_HK"  -%}
+{%- set source_model = "stg_customer_purchase_history_v0_2_0"  -%}
+{%- set src_pk = "CUST_PRDCT_CUST_HISTORY_HK"  -%}
 {%- set src_dfk = "CUSTOMER_HK"        -%}
-{%- set src_sfk = ["PRODUCT_HK",
-                   "TRANSACTION_HK"]          -%}
+{%- set src_sfk = ["PRODUCT_HK"]          -%}
 {%- set src_start_date = "START_DATE" -%}
 {%- set src_end_date = "END_DATE"     -%}
 

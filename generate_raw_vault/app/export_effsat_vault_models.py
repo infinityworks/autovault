@@ -4,15 +4,16 @@ from generate_raw_vault.app.find_metadata_files import (
     find_json_metadata,
 )
 from generate_raw_vault.app.metadata_handler import Metadata
+from generate_raw_vault.app.model_creation import write_model_files
 from string import Template
 
 
-LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/effect_sat_model.sql"
+EFF_SAT_TEMPLATE_PATH = "generate_raw_vault/app/templates/effect_sat_model.sql"
 NAME_DICTIONARY = "./name_dictionary.json"
 
 
 def export_all_effsat_files(metadata_file_dirs):
-    template = load_template_file(LINK_TEMPLATE_PATH)
+    template = load_template_file(EFF_SAT_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
     link_template = Template(template)
     file_map = get_file_map(metadata_file_dirs)
@@ -34,8 +35,9 @@ def export_all_effsat_files(metadata_file_dirs):
                 substitution_values.update({"source": source})
                 substitution_values.update({"link_key": link_key})
                 substitutions = create_effsat_substitutions(substitution_values)
-                create_effsat_model_files(
-                    substitutions, link_template, substitution_values["file_name"]
+                formatted_effsat_name = substitution_values["file_name"].lower()
+                write_model_files(
+                    substitutions, link_template, "effsat", formatted_effsat_name
                 )
 
 
@@ -87,7 +89,6 @@ def get_file_map(metadata_file_dirs):
 
 
 def create_link_source_map(file_map):
-    metadata_files = file_map.values()
     link_source_map = {
         file_path: f'{"_".join(list(get_map_of_source_and_hubs(metadata).values())[0])}_{Metadata(metadata).get_unit_of_work()}'
         for file_path, metadata in file_map.items()

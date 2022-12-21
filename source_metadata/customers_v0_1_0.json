@@ -1,16 +1,30 @@
 {
+  "table_description": "This table contains data describing a customer.",
   "unit_of_work": "CUST_STATS",
+  "source_system": "CRM_SYSTEM",
   "source_name": "CUSTOMERS",
   "version": "0_1_0",
-  "source_system": "CRM_SYSTEM",
+  "format": "Flat",
+  "filetype": ".csv",
+  "freshness": "Updated daily at 5am",
+  "source_location": "s3://data-lake-dev/customers",
+  "database_location": "https://instance.eu-west-1.snowflakecomputing.com/console",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
+  "access_requests": "Contact the Data squad for Snowflake and table access",
+  "quality": "This file often has null primary keys",
+  "access_roles": [
+    "data_analyst",
+    "data_scientist"
+  ],
+  "maintained_by": "Data squad",
   "business_topics": {
     "CUSTOMER": {
       "ignore_persisting_source_to_hub_model": false,
       "business_keys": {
         "CUSTOMER_ID": {
-          "description": "CUSTOMERS_V1 Business key 11111",
+          "description": "This is the driving key, a unique identifier to represent a customer.",
+          "driving_key": true,
           "type": "STRING",
           "tests": {
             "unique": true,
@@ -22,6 +36,7 @@
         {
           "business_definition": "CUSTOMER_DETAILS",
           "satellite_type": "standard_satellite",
+          "satellite_description": "CUSTOMERS_V1 Business key; Required",
           "payload": {
             "AGE": {
               "description": "Customer age",
@@ -29,7 +44,9 @@
               "tests": {
                 "unique": true,
                 "not_null": true
-              }
+              },
+              "is_PII": true,
+              "masking_policy": "policy_x"
             }
           }
         }

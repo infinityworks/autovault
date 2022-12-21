@@ -9,7 +9,7 @@ from generate_raw_vault.app.model_creation import (
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from string import Template
-import itertools
+from json import dumps
 
 LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/link_model.sql"
 TRANS_LINK_TEMPLATE_PATH = "generate_raw_vault/app/templates/trans_link_model.sql"
@@ -17,12 +17,7 @@ NAME_DICTIONARY = "./name_dictionary.json"
 
 
 def export_all_link_files(metadata_file_dirs):
-    template = load_template_file(LINK_TEMPLATE_PATH)
-    translink_template = load_template_file(TRANS_LINK_TEMPLATE_PATH)
     naming_dictionary = load_metadata_file(NAME_DICTIONARY)
-    translink_template = Template(translink_template)
-    link_template = Template(template)
-    templates = {"link": link_template, "trans_link": translink_template}
     metadata_map = get_metadata_map(metadata_file_dirs)
     link_source_map = create_link_source_map(metadata_map)
     link_combinations = set(link_source_map.values())
@@ -30,34 +25,38 @@ def export_all_link_files(metadata_file_dirs):
     for link in link_combinations:
         substitution_values_template = create_substitution_values_template()
         for metadata_dict in metadata_map.values():
-            if metadata_dict.get("transactional_payload"):
-                model_template = templates.get("trans_link")
-            else:
-                model_template = templates.get("link")
-            substitution_values = populate_substitution_values(
+            link_substitution_values = populate_substitution_values(
                 link, metadata_dict, substitution_values_template, naming_dictionary
             )
-            if substitution_values:
+
+            if link_substitution_values:
                 enriched_substitution_values = enrich_substitution_values(
-                    substitution_values
+                    link_substitution_values
                 )
                 substitutions = create_link_substitutions(enriched_substitution_values)
+                if metadata_dict.get("transactional_payload"):
+                    substitutions["model_type"] = "TRANS_LINK"
+                    model_template = fetch_template(TRANS_LINK_TEMPLATE_PATH)
+                else:
+                    substitutions["model_type"] = "LINK"
+                    model_template = fetch_template(LINK_TEMPLATE_PATH)
+
                 write_model_files(
                     substitutions,
                     model_template,
-                    model_type="link",
+                    model_type=substitutions["model_type"].lower(),
                     filename=enriched_substitution_values["filename"],
                 )
 
 
 def create_link_substitutions(enriched_substitution_values):
-    link_name = enriched_substitution_values["link_name"]
-    source_tables = enriched_substitution_values["source_tables"]
-    hash_key = enriched_substitution_values["hash_key"]
-    foreign_keys = enriched_substitution_values["foreign_keys"]
-    record_source = enriched_substitution_values["record_source"]
-    record_load_datetime = enriched_substitution_values["record_load_datetime"]
-    payload = enriched_substitution_values["payload"]
+    link_name = enriched_substitution_values.get("link_name")
+    source_tables = enriched_substitution_values.get("source_tables")
+    hash_key = enriched_substitution_values.get("hash_key")
+    foreign_keys = enriched_substitution_values.get("foreign_keys")
+    record_source = enriched_substitution_values.get("record_source")
+    record_load_datetime = enriched_substitution_values.get("record_load_datetime")
+    payload = enriched_substitution_values.get("payload")
     substitutions = {
         "alias": link_name,
         "source_model": source_tables,
@@ -74,24 +73,29 @@ def enrich_substitution_values(substitution_values):
     source_list = substitution_values["source_list"]
     link_keys = substitution_values["hubs"]
     link_name = substitution_values["link_name"]
-    payload_columns = substitution_values["payload"]
-    substitution_values["source_tables"] = f",\n{chr(32)*24}".join(
-        sorted([f'"stg_{source.lower()}"' for source in source_list])
+    payload_columns = substitution_values.get("payload")
+    substitution_values["hash_key"] = format_output_string(f"{link_name}_HK", 2)
+    substitution_values["foreign_keys"] = f"\n".join(
+        [format_output_string(f"{combination}_HK", 2) for combination in link_keys]
     )
-    substitution_values["hash_key"] = (link_name + "_HK").upper()
-    if payload_columns is None:
-        substitution_values["foreign_keys"] = f",\n{chr(32)*18}".join(
-            [f'"{combination}_HK"' for combination in link_keys]
-        )
-    else:
-        substitution_values["foreign_keys"] = f"\n".join(
-            [format_output_string(f"{combination}_HK", 4) for combination in link_keys]
-        )
+    source_list.sort(reverse=True)
+    if payload_columns:
+        """There is a known bug for producing Transactional Links: regular Link tables
+        are not versioned and can be feed by multiple staging tables, transactional links
+        should be versioned and have a 1 to 1 mapping from versioned staging table to
+        versioned transactional link table. The code below is a temporary fix which will
+        take the most recent versioned staging table in the source list, it will not produce
+        all versioned trans links currently"""
+        substitution_values["source_tables"] = f'"stg_{source_list[0].lower()}"'
         substitution_values["payload"] = f"\n".join(
             [
-                format_output_string(f"{payload_column}", 4)
+                format_output_string(f"{payload_column}", 2)
                 for payload_column in payload_columns
             ]
+        )
+    else:
+        substitution_values["source_tables"] = f"\n".join(
+            [format_output_string(f"stg_{source.lower()}", 2) for source in source_list]
         )
     return substitution_values
 
@@ -119,12 +123,13 @@ def populate_substitution_values(
             substitution_values["link_name"] = link_name
             substitution_values["source_list"].append(versioned_source_name)
             if metadata_dict.get("transactional_payload"):
-                trans_payload_list = []
-                for transaction_payload in metadata_dict.get("transactional_payload"):
-                    trans_payload_list.append(transaction_payload)
+                trans_payload_list = [
+                    transaction_payload
+                    for transaction_payload in metadata_dict.get(
+                        "transactional_payload"
+                    )
+                ]
                 substitution_values["payload"] = trans_payload_list
-            else:
-                substitution_values["payload"] = None
             return substitution_values
 
 
@@ -151,8 +156,14 @@ def get_metadata_map(metadata_file_dirs):
     return metadata_map
 
 
+def fetch_template(model_path):
+    model_template = load_template_file(model_path)
+    template = Template(model_template)
+    return template
+
+
 def format_output_string(key, number_of_white_space):
-    return f"{chr(32)*number_of_white_space}- '{key}'"
+    return f'{chr(32)*number_of_white_space}- "{key}"'
 
 
 if __name__ == "__main__":

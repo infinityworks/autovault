@@ -1,14 +1,24 @@
 {{ config(
   materialized='incremental',
-  schema = "LINKS",
+  schema = "$model_type",
   alias = "$alias"
   ) }}
 
-{%- set source_model = [$source_model]     -%}
-{%- set src_pk = "$src_pk"         -%}
-{%- set src_fk = [$src_fk]  -%}
-{%- set src_ldts = "$src_ldts" -%}
-{%- set src_source = "$src_source" -%}
+{%- set yaml_metadata -%}
+source_model:
+$source_model
+src_pk:
+$src_pk
+src_fk:
+$src_fk
+src_ldts: "$src_ldts"
+src_source: "$src_source"
+{%- endset -%}
 
-{{ dbtvault.link(src_pk=src_pk, src_fk=src_fk, src_ldts=src_ldts,
-                 src_source=src_source, source_model=source_model) }}
+{% set metadata_dict = fromyaml(yaml_metadata) %}
+
+{{ dbtvault.link(src_pk=metadata_dict["src_pk"],
+                   src_fk=metadata_dict["src_fk"],
+                   src_ldts=metadata_dict["src_ldts"],
+                   src_source=metadata_dict["src_source"],
+                   source_model=metadata_dict["source_model"]) }}

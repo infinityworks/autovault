@@ -75,7 +75,6 @@ def test_create_link_source_map():
         "hubs": ["HUB1", "HUB2"],
         "filename": "hub1_hub2_test_uow",
         "link_name": "HUB1_HUB2_TEST_UoW",
-        "payload": None,
         "source_list": ["TEST_V1"],
     }
     test_substitution_values = link_exporter.populate_substitution_values(

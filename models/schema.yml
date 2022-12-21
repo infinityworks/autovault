@@ -8,7 +8,7 @@ sources:
       - name: CUSTOMERS_V0_1_0
         columns:
           - name: CUSTOMER_ID
-            description: "CUSTOMERS_V1 Business key 11111"
+            description: "This is the driving key, a unique identifier to represent a customer."
             tests:
               - unique
               - not_null
@@ -18,6 +18,26 @@ sources:
             description: "CUSTOMERS_V2 Business key 22222"
             tests:
               - unique
+              - not_null
+      - name: CUSTOMER_PURCHASE_HISTORY_V0_1_0
+        columns:
+          - name: CUSTOMER_ID
+            description: "Customer IDs are concatenations of their region code and registration number"
+            tests:
+              - unique
+          - name: PRODUCT_ID
+            description: "Each product has a 12 digit UIID"
+            tests:
+              - not_null
+      - name: CUSTOMER_PURCHASE_HISTORY_V0_2_0
+        columns:
+          - name: CUSTOMER_ID
+            description: "Customer IDs are concatenations of their region code and registration number"
+            tests:
+              - unique
+          - name: PRODUCT_ID
+            description: "Each product has a 12 digit UIID"
+            tests:
               - not_null
       - name: CUSTOMER_VISITS_V0_1_0
         columns:
@@ -43,15 +63,13 @@ sources:
             description: "Each product has a 12 digit UIID"
             tests:
               - not_null
-          - name: DATE_OF_SESSION
-            description: "The datetime at which the order was made"
-            tests:
-            description: "444444"
-            tests:
-              - not_null
+      - name: TRANSACTIONS_V0_2_0
+        columns:
           - name: CUSTOMER_ID
-            description: "The datetime at which the order was made"
+            description: "Customer IDs are concatenations of their region code and registration number"
             tests:
-            description: "444444"
+              - unique
+          - name: PRODUCT_ID
+            description: "Each product has a 12 digit UIID"
             tests:
               - not_null

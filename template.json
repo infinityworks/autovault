@@ -1,0 +1,87 @@
+{
+  "table_description": "This table contains data describing a customer.",
+  "unit_of_work": "CUST_STATS",
+  "source_system": "CRM_SYSTEM",
+  "source_name": "CUSTOMERS",
+  "version": "0_1_0",
+  "format": "Flat",
+  "filetype": ".csv",
+  "freshness": "Updated daily at 5am",
+  "source_location": "s3://data-lake-dev/customers",
+  "database_location": "https://instance.eu-west-1.snowflakecomputing.com/console",
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "access_requests": "Contact the Data squad for Snowflake and table access",
+  "quality": "This file often has null primary keys",
+  "access_roles": [
+    "data_analyst",
+    "data_scientist"
+  ],
+  "maintained_by": "Data squad",
+  "link_description": "",
+  "business_topics": {
+    "CUSTOMER": {
+      "hub_description": "",
+      "business_keys": {
+        "CUSTOMER_ID": {
+          "description": "Customer IDs are concatenations of their region code and registration number",
+          "type": "STRING",
+          "pii": {
+            "bool": "true (may drop flag and infer is PII from roles etc)",
+            "pii_roles": [
+              "data_scientist_pii"
+            ],
+            "masking_policy": "SHA256() // masking policy (function / UDF) must exist in snowflake"
+          },
+          "tests": {
+            "unique": true
+          }
+        }
+      }
+    },
+    "PRODUCT": {
+      "business_keys": {
+        "PRODUCT_ID": {
+          "description": "Each product has a 12 digit UIID",
+          "type": "STRING",
+          "tests": {
+            "not_null": true
+          }
+        }
+      },
+      "business_attributes": [
+        {
+          "business_definition": "PRODUCTS",
+          "payload": {
+            "PRICE": {
+              "type": "NUMBER",
+              "tests": {
+                "unique": true,
+                "not_null": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TRANSACTION": {
+      "business_keys": {
+        "DATE_OF_SESSION": {
+          "description": "The datetime at which the order was made",
+          "type": "TIMESTAMP_TZ(9)",
+          "tests": {
+            "unique": true,
+            "not_null": true
+          }
+        },
+        "CUSTOMER_ID": {
+          "description": "444444",
+          "type": "STRING",
+          "tests": {
+            "not_null": true
+          }
+        }
+      }
+    }
+  }
+}

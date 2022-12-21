@@ -1,28 +1,26 @@
 {{ config(
   materialized='incremental',
-  schema = "$model_type",
-  alias = "$alias"
+  schema = "LINK",
+  alias = "CUST_PRDCT_CUST_HISTORY"
   ) }}
 
 {%- set yaml_metadata -%}
-source_model: $source_model
+source_model:
+  - "stg_customer_purchase_history_v0_2_0"
+  - "stg_customer_purchase_history_v0_1_0"
 src_pk:
-$src_pk
+  - "CUST_PRDCT_CUST_HISTORY_HK"
 src_fk:
-$src_fk
-src_payload:
-$payload
-src_eff: "EFFECTIVE_FROM"
-src_ldts: "$src_ldts"
-src_source: "$src_source"
+  - "CUSTOMER_HK"
+  - "PRODUCT_HK"
+src_ldts: "LOAD_DATETIME"
+src_source: "RECORD_SOURCE"
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}
 
-{{ dbtvault.t_link(src_pk=metadata_dict["src_pk"],
+{{ dbtvault.link(src_pk=metadata_dict["src_pk"],
                    src_fk=metadata_dict["src_fk"],
-                   src_payload=metadata_dict["src_payload"],
-                   src_eff=metadata_dict["src_eff"],
                    src_ldts=metadata_dict["src_ldts"],
                    src_source=metadata_dict["src_source"],
                    source_model=metadata_dict["source_model"]) }}
