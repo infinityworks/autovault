@@ -1,29 +1,35 @@
 # Introduction
-This project is a framework to automate the creation of a raw vault data model for a Snowflake datawarehouse that uses Data Vault 2.0 standards and rules.
+
+This project is a framework to automate the creation of a raw vault data model for a Snowflake data warehouse that uses Data Vault 2.0 standards and rules.
 
 The project generates dbt files which build the vault model through defined metadata which describes the source data. Along with generating the dbt files, it also generates SQL DDL statements for creating the landing / staging layer.
 
 The data vault entities produced are:
+
 - Staging enrichment layer (for hashes etc)
 - Hubs
 - Links
 - Satellites
 
-# Dependencies
+## Dependencies
 
 ## Tools
+
 The project relies on the following tools:
+
 - Python 3.8
 - dbt 1.0.3
 - dbtvault 0.8.1
 - pre-commit 2.15.0
 
 Optional:
+
 - snowsql CLI 1.2.21
 
 ## Connecting to Snowflake
 
 ### Authentication with RSA keys
+
 This project uses rsa keys as secure methods for authentication. To generate a private key edit and run the following cmd
 
     mkdir -p ~/.ssh/snowsql
@@ -42,6 +48,7 @@ Attach the public key to the user by executing the below statement in Snowflake 
     alter user <firstname.surname@infinityworks.com> set rsa_public_key='<THE_CONTENT_OF_YOUR_RSA_KEY.PUB>';
 
 #### Testing the connection
+
 To test your connection to Snowflake and that dbt can deploy tables and views, you may want to use the snowsql CLI:
 
 Install Snowsql
@@ -57,6 +64,7 @@ Run snowsql to install the cli; if the cmd is not recognised then add snowsql to
     touch .zshrc
 
 ##### Setting up snowsql cli
+
 Populate the the snowsql config file with connection details of your snowflake account and update the options particularly for the log file location.
 
     [connections.iw]
@@ -88,7 +96,6 @@ Populate the the snowsql config file with connection details of your snowflake a
     # executable.
     # log_bootstrap_file = ~/.snowsql/log_bootstrap
 
-
 To test the connection run the snowsql command to your desired profile e.g. `connections.iw`
 
         snowsql --connection  iw
@@ -97,6 +104,7 @@ To test the connection run the snowsql command to your desired profile e.g. `con
 This should validate your connectivity.
 
 ## Installing dbt
+
 Create a virtual environment:
 
     python3 -m venv .venv
@@ -109,7 +117,8 @@ Install dbt
 
     pip3 install --requirement requirements.txt
 
-# Configure dbt connection to snowflake
+### Configure dbt connection to snowflake
+
 If you do not have a dbt profiles.yml, you must create one:
 
     touch ~/.dbt/profiles.yml
@@ -141,18 +150,21 @@ Test the dbt connection to Snowflake:
     dbt debug
 
 ## Installing dbtvault
+
 dbt packages can be [installed via packages.yml](https://hub.getdbt.com/datavault-uk/dbtvault/latest/).
 
 Include the following in your packages.yml file:
 packages:
-  - package: Datavault-UK/dbtvault
+
+- package: Datavault-UK/dbtvault
     version: 0.7.8
 
 Then run the command:
 
     dbt deps
 
-# Data sources
+## Data sources
+
 Data sources are referenced in schema.yml, this file will be generated from your JSON metadata that descibes your source files and will resemble the following.
 
     version: 2
@@ -216,40 +228,65 @@ Metadata Template
     }
 
 ## unit_of_work
+
 Unit of work represents the business process or activity that the source table represents. It is used to distinguish between processes/activities with overlapping business topics (hubs).
+
 ## source_name
+
 It represents the source name i.e. table name from the source system.
+
 ## source_system
+
 It represent the source system the source belongs too.
+
 ## version
+
 It is the user defined version of the source system. It is used to identify the changed version of the source system and create a new satellite based on new version of the source.
+
 ## destination_database
+
 It the database in snowflake where the raw vault resides.
+
 ## destination_schema
+
 It the schema where raw data will land, usually "public".
+
 ## business_topic
+
 Concepts such as customer, product, agreement etc. are used to represent ideas, identified as business keys represented across multiple lines of business.
+
 ## business_key
+
 The column name/s in the source that stores the business key e.g. customer_id. The business_key should be understood by business and mean something to the business and is exposed to the user. It could be a composite key.
+
 ## alias
+
 If your business key columns have different names across the different tables, they will need to be aliased to the same name.
+
 ## business_definition
+
 A satellite is named by combining source system, business definition and version. It is useful when attributes of a business are split into multiple satellites.
+
 ## payload
+
 List of business_topic attributes represented by column names and relevant data types.
 
 # Raw vault objects
 
 ## HUB
+
 It is a uniquely identifiable business element. It has the semantic meaning accross the business and same granularity.
 
 ## SATELLITE
+
 It represents descriptive attributes of a business key/business element at a point in time. i.e. customer name, customer date of birth.
 
 ## LINK
+
 It is a uniquely identifiable relationship between business elements(Hubs) and represents an unit of work(process/activity) or hierarchy.
 
 ## Set creation of hubs, links and sats in the schema of choice
+
 By detault all the artefacts would be created in public schema. You can overide it in the specific model, by adding following lines at the start-
 e.g. hub customers.sql
 
@@ -259,6 +296,7 @@ e.g. hub customers.sql
 Note the above line of code is automatically added to the artefact files. Also add custom schema macro called get_custom_schema.sql to the macros directory. This will ensure artefacts are created in your schema of choice.
 
 ## Staging, Hubs, Links, Sats
+
 Set staging models to views in the dbt_project.yml as below-
 
     models:
@@ -288,13 +326,14 @@ Write the metadata file with the hubs in order of the unit of work - the busines
 - Payload columns can only be persisted to satellites which retains their business context, if the context is lost it is in the wrong satellite e.g. Party role agreements only makes sense when the role is attached to the agreement, detaching the two breaks the business logic continuity.
 - If the source data has a business topic which does not have any related business keys, the record will only be populated in the hub and link table preserving the lineage and connection to other business hubs and satellites within said data.
 
-
 # Running the project
 
 ## Sample data
+
 Sample data can be found in the `./data` and their schemas can be found in `./sample_data_schema`. The sample data will create 3 hubs, 1 link and multiple satellites.
 
 ## Generating the raw vault
+
 To ingest sample data in the snowflake public schema, run command:
 
     dbt seed
@@ -306,10 +345,13 @@ To generate dbt raw vault model files ensure you have create the metadata file `
 Note: If you get a ModuleNotFoundError then the folder directory may need to be added to your PYTHONPATH environment variable with the appropriate command below. Alternatively, you can update this in your .zshrc file.
 
 **For UNIX (Linux, OSX, ...)**
+
 ```python
 export PYTHONPATH=“${PYTHONPATH}:/path/to/your/project/”
 ```
+
 **For Windows**
+
 ```python
 set PYTHONPATH=%PYTHONPATH%;C:\path\to\your\project\
 ```
@@ -321,9 +363,17 @@ To deploy the model in snowflake run command:
 Raw vault artefacts would be created in the target database.
 
 ## Name dictionary
+
 Database name and system directory often have character length limits. The naming convention dictionary has been included to standardise shortened naming for models. This can be found in `./name_dictionary`; add more key value name conventions as required that will be used in link creation.
 
-### Resources:
+## Contributing
+
+Code can be merged into the current development branch main by opening a pull request (PR). For public users, these pull requests will need to be created from your own fork of the repository.
+
+An IW repository maintainer will review your PR. They may suggest code revision for style or clarity, or request that you add unit or integration test(s).
+
+### Resources
+
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
 - Join the [chat](http://slack.getdbt.com/) on Slack for live discussions and support
