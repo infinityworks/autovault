@@ -5,6 +5,7 @@
   ) }}
 
 {%- set source_model = ["stg_customer_purchase_history_v0_1_0",
+                        "stg_customer_purchase_history_v0_2_0",
                         "stg_products_v0_1_0",
                         "stg_transactions_v0_1_0",
                         "stg_transactions_v0_2_0"] -%}

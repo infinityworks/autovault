@@ -29,6 +29,16 @@ sources:
             description: "Each product has a 12 digit UIID"
             tests:
               - not_null
+      - name: CUSTOMER_PURCHASE_HISTORY_V0_2_0
+        columns:
+          - name: CUSTOMER_ID
+            description: "Customer IDs are concatenations of their region code and registration number"
+            tests:
+              - unique
+          - name: PRODUCT_ID
+            description: "Each product has a 12 digit UIID"
+            tests:
+              - not_null
       - name: CUSTOMER_VISITS_V0_1_0
         columns:
           - name: CUST_ID

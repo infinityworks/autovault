@@ -5,9 +5,7 @@
   ) }}
 
 {%- set yaml_metadata -%}
-source_model:
-  - "stg_transactions_v0_1_0"
-  - "stg_transactions_v0_2_0"
+source_model: "stg_transactions_v0_2_0"
 src_pk:
   - "CUST_PRDCT_STORE_CHECKOUT_HK"
 src_fk:

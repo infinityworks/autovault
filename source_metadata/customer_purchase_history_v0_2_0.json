@@ -1,0 +1,47 @@
+{
+  "unit_of_work": "CUST_HISTORY",
+  "source_name": "CUSTOMER_PURCHASE_HISTORY",
+  "version": "0_2_0",
+  "source_system": "TILLS",
+  "destination_database": "AUTOVAULT",
+  "destination_schema": "PUBLIC",
+  "business_topics": {
+    "CUSTOMER": {
+      "ignore_persisting_source_to_hub_model": false,
+      "business_keys": {
+        "CUSTOMER_ID": {
+          "description": "Customer IDs are concatenations of their region code and registration number",
+          "type": "STRING",
+          "tests": {
+            "unique": true
+          }
+        }
+      }
+    },
+    "PRODUCT": {
+      "business_keys": {
+        "PRODUCT_ID": {
+          "description": "Each product has a 12 digit UIID",
+          "type": "STRING",
+          "tests": {
+            "not_null": true
+          }
+        }
+      },
+      "business_attributes": [
+        {
+          "business_definition": "PRODUCTS",
+          "payload": {
+            "PRICE": {
+              "type": "NUMBER",
+              "tests": {
+                "unique": true,
+                "not_null": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

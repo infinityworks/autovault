@@ -74,19 +74,28 @@ def enrich_substitution_values(substitution_values):
     link_keys = substitution_values["hubs"]
     link_name = substitution_values["link_name"]
     payload_columns = substitution_values.get("payload")
-    substitution_values["source_tables"] = f"\n".join(
-        [format_output_string(f"stg_{source.lower()}", 2) for source in source_list]
-    )
     substitution_values["hash_key"] = format_output_string(f"{link_name}_HK", 2)
     substitution_values["foreign_keys"] = f"\n".join(
         [format_output_string(f"{combination}_HK", 2) for combination in link_keys]
     )
+    source_list.sort(reverse=True)
     if payload_columns:
+        """There is a known bug for producing Transactional Links: regular Link tables
+        are not versioned and can be feed by multiple staging tables, transactional links
+        should be versioned and have a 1 to 1 mapping from versioned staging table to
+        versioned transactional link table. The code below is a temporary fix which will
+        take the most recent versioned staging table in the source list, it will not produce
+        all versioned trans links currently"""
+        substitution_values["source_tables"] = f'"stg_{source_list[0].lower()}"'
         substitution_values["payload"] = f"\n".join(
             [
                 format_output_string(f"{payload_column}", 2)
                 for payload_column in payload_columns
             ]
+        )
+    else:
+        substitution_values["source_tables"] = f"\n".join(
+            [format_output_string(f"stg_{source.lower()}", 2) for source in source_list]
         )
     return substitution_values
 
