@@ -5,7 +5,7 @@
 
 {%- set yaml_metadata -%}
 source_model:
-  AUTOVAULT_PUBLIC: "TRANSACTIONS_V0_1_0"
+  AUTOVAULT_PUBLIC: "TRANSACTIONS_V0_2_0"
 derived_columns:
   EFFECTIVE_FROM: "LOAD_DATETIME"
   START_DATE: "LOAD_DATETIME"

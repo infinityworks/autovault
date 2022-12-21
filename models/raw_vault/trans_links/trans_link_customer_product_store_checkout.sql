@@ -1,21 +1,23 @@
 {{ config(
   materialized='incremental',
-  schema = "$model_type",
-  alias = "$alias"
+  schema = "TRANS_LINK",
+  alias = "CUST_PRDCT_STORE_CHECKOUT"
   ) }}
 
 {%- set yaml_metadata -%}
 source_model:
-$source_model
+  - "stg_transactions_v0_1_0"
+  - "stg_transactions_v0_2_0"
 src_pk:
-$src_pk
+  - "CUST_PRDCT_STORE_CHECKOUT_HK"
 src_fk:
-$src_fk
+  - "CUSTOMER_HK"
+  - "PRODUCT_HK"
 src_payload:
-$payload
+  - "DATE_OF_SESSION"
 src_eff: "EFFECTIVE_FROM"
-src_ldts: "$src_ldts"
-src_source: "$src_source"
+src_ldts: "LOAD_DATETIME"
+src_source: "RECORD_SOURCE"
 {%- endset -%}
 
 {% set metadata_dict = fromyaml(yaml_metadata) %}

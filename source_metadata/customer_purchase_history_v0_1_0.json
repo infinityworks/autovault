@@ -1,8 +1,8 @@
 {
-  "unit_of_work": "STORE_CHECKOUT",
-  "source_name": "TRANSACTIONS",
+  "unit_of_work": "CUST_HISTORY",
+  "source_name": "CUSTOMER_PURCHASE_HISTORY",
   "version": "0_1_0",
-  "source_system": "STORE_TILLS",
+  "source_system": "TILLS",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
   "business_topics": {
@@ -42,16 +42,6 @@
           }
         }
       ]
-    }
-  },
-  "transactional_payload": {
-    "DATE_OF_SESSION": {
-      "description": "The datetime at which the order was made",
-      "type": "TIMESTAMP_TZ(9)",
-      "tests": {
-        "uniqueness": true,
-        "not_null": true
-      }
     }
   }
 }

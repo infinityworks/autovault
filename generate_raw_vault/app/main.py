@@ -15,6 +15,7 @@ def main(metadata_file_dirs):
         "./source_tables/ddl",
         "./models/raw_vault/hubs",
         "./models/raw_vault/links",
+        "./models/raw_vault/trans_links",
         "./models/raw_vault/sats",
         "./models/raw_vault/effsats",
         "./models/raw_vault/stages",
