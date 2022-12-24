@@ -41,10 +41,10 @@ def create_sat_file(metadata_file_path):
                 substitutions = create_sat_substitutions(
                     source_name, satellite, satellites, hub_name, sat_name
                 )
+                substitutions["model_type"] = "SATS"
                 write_model_files(
                     substitutions,
                     sat_template,
-                    model_type="sat",
                     filename=sat_name,
                 )
 

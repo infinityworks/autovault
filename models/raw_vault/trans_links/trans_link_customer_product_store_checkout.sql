@@ -1,6 +1,6 @@
 {{ config(
   materialized='incremental',
-  schema = "TRANS_LINK",
+  schema = "TRANS_LINKS",
   alias = "CUST_PRDCT_STORE_CHECKOUT"
   ) }}
 

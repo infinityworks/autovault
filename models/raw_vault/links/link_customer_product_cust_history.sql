@@ -1,6 +1,6 @@
 {{ config(
   materialized='incremental',
-  schema = "LINK",
+  schema = "LINKS",
   alias = "CUST_PRDCT_CUST_HISTORY"
   ) }}
 

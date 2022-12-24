@@ -1,6 +1,7 @@
 {{ config(
   materialized='incremental',
-  schema = "SATS"
+  schema = "$model_type",
+  alias = "$effsat_name"
   ) }}
 
 {%- set source_model = $source_model  -%}

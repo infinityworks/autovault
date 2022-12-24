@@ -2,11 +2,11 @@ from typing import Set, Any
 import itertools
 
 
-def write_model_files(substitutions, model_template, model_type, filename):
+def write_model_files(substitutions, model_template, filename):
     model = model_template.substitute(substitutions)
-    with open(
-        f"./models/raw_vault/{model_type}s/{model_type}_{filename}.sql", "w"
-    ) as dbt_sql_export:
+    model_type = substitutions["model_type"]
+    path = f"./models/raw_vault/{model_type}/{model_type[:-1]}_{filename}.sql"
+    with open(path.lower(), "w") as dbt_sql_export:
         dbt_sql_export.write(model)
 
 

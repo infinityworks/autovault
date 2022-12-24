@@ -35,16 +35,15 @@ def export_all_link_files(metadata_file_dirs):
                 )
                 substitutions = create_link_substitutions(enriched_substitution_values)
                 if metadata_dict.get("transactional_payload"):
-                    substitutions["model_type"] = "TRANS_LINK"
+                    substitutions["model_type"] = "TRANS_LINKS"
                     model_template = fetch_template(TRANS_LINK_TEMPLATE_PATH)
                 else:
-                    substitutions["model_type"] = "LINK"
+                    substitutions["model_type"] = "LINKS"
                     model_template = fetch_template(LINK_TEMPLATE_PATH)
 
                 write_model_files(
                     substitutions,
                     model_template,
-                    model_type=substitutions["model_type"].lower(),
                     filename=enriched_substitution_values["filename"],
                 )
 

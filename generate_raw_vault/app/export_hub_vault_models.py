@@ -31,8 +31,13 @@ def export_all_hub_files(metadata_file_dirs):
             hub_name, hub_substitutions, all_metadata
         )
         if substitutions.get("source_list"):
+            substitutions["model_type"] = "HUBS"
             formatted_hub_name = hub_name.lower()
-            write_model_files(substitutions, hub_template, "hub", formatted_hub_name)
+            write_model_files(
+                substitutions,
+                hub_template,
+                formatted_hub_name,
+            )
 
 
 def populate_hub_substitutions(hub_name, hub_substitutions, all_metadata):

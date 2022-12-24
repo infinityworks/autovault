@@ -9,7 +9,7 @@ source_model:
 derived_columns:
   EFFECTIVE_FROM: "LOAD_DATETIME"
   START_DATE: "LOAD_DATETIME"
-  END_DATE: "TO_DATE('9999-12-31')"
+  END_DATE: "TO_TIMESTAMP_TZ('9999-01-01 00:00:00')"
 
 hashed_columns:
   CUSTOMER_HK:
