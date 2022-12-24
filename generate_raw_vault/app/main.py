@@ -1,4 +1,7 @@
 from generate_raw_vault.app.find_metadata_files import find_json_metadata
+from generate_raw_vault.app.export_source_documentation import (
+    export_all_model_docs_md_files,
+)
 from generate_raw_vault.app.export_model_schema_yml import export_model_schema
 from generate_raw_vault.app.export_ddl_statement import export_all_ddl_statments
 from generate_raw_vault.app.export_staging_vault_models import export_all_staging_files
@@ -24,6 +27,7 @@ def main(metadata_file_dirs):
         create_directory_and_gitkeep(directory)
 
     export_all_ddl_statments(metadata_file_dirs)
+    export_all_model_docs_md_files(metadata_file_dirs)
     export_model_schema(metadata_file_dirs)
     export_all_staging_files(metadata_file_dirs)
     export_all_hub_files(metadata_file_dirs)

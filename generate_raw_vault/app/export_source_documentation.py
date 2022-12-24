@@ -1,7 +1,6 @@
 from pathlib import Path
 from generate_raw_vault.app.find_metadata_files import (
     find_json_metadata,
-    load_template_file,
     load_metadata_file,
     load_template,
 )
@@ -9,7 +8,6 @@ from generate_raw_vault.app.metadata_handler import Metadata
 from generate_raw_vault.app.model_creation import (
     write_documentation_files,
 )
-import json
 
 
 def export_all_model_docs_md_files(metadata_file_dirs):
