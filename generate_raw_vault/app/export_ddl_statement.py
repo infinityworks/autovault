@@ -57,7 +57,7 @@ def create_source_table_ddl(metadata):
             transactional_payload_datatype_map
         )
         payload_columns_and_types_str += (
-            f"\n{4*chr(32)}{transactional_payload_columns_and_types_str}"
+            f",\n{4*chr(32)}{transactional_payload_columns_and_types_str}"
         )
 
     substitutions = {
