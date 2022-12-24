@@ -42,6 +42,7 @@ def create_substitution_values(metadata):
         "warehouse_location": metadata.get_warehouse_location(),
         "access_roles": metadata.get_access_roles(),
         "access_requests": metadata.get_access_requests(),
+        "maintained_by": metadata.get_maintained_by(),
         "quality": metadata.get_data_quality(),
     }
     return substitutions

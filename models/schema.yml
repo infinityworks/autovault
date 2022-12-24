@@ -9,7 +9,7 @@ sources:
         description: '{{ doc("customers_v0_1_0_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
-            description: "This is the driving key, a unique identifier to represent a customer."
+            description: "This is the driving key. A unique identifier to represent a customer."
             tests:
               - unique
               - not_null

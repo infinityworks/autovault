@@ -21,6 +21,9 @@ The original business process that generated the data is: $unit_of_work
 ### Access requests
 $access_requests
 
-## Quality
+#### Maintained by
+Data set maintained by: $maintained_by
+
+## Quality & Known Issues
 $quality
 {% enddocs %}

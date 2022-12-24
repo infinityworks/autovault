@@ -110,9 +110,12 @@ def get_tests(tests):
 def create_column_descriptions(key_name, attributes):
     descriptions = [f"{10*chr(32)}- name: {key_name}"]
     if attributes.get("description"):
-        descriptions.append(
-            f'{12*chr(32)}description: "{attributes.get("description")}"'
-        )
+        col_desc = attributes.get("description")
+        if attributes.get("driving_key"):
+            driving_key = "This is the driving key. "
+            col_desc = driving_key + col_desc
+
+        descriptions.append(f'{12*chr(32)}description: "{col_desc}"')
     if attributes.get("description"):
         descriptions.append(f'{12*chr(32)}tests:\n{get_tests(attributes.get("tests"))}')
     column_descriptions = "\n".join(descriptions)
