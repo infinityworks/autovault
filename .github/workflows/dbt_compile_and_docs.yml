@@ -1,14 +1,13 @@
-name: 'dbt-compile-and-docs-generate'
+name: 'run-linting'
 
 on:
   push:
     paths:
-      - 'models/**'
-      - 'dbt_project.yml'
+      - 'generate_raw_vault/**'
   workflow_dispatch:
 
 jobs:
-  run-tests:
+  lint-code:
     runs-on: ubuntu-latest
     steps:
     - name: checkout-code
@@ -27,10 +26,6 @@ jobs:
       run: |
         pip3 install --requirement requirements.txt
 
-    - name: compile-dbt-models
+    - name: lint-python
       run: |
-        dbt compile
-
-    - name: generate-dbt-docs
-      run: |
-        dbt docs generate
+        python3 -m black generate_raw_vault
