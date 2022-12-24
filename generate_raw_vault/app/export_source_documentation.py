@@ -48,6 +48,5 @@ def create_substitution_values(metadata):
 
 
 if __name__ == "__main__":
-    # metadata_file = load_metadata_file("source_metadata/customers_v0_1_0.json")
     metadata_file_dirs = find_json_metadata(metadata_directory="source_metadata")
     export_all_model_docs_md_files(metadata_file_dirs)

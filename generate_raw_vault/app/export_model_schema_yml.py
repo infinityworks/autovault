@@ -114,9 +114,7 @@ def create_column_descriptions(key_name, attributes):
             f'{12*chr(32)}description: "{attributes.get("description")}"'
         )
     if attributes.get("description"):
-        descriptions.append(
-            f'{12*chr(32)}tests: \n{get_tests(attributes.get("tests"))}'
-        )
+        descriptions.append(f'{12*chr(32)}tests:\n{get_tests(attributes.get("tests"))}')
     column_descriptions = "\n".join(descriptions)
     return column_descriptions
 

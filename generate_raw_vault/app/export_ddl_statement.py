@@ -1,9 +1,15 @@
 from generate_raw_vault.app.find_metadata_files import (
     load_metadata_file,
     find_json_metadata,
+    load_template,
+)
+from generate_raw_vault.app.model_creation import (
+    write_ddl_file,
 )
 from generate_raw_vault.app.metadata_handler import Metadata
 from pathlib import Path
+
+DDL_TEMPLATE = "generate_raw_vault/app/templates/ddl.sql"
 
 
 def export_all_ddl_statments(metadata_file_dirs):
@@ -14,12 +20,10 @@ def export_all_ddl_statments(metadata_file_dirs):
 def ddl_exporter(metadata_file_path):
     json_metadata = load_metadata_file(metadata_file_path)
     metadata = Metadata(json_metadata)
-    ddl = create_source_table_ddl(metadata)
+    template = load_template(DDL_TEMPLATE)
+    ddl_substitutions = create_source_table_ddl(metadata)
     formatted_source_name = metadata.get_versioned_source_name().lower()
-    with open(
-        Path(f"./source_tables/ddl/{formatted_source_name}.sql"), "w"
-    ) as sql_export:
-        sql_export.write(ddl)
+    write_ddl_file(ddl_substitutions, template, formatted_source_name)
 
 
 def create_source_table_ddl(metadata):
@@ -28,6 +32,7 @@ def create_source_table_ddl(metadata):
     versioned_source_name = metadata.get_versioned_source_name().upper()
     transactional_payloads = metadata.get_transactional_payloads()
     hub_names_list = metadata.get_hubs_from_business_topics()
+    access_roles = metadata.metadata.get("access_roles")
     primary_key_datatype_association = {}
     transactional_payload_columns_and_types_str = ""
 
@@ -51,57 +56,29 @@ def create_source_table_ddl(metadata):
         transactional_payload_columns_and_types_str = format_column_and_dtype(
             transactional_payload_datatype_map
         )
-        ddl_statement = create_ddl_with_transaction_payload_statement(
-            keys_and_types_str,
-            payload_columns_and_types_str,
-            transactional_payload_columns_and_types_str,
-            target_database,
-            target_schema,
-            versioned_source_name,
+        payload_columns_and_types_str += (
+            f"\n{4*chr(32)}{transactional_payload_columns_and_types_str}"
         )
+
+    substitutions = {
+        "target_database": target_database,
+        "target_schema": target_schema,
+        "versioned_source_name": versioned_source_name,
+        "keys_and_types_str": keys_and_types_str,
+        "payload_columns_and_types_str": payload_columns_and_types_str,
+    }
+
+    if access_roles:
+        access_grants = "\n".join(
+            [
+                f'GRANT SELECT ON "{target_database}"."{target_schema}"."{versioned_source_name}" TO ROLE {role};'
+                for role in access_roles
+            ]
+        )
+        substitutions["access_grants"] = access_grants
     else:
-        ddl_statement = create_ddl_without_transaction_payload_statement(
-            keys_and_types_str,
-            payload_columns_and_types_str,
-            target_database,
-            target_schema,
-            versioned_source_name,
-        )
-    return ddl_statement
-
-
-def create_ddl_with_transaction_payload_statement(
-    keys_and_types_str,
-    column_and_types_str,
-    transactional_payload_columns_and_types_str,
-    target_database,
-    target_schema,
-    source_name,
-):
-    ddl = f"""CREATE TABLE "{target_database}"."{target_schema}"."{source_name}" (
-    {keys_and_types_str},
-    {column_and_types_str},
-    {transactional_payload_columns_and_types_str},
-    "RECORD_SOURCE" STRING,
-    "LOAD_DATETIME" TIMESTAMP_TZ
-    );\n"""
-    return ddl
-
-
-def create_ddl_without_transaction_payload_statement(
-    keys_and_types_str,
-    column_and_types_str,
-    target_database,
-    target_schema,
-    source_name,
-):
-    ddl = f"""CREATE TABLE "{target_database}"."{target_schema}"."{source_name}" (
-    {keys_and_types_str},
-    {column_and_types_str},
-    "RECORD_SOURCE" STRING,
-    "LOAD_DATETIME" TIMESTAMP_TZ
-    );\n"""
-    return ddl
+        substitutions["access_grants"] = ""
+    return substitutions
 
 
 def format_column_and_dtype(columns_and_types):
