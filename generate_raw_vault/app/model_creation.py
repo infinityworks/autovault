@@ -16,6 +16,12 @@ def write_documentation_files(substitutions, docs_template, filename):
         dbt_docs_export.write(doc)
 
 
+def write_ddl_file(substitutions, ddl_template, filename):
+    ddl = ddl_template.substitute(substitutions)
+    with open(f"./source_tables/ddl/{filename}.sql", "w") as ddl_export:
+        ddl_export.write(ddl)
+
+
 def create_substitution_values_template():
     return {
         "filename": None,
