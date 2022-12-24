@@ -12,6 +12,7 @@ src_hashdiff:
   alias: "HASHDIFF"
 src_payload:
   - "AGE"
+  - "COUNTRY"
 src_eff: "EFFECTIVE_FROM"
 src_ldts: "LOAD_DATETIME"
 src_source: "RECORD_SOURCE"

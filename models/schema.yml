@@ -6,23 +6,37 @@ sources:
     schema: PUBLIC
     tables:
       - name: CUSTOMERS_V0_1_0
-        description: '{{ doc("customers_v0_1_0_desc") }}'
+        description: '{{ doc("customers_v0_1_0_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
-            description: '{{ doc("customers_v0_1_0_col_customer_id") }}'
+            description: "This is the driving key, a unique identifier to represent a customer."
             tests:
               - unique
               - not_null
           - name: AGE
-            description: '{{ doc("customers_v0_1_0_col_age") }}'
+            description: "Customer age"
+            tests:
+              - unique
+              - not_null
+          - name: COUNTRY
+            description: "Location of residence"
+            tests:
+              - not_null
       - name: CUSTOMERS_V0_1_1
+        description: '{{ doc("customers_v0_1_1_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
-            description: "CUSTOMERS_V2 Business key 22222"
+            description: "Business key CUSTOMERS_V2"
+            tests:
+              - unique
+              - not_null
+          - name: AGE
+            description: "Customer age"
             tests:
               - unique
               - not_null
       - name: CUSTOMER_PURCHASE_HISTORY_V0_1_0
+        description: '{{ doc("customer_purchase_history_v0_1_0_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
             description: "Customer IDs are concatenations of their region code and registration number"
@@ -32,7 +46,9 @@ sources:
             description: "Each product has a 12 digit UIID"
             tests:
               - not_null
+          - name: PRICE
       - name: CUSTOMER_PURCHASE_HISTORY_V0_2_0
+        description: '{{ doc("customer_purchase_history_v0_2_0_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
             description: "Customer IDs are concatenations of their region code and registration number"
@@ -42,21 +58,28 @@ sources:
             description: "Each product has a 12 digit UIID"
             tests:
               - not_null
+          - name: PRICE
       - name: CUSTOMER_VISITS_V0_1_0
+        description: '{{ doc("customer_visits_v0_1_0_table_desc") }}'
         columns:
           - name: CUST_ID
-            description: "CUSTOMER_VISITS_V1 Business key 1111"
+            description: "Business key CUSTOMER_VISITS_V1"
             tests:
               - unique
               - not_null
+          - name: TOTAL_VISITS
       - name: PRODUCTS_V0_1_0
+        description: '{{ doc("products_v0_1_0_table_desc") }}'
         columns:
           - name: PRODUCT_ID
-            description: "PRODUCT_V1 Business key 11111"
+            description: "Business key PRODUCT_V1"
             tests:
               - unique
               - not_null
+          - name: MAKE
+          - name: MODEL
       - name: TRANSACTIONS_V0_1_0
+        description: '{{ doc("transactions_v0_1_0_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
             description: "Customer IDs are concatenations of their region code and registration number"
@@ -66,7 +89,9 @@ sources:
             description: "Each product has a 12 digit UIID"
             tests:
               - not_null
+          - name: PRICE
       - name: TRANSACTIONS_V0_2_0
+        description: '{{ doc("transactions_v0_2_0_table_desc") }}'
         columns:
           - name: CUSTOMER_ID
             description: "Customer IDs are concatenations of their region code and registration number"
@@ -76,3 +101,4 @@ sources:
             description: "Each product has a 12 digit UIID"
             tests:
               - not_null
+          - name: PRICE

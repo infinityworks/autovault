@@ -15,20 +15,12 @@ The original business process that generated the data is: $unit_of_work
 
 ## Accessibility
 - Raw source location: $source_location
-- Database location: $database_location
-- Database role access: $access_roles
+- Warehouse location: $warehouse_location
+- Warehouse role access: $access_roles
 
 ### Access requests
 $access_requests
 
 ## Quality
 $quality
-{% enddocs %}
-
-{% docs $versioned_source_name_col_1 %}
-$versioned_source_name_col_1_desc
-{% enddocs %}
-
-{% docs $versioned_source_name_col_2 %}
-$versioned_source_name_col_2_desc
 {% enddocs %}
