@@ -1,4 +1,5 @@
 {
+  "table_description": "xxx",
   "unit_of_work": "CUST_VSTS",
   "source_name": "CUSTOMER_VISITS",
   "version": "0_1_0",
@@ -10,7 +11,7 @@
       "ignore_persisting_source_to_hub_model": true,
       "business_keys": {
         "CUST_ID": {
-          "description": "CUSTOMER_VISITS_V1 Business key 1111",
+          "description": "Business key CUSTOMER_VISITS_V1",
           "alias": "CUSTOMER_ID",
           "type": "STRING",
           "tests": {

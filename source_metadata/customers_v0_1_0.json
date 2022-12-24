@@ -8,7 +8,7 @@
   "filetype": ".csv",
   "freshness": "Updated daily at 5am",
   "source_location": "s3://data-lake-dev/customers",
-  "database_location": "https://instance.eu-west-1.snowflakecomputing.com/console",
+  "warehouse_location": "https://instance.eu-west-1.snowflakecomputing.com/console",
   "destination_database": "AUTOVAULT",
   "destination_schema": "PUBLIC",
   "access_requests": "Contact the Data squad for Snowflake and table access",
@@ -47,6 +47,15 @@
               },
               "is_PII": true,
               "masking_policy": "policy_x"
+            },
+            "COUNTRY": {
+              "description": "Location of residence",
+              "type": "STRING",
+              "tests": {
+                "not_null": true
+              },
+              "is_PII": false,
+              "masking_policy": "policy_y"
             }
           }
         }

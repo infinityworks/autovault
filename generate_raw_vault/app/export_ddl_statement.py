@@ -32,7 +32,7 @@ def create_source_table_ddl(metadata):
     transactional_payload_columns_and_types_str = ""
 
     for hub_name in hub_names_list:
-        primarykey_datatype_map = metadata.get_primarykey_datatype_map(
+        primarykey_datatype_map = metadata.get_key_datatype_map(
             metadata.get_business_keys().get(hub_name)
         )
         for primarykey, datatype in primarykey_datatype_map.items():

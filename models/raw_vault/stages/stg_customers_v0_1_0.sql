@@ -19,6 +19,7 @@ hashed_columns:
     is_hashdiff: true
     columns:
       - "AGE"
+      - "COUNTRY"
 
 {%- endset -%}
 

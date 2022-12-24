@@ -22,14 +22,13 @@ def export_model_schema(metadata_file_dirs: list):
         for source in sources_files.values()
     }
 
-    for original_source in sources_files.values():
-        aggregated_sources[original_source.get("source_name")].get("tables").append(
-            original_source.get("table")
+    for source in sources_files.values():
+        aggregated_sources[source.get("source_name")].get("tables").append(
+            source.get("table")
         )
 
     for source_name in aggregated_sources.keys():
         format_source_table_list(aggregated_sources[source_name])
-
     source_template = load_template(SOURCE_TEMPLATE)
     source_string_map = generate_source_substitutions(
         source_template=source_template, aggregated_sources=aggregated_sources
@@ -53,40 +52,80 @@ def create_schema_subsitutions(metadata) -> dict:
     schema_name = metadata.get_target_schema()
     source_name = f"{database_name}_{schema_name}"
     hub_names_list = metadata.get_hubs_from_business_topics()
-    primary_keys = []
+
+    hub_attributes = {}
     for hub_name in hub_names_list:
-        primarykey_datatype_map = metadata.get_primarykey_datatype_map(
-            metadata.get_business_keys().get(hub_name)
-        )
-        for primarykey in primarykey_datatype_map.keys():
-            primary_keys.append(f"{10*chr(32)}- name: {primarykey}")
-            primarykey_description_map = metadata.get_primarykey_description_map(
-                metadata.get_business_keys().get(hub_name)
+        hub_attributes.update({hub_name: {}})
+        hub_business_key_attributes = metadata.get_business_keys().get(hub_name)
+        business_keys = hub_business_key_attributes.get("business_keys")
+        for key_name, attributes in business_keys.items():
+            hub_attributes.get(hub_name).update(
+                {f"{key_name}": create_column_descriptions(key_name, attributes)}
             )
-            primarykey_test_map = metadata.get_primary_key_tests_map(
-                metadata.get_business_keys().get(hub_name)
-            )
-            for description in primarykey_description_map.values():
-                primary_keys.append(
-                    f'{12*chr(32)}description: "{description}"\n{12*chr(32)}tests:'
+        hub_satellites = metadata.get_sat_from_hub(hub_name)
+        if hub_satellites:
+            for column_name, attributes in list(hub_satellites.values())[0].items():
+                hub_attributes.get(hub_name).update(
+                    {
+                        f"{column_name}": create_column_descriptions(
+                            column_name, attributes
+                        )
+                    }
                 )
-            for test, test_type in primarykey_test_map.items():
-                primary_keys.append(f"{12*chr(32)}{chr(32)} - {test}")
-    keys_str = "\n".join(primary_keys)
-    table_name = f"- name: {metadata.get_versioned_source_name()}\n{8*chr(32)}columns:\n{keys_str}"
+
+    joined_key_attributes = {
+        hub: "\n".join(list(hub_keys.values()))
+        for hub, hub_keys in hub_attributes.items()
+    }
+    joined_hub_attributes = "\n".join(list(joined_key_attributes.values()))
+    table_name = metadata.get_versioned_source_name()
+    table_desc = metadata.get_versioned_source_name_desc()
+    table_desc_ref = f'{2*chr(123)} doc("{table_desc}") {2*chr(125)}'
+    table_description = "\n".join(
+        [
+            f"- name: {table_name}",
+            f"{8*chr(32)}description: '{table_desc_ref}'",
+            f"{8*chr(32)}columns:\n{joined_hub_attributes}",
+        ]
+    )
     substitutions = {
         "source_name": source_name,
+        "description": f"{metadata.get_versioned_source_name()}_desc".lower(),
         "database": database_name,
         "schema": schema_name,
-        "table": table_name,
+        "table": table_description,
     }
     return substitutions
+
+
+def get_tests(tests):
+    column_tests = [
+        f"{12*chr(32)}{chr(32)} - {test_type}"
+        for test_type, is_active in tests.items()
+        if is_active == True
+    ]
+    return "\n".join(column_tests)
+
+
+def create_column_descriptions(key_name, attributes):
+    descriptions = [f"{10*chr(32)}- name: {key_name}"]
+    if attributes.get("description"):
+        descriptions.append(
+            f'{12*chr(32)}description: "{attributes.get("description")}"'
+        )
+    if attributes.get("description"):
+        descriptions.append(
+            f'{12*chr(32)}tests: \n{get_tests(attributes.get("tests"))}'
+        )
+    column_descriptions = "\n".join(descriptions)
+    return column_descriptions
 
 
 def create_sources_map(source: dict) -> dict:
     source = {
         "source_name": source.get("source_name"),
         "tables": [],
+        "description": source.get("description"),
         "database": source.get("database"),
         "schema": source.get("schema"),
         "business_keys": source.get("business_keys"),

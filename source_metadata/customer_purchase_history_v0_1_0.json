@@ -1,4 +1,5 @@
 {
+  "table_description": "xxx",
   "unit_of_work": "CUST_HISTORY",
   "source_name": "CUSTOMER_PURCHASE_HISTORY",
   "version": "0_1_0",

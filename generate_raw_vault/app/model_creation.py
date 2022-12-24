@@ -10,6 +10,12 @@ def write_model_files(substitutions, model_template, model_type, filename):
         dbt_sql_export.write(model)
 
 
+def write_documentation_files(substitutions, docs_template, filename):
+    doc = docs_template.substitute(substitutions)
+    with open(f"./models/source_descriptions/{filename}.md", "w") as dbt_docs_export:
+        dbt_docs_export.write(doc)
+
+
 def create_substitution_values_template():
     return {
         "filename": None,

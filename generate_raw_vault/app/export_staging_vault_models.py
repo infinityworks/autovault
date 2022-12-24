@@ -147,10 +147,10 @@ def get_hub_alias_substitutions_string(metadata):
     hub_names_list = metadata.get_hubs_from_business_topics()
     alias_primary_key_association_list = []
     for hub_name in hub_names_list:
-        alias_primarykey_map = metadata.get_alias_primarykey_map(
+        alias_key_map = metadata.get_alias_key_map(
             metadata.get_hub_business_key(hub_name)
         )
-        for alias, primary_key in alias_primarykey_map.items():
+        for alias, primary_key in alias_key_map.items():
             if alias != primary_key:
                 alias_primary_key_association_list.append(
                     f'{alias}:{chr(32)}"{primary_key}"'

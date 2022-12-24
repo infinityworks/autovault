@@ -1,4 +1,5 @@
 {
+  "table_description": "xxx",
   "unit_of_work": "CATALOGUE",
   "source_name": "PRODUCTS",
   "version": "0_1_0",
@@ -9,7 +10,7 @@
     "PRODUCT": {
       "business_keys": {
         "PRODUCT_ID": {
-          "description": "PRODUCT_V1 Business key 11111",
+          "description": "Business key PRODUCT_V1",
           "type": "STRING",
           "tests": {
             "unique": true,
