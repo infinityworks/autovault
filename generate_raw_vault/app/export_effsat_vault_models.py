@@ -29,15 +29,21 @@ def export_all_effsat_files(metadata_file_dirs):
             if f"{linked_hubs}_{unit_of_work}" == link:
                 source = metadata.get_versioned_source_name()
                 short_name = "_".join([naming_dictionary[hub] for hub in hub_list])
-                name = f"{short_name}_{unit_of_work}_{metadata.get_source_version()}"
+                name = f"{short_name}_{unit_of_work}_v{metadata.get_source_version()}"
                 link_key = f"{short_name}_{unit_of_work}"
                 substitution_values = {"hubs": hub_list, "file_name": name.lower()}
                 substitution_values.update({"source": source})
                 substitution_values.update({"link_key": link_key})
+                substitution_values.update({"link_key": link_key})
                 substitutions = create_effsat_substitutions(substitution_values)
+                substitutions["model_type"] = "EFFSATS"
+                substitutions["effsat_name"] = name
+
                 formatted_effsat_name = substitution_values["file_name"].lower()
                 write_model_files(
-                    substitutions, link_template, "effsat", formatted_effsat_name
+                    substitutions,
+                    link_template,
+                    formatted_effsat_name,
                 )
 
 

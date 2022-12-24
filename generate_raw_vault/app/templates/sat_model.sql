@@ -1,6 +1,6 @@
 {{ config(
   materialized='incremental',
-  schema = "SATS",
+  schema = "$model_type",
   alias = "$sat_name"
   ) }}
 

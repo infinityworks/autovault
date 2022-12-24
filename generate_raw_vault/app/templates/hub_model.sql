@@ -1,6 +1,6 @@
 {{ config(
   materialized='incremental',
-  schema = "HUBS",
+  schema = "$model_type",
   alias = "$hub_name"
   ) }}
 

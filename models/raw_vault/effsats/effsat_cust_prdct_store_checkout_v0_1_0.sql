@@ -1,6 +1,7 @@
 {{ config(
   materialized='incremental',
-  schema = "SATS"
+  schema = "EFFSATS",
+  alias = "CUST_PRDCT_STORE_CHECKOUT_v0_1_0"
   ) }}
 
 {%- set source_model = "stg_transactions_v0_1_0"  -%}

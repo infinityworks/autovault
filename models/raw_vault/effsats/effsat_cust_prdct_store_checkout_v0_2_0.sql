@@ -1,10 +1,11 @@
 {{ config(
   materialized='incremental',
-  schema = "SATS"
+  schema = "EFFSATS",
+  alias = "CUST_PRDCT_STORE_CHECKOUT_v0_2_0"
   ) }}
 
-{%- set source_model = "stg_customer_purchase_history_v0_2_0"  -%}
-{%- set src_pk = "CUST_PRDCT_CUST_HISTORY_HK"  -%}
+{%- set source_model = "stg_transactions_v0_2_0"  -%}
+{%- set src_pk = "CUST_PRDCT_STORE_CHECKOUT_HK"  -%}
 {%- set src_dfk = "CUSTOMER_HK"        -%}
 {%- set src_sfk = ["PRODUCT_HK"]          -%}
 {%- set src_start_date = "START_DATE" -%}
