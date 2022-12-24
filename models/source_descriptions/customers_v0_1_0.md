@@ -21,6 +21,9 @@ The original business process that generated the data is: CUST_STATS
 ### Access requests
 Contact the Data squad for Snowflake and table access
 
-## Quality
+#### Maintained by
+Data set maintained by: Data squad
+
+## Quality & Known Issues
 This file often has null primary keys
 {% enddocs %}

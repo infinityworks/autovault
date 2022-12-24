@@ -23,7 +23,7 @@
       "ignore_persisting_source_to_hub_model": false,
       "business_keys": {
         "CUSTOMER_ID": {
-          "description": "This is the driving key, a unique identifier to represent a customer.",
+          "description": "A unique identifier to represent a customer.",
           "driving_key": true,
           "type": "STRING",
           "tests": {

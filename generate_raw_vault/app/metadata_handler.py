@@ -64,6 +64,12 @@ class Metadata:
     def get_warehouse_location(self):
         return self.metadata.get("warehouse_location")
 
+    def get_maintained_by(self):
+        return self.metadata.get("maintained_by")
+
+    def get_driving_key(self):
+        return self.metadata.get("driving_key")
+
     def get_business_topics(self):
         business_topics = self.metadata.get("business_topics")
         return business_topics
