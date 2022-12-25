@@ -32,14 +32,16 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 
+vars:
+  hash: SHA
+  max_datetime: '9999-12-31 23:59:59.999999'
 
 quoting:
   database: false
   schema: false
   identifier: false
+
 models:
-  vars:
-    hash: SHA
   +transient: false
   raw_vault:
       stages:
