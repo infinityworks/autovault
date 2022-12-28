@@ -70,7 +70,7 @@ def create_source_table_ddl(metadata):
 
     if access_roles:
         grants_list = [
-            f'GRANT SELECT ON "{target_database}"."{target_schema}"."{versioned_source_name}" TO ROLE {role};\n'
+            f'GRANT SELECT ON "{target_database}"."{target_schema}"."{versioned_source_name}" TO ROLE "{role}";\n'
             for role in access_roles
         ]
         access_grants = "".join(grants_list)

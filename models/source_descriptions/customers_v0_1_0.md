@@ -16,7 +16,7 @@ The original business process that generated the data is: CUST_STATS
 ## Accessibility
 - Raw source location: s3://data-lake-dev/customers
 - Warehouse location: https://instance.eu-west-1.snowflakecomputing.com/console
-- Warehouse role access: "data_analyst", "data_scientist"
+- Warehouse role access: "DATA_ANALYST", "DATA_SCIENTIST"
 
 ### Access requests
 Contact the Data squad for Snowflake and table access

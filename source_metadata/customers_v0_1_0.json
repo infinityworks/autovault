@@ -14,8 +14,8 @@
   "access_requests": "Contact the Data squad for Snowflake and table access",
   "quality": "This file often has null primary keys",
   "access_roles": [
-    "data_analyst",
-    "data_scientist"
+    "DATA_ANALYST",
+    "DATA_SCIENTIST"
   ],
   "maintained_by": "Data squad",
   "business_topics": {
