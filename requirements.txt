@@ -72,7 +72,7 @@ PyYAML==6.0
 requests==2.27.1
 six==1.16.0
 snowflake-connector-python==2.7.4
-sqlparse==0.4.2
+sqlparse==0.4.4
 stack-data==0.2.0
 text-unidecode==1.3
 toml==0.10.2
